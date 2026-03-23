@@ -1,3 +1,7 @@
+---
+description: 讀取特定的 GitHub Issue，分析相關的 Git Commit 內容與執行結果，並在 Issue 下方自動回覆分析報告。當用戶要求追蹤 Issue 進度或確認程式碼變更對 Issue 的影響時使用。
+---
+
 # Git Issue 分析與回覆工作流
 讀取特定的 GitHub Issue，分析相關的 Git Commit 內容與執行結果，並在 Issue 下方自動回覆分析報告。當用戶要求追蹤 Issue 進度或確認程式碼變更對 Issue 的影響時使用。
 

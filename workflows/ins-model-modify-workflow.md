@@ -1,3 +1,7 @@
+---
+description: 此工作流專用於導航系統（INS）中 ESKF 框架的優化與開發。其核心邏輯採用「計劃-執行-驗證-迭代」的閉環架構，確保融合模型（如 3D 磁力計、GNSS）在進入最終文檔化之前，已通過嚴格的指標考核。
+---
+
 # Unified ESKF Optimization & Recursive Development Workflow
 
 此工作流專用於導航系統（INS）中 ESKF 框架的優化與開發。其核心邏輯採用「計劃-執行-驗證-迭代」的閉環架構，確保融合模型（如 3D 磁力計、GNSS）在進入最終文檔化之前，已通過嚴格的指標考核。
