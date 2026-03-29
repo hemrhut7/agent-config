@@ -36,7 +36,9 @@ description: 分析 Git 暫存區變更、生成符合規範的提交訊息並�
 3. **驗證與修訂**：
    - 檢查是否保留技術專有名詞（如 `EKF`, `DMA`）。
    - 確保訊息反映了「分析變更範圍」中發現的所有核心異動。
-4. **執行提交**：運行 `python .agents/skills/git-committer/scripts/git_helper.py --action commit --message "[訊息內容]"`，執行提交前請先進行確認。
+   - 驗證與修訂完後，須先向使用者進行內容確認。
+4. **執行提交**：運行 `python .agents/skills/git-committer/scripts/git_helper.py --action commit --message "[訊息內容]"` 執行提交。
+5. **確認提交**：執行提交後，使用 `git log -n 1` 確認完成提交。
 
 ## 錯誤處理
 - 若無暫存變更（No staged changes），先執行 `git add`。
