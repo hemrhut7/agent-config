@@ -10,7 +10,7 @@ description: 使用 waf 構建 Ardupilot Plane 韌體，具備狀態監控與自
 ## 執行邏輯
 
 ### 1. 啟動編譯 (非同步優化)
-- **指令執行**：執行 `./waf configure --board CubeOrangePlus && ./waf plane`，以及 `./waf configure --board sitl && ./waf plane`，確認可以在實體飛控與軟模擬環境都可以正常編譯。
+- **指令執行**：執行 `./waf configure --board sitl && ./waf plane`，以及 `./waf configure --board CubeOrangePlus-CIRC && ./waf plane`，確認可以在實體飛控與軟模擬環境都可以正常編譯。
 - **紀錄輸出**：建議將輸出導向至臨時記錄檔，或使用 `--summary` 旗標（若支援）以減少實時文字流。
 - **防止卡頓**：Agent 應避免逐行讀取數千行的編譯輸出，而是採用「追蹤模式」。
 
