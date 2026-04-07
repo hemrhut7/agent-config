@@ -25,33 +25,33 @@ python3 mavmsgstats.py data/flight.bin
 python3 mavparms.py data/flight.bin
 ```
 
-### 功能 3：特定資料處理（以 ATT 為例）
-針對特定類型執行輸出、存檔或繪圖操作：
+### 功能 3：進階高效繪圖 (新增)
+這是一個比 `mavgraph.py` 更高效的通用型繪圖工具。它採用 Single-pass 解析，並自動處理數據對齊與斷點偵測。
 
-- **模式 A：終端輸出（前 50 筆）**
-  使用 `mavlogdump.py` 過濾類型並配合 `head`。
+- **用法**：`python3 fast_plot.py <日誌路徑> "MSG1.Field1" "MSG2.Field2" ...`
+- **範例**：繪製 Roll 與 Pitch 的對比圖
   ```bash
-  python3 mavlogdump.py --types ATT data/flight.bin | head -n 50
+  python3 fast_plot.py data/flight.bin "ATT.Roll" "ATT.Pitch" --output output/fast_plot.png  ```
+
+### 功能 4：統一分析入口與快取架構 (最強效能型 - 新增)
+為解決反覆解析巨大日誌的耗時問題，請使用 `auto_analysis.py` 處理複合任務：
+1. **日誌快取**：首次執行會將日誌緩存為 `.pkl` (存於 `.logcache/`)，後續載入僅需毫秒級。
+2. **一體化流程**：單一指令完成對齊、PVA 誤差計算與圖表報表生成。
+3. **智慧降採樣**：自動優化繪圖點數，防止 Matplotlib 渲染卡死。
+
+- **用法**：`python3 auto_analysis.py <日誌路徑> --task pva --out <輸出前綴>`
+- **範例**：
+  ```bash
+  python3 auto_analysis.py data/flight.bin --task pva --out output/pva_report
   ```
 
-- **模式 B：另存為 CSV 檔案**
-  利用 `mavlogdump.py` 的格式化功能。
-  ```bash
-  python3 mavlogdump.py --types ATT --format csv data/flight.bin > export_ATT.csv
-  ```
-
-- **模式 C：繪製趨勢圖表 (PNG)**
-  使用 `mavgraph.py` 進行視覺化。注意：必須指定輸出路徑。
-  ```bash
-  # 繪製 Roll 與 Pitch 的對比圖
-  python3 mavgraph.py data/flight.bin "ATT.Roll" "ATT.Pitch" --output plot_ATT.png
-  ```
 
 ## 輔助功能：快速摘要
 若需快速了解飛行狀況（如總飛行時間），請執行：
 ```bash
 python3 mavsummarize.py data/flight.bin
 ```
+
 
 ## 漸進式揭露
 若不清楚特定訊息（如 NKF1）的含義，請閱讀 [MESSAGE_REFERENCE.md](MESSAGE_REFERENCE.md)。
