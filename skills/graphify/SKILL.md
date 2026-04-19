@@ -198,13 +198,16 @@ else:
 
 **Fast path:** If detection found zero docs, papers, and images (code-only corpus), skip Part B entirely and go straight to Part C. AST handles code - there is nothing for semantic subagents to do.
 
-**MANDATORY: You MUST use the Agent tool here. Reading files yourself one-by-one is forbidden - it is 5-10x slower. If you do not use the Agent tool you are doing this wrong.**
+**PROMPT ADAPTATION / ENVIRONMENT CHECK:** 
+First, check what tools are available to you. 
+- If you have an `Agent` tool or `delegate_task` tool capable of running "general-purpose" agents, you MUST use it. Reading files yourself one-by-one is forbidden in these environments as it is 5-10x slower.
+- If you are in an environment like **Google Antigravity** where the only subagent available is `browser_subagent`, **DO NOT USE THE BROWSER SUBAGENT for local file extraction. It will fail.** Instead, if the corpus is small (fits in context), you must perform the semantic extraction yourself inline by reading the files using `view_file` and constructing the JSON. If the corpus is large, process files in batches inline by writing a short Python script to read them.
 
-Before dispatching subagents, print a timing estimate:
+Before dispatching subagents (or processing inline), print a timing estimate:
 - Load `total_words` and file counts from `graphify-out/.graphify_detect.json`
-- Estimate agents needed: `ceil(uncached_non_code_files / 22)` (chunk size is 20-25)
+- Estimate agents/chunks needed: `ceil(uncached_non_code_files / 22)` (chunk size is 20-25)
 - Estimate time: ~45s per agent batch (they run in parallel, so total ≈ 45s × ceil(agents/parallel_limit))
-- Print: "Semantic extraction: ~N files → X agents, estimated ~Ys"
+- Print: "Semantic extraction: ~N files → X chunks, estimated ~Ys"
 
 **Step B0 - Check extraction cache first**
 
@@ -236,7 +239,9 @@ Load files from `graphify-out/.graphify_uncached.txt`. Split into chunks of 20-2
 
 **Step B2 - Dispatch ALL subagents in a single message**
 
-Call the Agent tool multiple times IN THE SAME RESPONSE - one call per chunk. This is the only way they run in parallel. If you make one Agent call, wait, then make another, you are doing it sequentially and defeating the purpose.
+*Note on tool limits:* If you do not have a parallel subagent tool (e.g., you only have `browser_subagent`), **STOP**. Do not use `browser_subagent`. Process the chunks inline yourself by reading the files and writing the `.graphify_chunk_NN.json` files directly or with a Python script.
+
+If you have the `Agent` tool, call it multiple times IN THE SAME RESPONSE - one call per chunk. This is the only way they run in parallel. If you make one Agent call, wait, then make another, you are doing it sequentially and defeating the purpose.
 
 **IMPORTANT - subagent type:** Always use `subagent_type="general-purpose"`. Do NOT use `Explore` - it is read-only and cannot write chunk files to disk, which silently drops extraction results. General-purpose has Write and Bash access which the subagent needs.
 
@@ -248,7 +253,7 @@ Concrete example for 3 chunks:
 ```
 All three in one message. Not three separate messages.
 
-Each subagent receives this exact prompt (substitute FILE_LIST, CHUNK_NUM, TOTAL_CHUNKS, and DEEP_MODE):
+Each subagent (or you, if processing inline) receives this exact prompt (substitute FILE_LIST, CHUNK_NUM, TOTAL_CHUNKS, and DEEP_MODE):
 
 ```
 You are a graphify extraction subagent. Read the files listed and extract a knowledge graph fragment.
