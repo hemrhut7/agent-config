@@ -5,13 +5,15 @@ description: Analyze Git changes, generate standardized commit messages, and exe
 
 # Git Commit Management Workflow
 
+
 ## Core Rules
 - **Automation First**: Prioritize invoking `.agents/skills/git-committer/scripts/git_helper.py --action analyze_all` to obtain all background information with one click.
 - **Comprehensive Analysis**: All changes should be confirmed before committing. The script automatically detects "Staged" and "Unstaged" changes, conflict status, and submodule status.
 - **Format Compliance**: Select language based on context (default is English).
    - English messages: Comply with [EN_FORMAT.md](EN_FORMAT.md).
    - Chinese messages: Comply with [CH_FORMAT.md](CH_FORMAT.md).
-- **Commit Confirmation**: Ensure you confirm the message content with the user before executing `commit`.
+- **Plan Before Action**: After analysis, always present a comprehensive plan (including any necessary submodule repairs or intermediate commits) and the proposed message. Wait for user approval before modifying any files or executing any state-changing git commands.
+- **Commit Confirmation**: Ensure you confirm the message content and the sequence of actions with the user before executing `commit`.
 
 ## Execution Workflow
 
@@ -23,10 +25,11 @@ description: Analyze Git changes, generate standardized commit messages, and exe
 2. **Drafting**:
    Generate the commit message by referencing the `Detailed Staged Diff` and `Recent Commits Context` in the report.
 
-3. **Verification and Revision**:
+3. **Plan and Verification**:
+   - Present the proposed commit message and a list of all intended actions (e.g., submodule updates, file additions).
    - Check if technical jargon (e.g., `EKF`, `DMA`) is retained.
    - Ensure the message reflects all core modifications found in the report.
-   - After verification, confirm the content with the user.
+   - **STOP**: Wait for explicit user approval before proceeding to any execution.
 
 4. **Execute Commit**:
    Run `python .agents/skills/git-committer/scripts/git_helper.py --action commit --message "[Message Content]"`.
@@ -38,4 +41,4 @@ description: Analyze Git changes, generate standardized commit messages, and exe
 ## Error Handling
 - **No staged changes**: Run `git add` first.
 - **Conflict Warning**: If the script warns of conflicts, please resolve the conflicts first, then re-run `analyze_all`.
-- **Submodule Dirty**: If there are changes in the submodule, please enter the submodule directory first to process them.
+- **Submodule Dirty**: If there are changes in the submodule, include the plan to process them (e.g., `cd` into submodule, commit/reset) in your proposal to the user. DO NOT process them without approval.
