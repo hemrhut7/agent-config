@@ -1,108 +1,60 @@
 ---
 name: code-execution
-description: Execute Python code locally with marketplace API access for 90%+ token savings on bulk operations. Activates when user requests bulk operations (10+ files), complex multi-step workflows, iterative processing, or mentions efficiency/performance.
+description: 使用 Python 腳本執行批量檔案操作或複雜多步驟工作流。當任務涉及 10+ 檔案的批量處理、資料轉換或自動化流程時使用。
 ---
 
-# Code Execution
+# 批量程式碼執行
 
-Execute Python locally with API access. **90-99% token savings** for bulk operations.
+使用 Python 腳本處理涉及大量檔案或多步驟的批量操作，避免逐一手動處理。
 
-## When to Use
+## 適用時機
 
-- Bulk operations (10+ files)
-- Complex multi-step workflows
-- Iterative processing across many files
-- User mentions efficiency/performance
+- 批量操作（10+ 檔案）
+- 複雜多步驟工作流
+- 跨多檔案的迭代處理
 
-## How to Use
+## 執行策略
 
-Use direct Python imports in Claude Code:
+### 1. 撰寫批量處理腳本
+將批量邏輯寫入 `.agent_scratchpad/` 內的臨時 Python 腳本：
 
 ```python
-from execution_runtime import fs, code, transform, git
-
-# Code analysis (metadata only!)
-functions = code.find_functions('app.py', pattern='handle_.*')
-
-# File operations
-code_block = fs.copy_lines('source.py', 10, 20)
-fs.paste_code('target.py', 50, code_block)
-
-# Bulk transformations
-result = transform.rename_identifier('.', 'oldName', 'newName', '**/*.py')
-
-# Git operations
-git.git_add(['.'])
-git.git_commit('feat: refactor code')
-```
-
-**If not installed:** Run `~/.claude/plugins/marketplaces/mhattingpete-claude-skills/execution-runtime/setup.sh`
-
-## Available APIs
-
-- **Filesystem** (`fs`): copy_lines, paste_code, search_replace, batch_copy
-- **Code Analysis** (`code`): find_functions, find_classes, analyze_dependencies - returns METADATA only!
-- **Transformations** (`transform`): rename_identifier, remove_debug_statements, batch_refactor
-- **Git** (`git`): git_status, git_add, git_commit, git_push
-
-## Pattern
-
-1. **Analyze locally** (metadata only, not source)
-2. **Process locally** (all operations in execution)
-3. **Return summary** (not data!)
-
-## Examples
-
-**Bulk refactor (50 files):**
-```python
-from execution_runtime import transform
-result = transform.rename_identifier('.', 'oldName', 'newName', '**/*.py')
-# Returns: {'files_modified': 50, 'total_replacements': 247}
-```
-
-**Extract functions:**
-```python
-from execution_runtime import code, fs
-
-functions = code.find_functions('app.py', pattern='.*_util$')  # Metadata only!
-for func in functions:
-    code_block = fs.copy_lines('app.py', func['start_line'], func['end_line'])
-    fs.paste_code('utils.py', -1, code_block)
-
-result = {'functions_moved': len(functions)}
-```
-
-**Code audit (100 files):**
-```python
-from execution_runtime import code
+# .agent_scratchpad/batch_process.py
 from pathlib import Path
+import re
 
-files = list(Path('.').glob('**/*.py'))
-issues = []
+results = {"modified": 0, "skipped": 0, "errors": []}
 
-for file in files:
-    deps = code.analyze_dependencies(str(file))  # Metadata only!
-    if deps.get('complexity', 0) > 15:
-        issues.append({'file': str(file), 'complexity': deps['complexity']})
+for py_file in Path("src").rglob("*.py"):
+    content = py_file.read_text(encoding="utf-8")
+    new_content = re.sub(r"old_pattern", "new_pattern", content)
+    if new_content != content:
+        py_file.write_text(new_content, encoding="utf-8")
+        results["modified"] += 1
+    else:
+        results["skipped"] += 1
 
-result = {'files_audited': len(files), 'high_complexity': len(issues)}
+print(f"Modified: {results['modified']}, Skipped: {results['skipped']}")
 ```
 
-## Best Practices
+### 2. 使用 venv 執行
+遵循 `run-python` 技能的執行規範：
+```bash
+.\.venv\Scripts\python.exe -u .agent_scratchpad/batch_process.py
+```
 
-✅ Return summaries, not data
-✅ Use code_analysis (returns metadata, not source)
-✅ Batch operations
-✅ Handle errors, return error count
+### 3. 回報摘要
+返回統計摘要（修改了多少檔案、跳過了多少），而非完整檔案內容。
 
-❌ Don't return all code to context
-❌ Don't read full source when you need metadata
-❌ Don't process files one by one
+### 4. 清理臨時檔案
+執行完畢後刪除 `.agent_scratchpad/` 中的臨時腳本。
 
-## Token Savings
+## 最佳實踐
 
-| Files | Traditional | Execution | Savings |
-|-------|-------------|-----------|---------|
-| 10 | 5K tokens | 500 | 90% |
-| 50 | 25K tokens | 600 | 97.6% |
-| 100 | 150K tokens | 1K | 99.3% |
+✅ 返回統計摘要，不返回完整檔案內容  
+✅ 批量處理而非逐一操作  
+✅ 使用 `pathlib` 進行跨平台路徑處理  
+✅ 包含錯誤計數與處理  
+
+❌ 不要將所有程式碼內容回傳到 context  
+❌ 不要逐檔案使用編輯工具（> 10 個檔案時）  

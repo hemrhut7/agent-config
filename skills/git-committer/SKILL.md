@@ -1,5 +1,5 @@
 ---
-name: managing-git-commits
+name: git-committer
 description: 分析 Git 暫存區變更、生成符合規範的提交訊息並執行 commit。於用戶要求提交程式碼或完成任務後需存檔時使用。
 ---
 

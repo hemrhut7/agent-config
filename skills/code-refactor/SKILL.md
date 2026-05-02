@@ -5,19 +5,27 @@ description: Perform bulk code refactoring operations like renaming variables/fu
 
 # Code Refactor
 
-Systematic code refactoring across files. **Auto-switches to execution mode** for 10+ files (90% token savings).
+Systematic code refactoring across files.
 
 ## Mode Selection
 
-- **1-9 files**: Use native tools (Grep + Edit with replace_all)
-- **10+ files**: Automatically use `code-execution` skill
+- **1-9 files**: Use native tools (`grep_search` + `replace_file_content`)
+- **10+ files**: Use `code-execution` skill（寫批量 Python 腳本處理）
 
-**Execution example (50 files):**
+**Batch example (10+ files):**
 ```python
-from api.code_transform import rename_identifier
-result = rename_identifier('.', 'oldName', 'newName', '**/*.py')
-# Returns: {'files_modified': 50, 'total_replacements': 247}
-# ~500 tokens vs ~25,000 tokens traditional
+# .agent_scratchpad/batch_rename.py
+from pathlib import Path
+import re
+
+count = 0
+for f in Path("src").rglob("*.py"):
+    text = f.read_text(encoding="utf-8")
+    new_text = re.sub(r'\boldName\b', 'newName', text)
+    if new_text != text:
+        f.write_text(new_text, encoding="utf-8")
+        count += 1
+print(f"Modified {count} files")
 ```
 
 ## When to Use
@@ -32,23 +40,22 @@ result = rename_identifier('.', 'oldName', 'newName', '**/*.py')
 
 ### 1. Find All Occurrences
 ```
-Grep(pattern="getUserData", output_mode="files_with_matches")     # Find files
-Grep(pattern="getUserData", output_mode="content", -n=true, -B=2, -A=2)  # Verify with context
+grep_search: Query="getUserData", SearchPath="src/"                    # Find files
+grep_search: Query="getUserData", SearchPath="src/", MatchPerLine=true # Verify with context
 ```
 
 ### 2. Replace All Instances
 ```
-Edit(
-  file_path="src/api.js",
-  old_string="getUserData",
-  new_string="fetchUserData",
-  replace_all=true
-)
+replace_file_content:
+  TargetFile="src/api.py"
+  TargetContent="getUserData"
+  ReplacementContent="fetchUserData"
+  AllowMultiple=true
 ```
 
 ### 3. Verify Changes
 ```
-Grep(pattern="getUserData", output_mode="files_with_matches")  # Should return none
+grep_search: Query="getUserData", SearchPath="src/"  # Should return no matches
 ```
 
 ## Workflow Examples

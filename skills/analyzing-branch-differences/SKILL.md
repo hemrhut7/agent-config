@@ -15,8 +15,9 @@ description: 讀取兩個 Git 分支間的差異並執行深度分析。識別�
 
 ```text
 分析進度：
-- [ ] 步驟 1：獲取分支差異清單 (scripts/diff_analyzer.py)
+- [ ] 步驟 1：獲取分支差異清單 (`git diff <base>..<compare> --stat`)
 - [ ] 步驟 2：分類變更範疇 (邏輯/配置/文件)
 - [ ] 步驟 3：執行深度代碼走查 (Deep Code Walkthrough)
 - [ ] 步驟 4：評估架構影響與潛在風險
-- [ ] 步驟 5：生成結構化分析報告
+- [ ] 步驟 5：生成結構化分析報告（參考 [REPORT_TEMPLATE.md](REPORT_TEMPLATE.md)）
+```

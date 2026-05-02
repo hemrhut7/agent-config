@@ -1,5 +1,5 @@
 ---
-name: build-ardupilot-plane-monitored
+name: build-ardupilot-plane
 description: 使用 waf 構建 Ardupilot Plane 韌體，具備狀態監控與自動錯誤分析功能。採用增量編譯優先，並優化輸出處理以防止 Terminal 卡頓。
 ---
 

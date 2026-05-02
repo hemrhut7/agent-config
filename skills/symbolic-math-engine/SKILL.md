@@ -21,6 +21,7 @@ description: 使用 math_engine.py 執行精確數學運算。支援符號簡化
 - **範例**：求 $h = u/v$ 對 $\hat{v}_{air}^b = [u, v, w]^T$ 的 Jacobian。
   ```bash
   python scripts/math_engine.py '{"task": "derive", "expr": "u/v", "vars": ["u", "v", "w"]}'
+  ```
 
 ### B. 反對稱矩陣 (Skew-symmetric)
 用於交叉乘積的符號運算，常見於姿態誤差模型 $[v \times]$。
@@ -40,4 +41,8 @@ description: 使用 math_engine.py 執行精確數學運算。支援符號簡化
 記錄誤差關係：$\delta v_{air}^b = C_l^b \delta v^l + C_l^b [v_{air}^l \times] \delta \psi$。
 
 - 步驟 C: 組合 H 矩陣 (矩陣乘法符號運算)
-Agent 將利用步驟 A 的結果 $J_v$ 與使用者定義的 $C_l^b$ 行列式進行符號相乘 ($J_v \cdot C_l^b$) 以形成完整的 $H$ 矩陣報告。注意事項優先級：當用戶提及「推導」、「Jacobian」、「偏微分」時，必須使用此技能。依賴：執行環境需預裝 sympy, numpy。
+Agent 將利用步驟 A 的結果 $J_v$ 與使用者定義的 $C_l^b$ 行列式進行符號相乘 ($J_v \cdot C_l^b$) 以形成完整的 $H$ 矩陣報告。
+
+## 注意事項
+- **優先級**：當用戶提及「推導」、「Jacobian」、「偏微分」時，必須使用此技能。
+- **依賴**：執行環境需預裝 `sympy`, `numpy`。
