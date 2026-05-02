@@ -1,23 +1,23 @@
 ---
 name: analyzing-branch-differences
-description: 讀取兩個 Git 分支間的差異並執行深度分析。識別邏輯變更、架構影響及潛在風險。於執行代碼審查、準備合併請求（PR）或追蹤版本差異時使用。
+description: Read the differences between two Git branches and perform in-depth analysis. Identify logic changes, architectural impacts, and potential risks. Trigger whenever the user asks to analyze branch differences, perform code reviews, prepare Pull Requests (PR), or track version differences.
 ---
 
-# 分支差異深度分析
+# Deep Analysis of Branch Differences
 
-## 核心規則
-- **結構化分析**：分析過程必須涵蓋「邏輯變更」、「破壞性修改（Breaking Changes）」與「風險評估」。
-- **技術精準度**：保留原始技術術語，並對演算法或通訊協定的修改進行深入探討。
-- **漸進式讀取**：若差異過大，應先列出檔案清單，再按需讀取特定檔案內容。
+## Core Rules
+- **Structured Analysis**: The analysis process must cover "Logic Changes", "Breaking Changes", and "Risk Assessment".
+- **Technical Precision**: Retain original technical terminology and provide in-depth discussions on modifications to algorithms or communication protocols.
+- **Progressive Disclosure**: If the difference is too large, first list the files, then read specific file contents as needed.
 
-## 深度分析工作流
-請複製並執行以下清單，以確保分析的完整性：
+## Deep Analysis Workflow
+Please copy and execute the following checklist to ensure the completeness of the analysis:
 
 ```text
-分析進度：
-- [ ] 步驟 1：獲取分支差異清單 (`git diff <base>..<compare> --stat`)
-- [ ] 步驟 2：分類變更範疇 (邏輯/配置/文件)
-- [ ] 步驟 3：執行深度代碼走查 (Deep Code Walkthrough)
-- [ ] 步驟 4：評估架構影響與潛在風險
-- [ ] 步驟 5：生成結構化分析報告（參考 [REPORT_TEMPLATE.md](REPORT_TEMPLATE.md)）
-```
+Analysis Progress:
+- [ ] Step 1: Obtain branch difference list (`git diff <base>..<compare> --stat`)
+- [ ] Step 2: Categorize change scope (Logic/Config/Docs)
+- [ ] Step 3: Perform Deep Code Walkthrough
+- [ ] Step 4: Assess architectural impacts and potential risks
+- [ ] Step 5: Generate a structured analysis report (refer to [REPORT_TEMPLATE.md](REPORT_TEMPLATE.md))
+```

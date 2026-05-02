@@ -1,20 +1,20 @@
-# 監督者驗證清單 (Supervisor Verification Checklist)
+# Supervisor Verification Checklist
 
-監督者在批准執行者的成果前，必須逐項核對：
+The supervisor must check item by item before approving the executor's results:
 
-## 目標一致性
-- [ ] 產出是否解決了原始 User Prompt 中的核心問題？
-- [ ] 是否有無關的過度工程 (Over-engineering)？
+## Goal Consistency
+- [ ] Did the output solve the core problem in the original User Prompt?
+- [ ] Is there any irrelevant over-engineering?
 
-## 程式碼品質
-- [ ] 變數命名是否清晰且具備一致性？
-- [ ] 是否處理了潛在的例外狀況 (Exception Handling)？
-- [ ] 是否包含必要的註解說明？
+## Code Quality
+- [ ] Are variable names clear and consistent?
+- [ ] Are potential exception conditions (Exception Handling) handled?
+- [ ] Are necessary comments and explanations included?
 
-## 邏輯與效能
-- [ ] 演算法的時間/空間複雜度是否在可接受範圍？
-- [ ] 是否存在硬編碼 (Hard-coded) 的巫毒常數？
+## Logic and Performance
+- [ ] Is the time/space complexity of the algorithm within an acceptable range?
+- [ ] Are there hard-coded voodoo constants?
 
-## 失敗分析 (若發生錯誤)
-- [ ] 錯誤是因為環境問題、語法錯誤，還是邏輯悖論？
-- [ ] 下一次修復計畫是否能避免重複相同的錯誤？
+## Failure Analysis (If an error occurs)
+- [ ] Was the error due to environmental issues, syntax errors, or logic paradoxes?
+- [ ] Will the next repair plan avoid repeating the same mistake?

@@ -1,45 +1,45 @@
 ---
 name: recording-stage-progress
-description: 將執行的階段性結果、中間數據或決策直接寫入並附加至 Markdown 檔案中。當進行長任務、複雜分析或需要跨輪次保留資訊時使用，防止資訊因上下文過長而遺失。
+description: Directly write and append stage results, intermediate data, or decisions to a Markdown file. Use this during long tasks, complex analysis, or when information needs to be retained across turns, preventing information loss due to long contexts.
 ---
 
-# 階段性進度紀錄
+# Stage Progress Recording
 
-## 核心功能
+## Core Function
 
-此技能負責在執行複雜或多步驟任務時，將中間結果以標準化的 Markdown 格式直接附加 (Append) 到紀錄檔案（如 `progress.md` 或 `session_log.md`）中，以建立可追溯的執行日誌。
+This skill is responsible for directly appending intermediate results in a standardized Markdown format to a record file (such as `progress.md` or `session_log.md`) during the execution of complex or multi-step tasks, establishing a traceable execution log.
 
-## 紀錄格式標準
+## Record Format Standards
 
-每次寫入或附加內容時，必須嚴格遵守以下結構。請確保每個紀錄點之間使用水平線 (`---`) 區隔：
+Every time you write or append content, you must strictly follow the structure below. Ensure that each record point is separated by a horizontal rule (`---`):
 
 ```markdown
-### [YYYY-MM-DD HH:MM] 階段：[階段名稱]
-- **執行狀態**：[成功 / 部分完成 / 發生錯誤]
-- **關鍵輸出**：
-  [將完整資料輸出結果、摘要、錯誤訊息或分析結果放置於此]
-- **遺留問題 / 下一步**：[紀錄尚未解決的問題或下一步動作]
+### [YYYY-MM-DD HH:MM] Stage: [Stage Name]
+- **Execution Status**: [Success / Partially Complete / Error Occurred]
+- **Key Output**:
+  [Place the complete data output results, summary, error messages, or analysis results here]
+- **Remaining Issues / Next Steps**: [Record unresolved issues or the next action]
 
 ---
 ```
 
-## 執行流程
+## Execution Flow
 
-1. **識別紀錄點**：在完成一個子任務、取得重要數據，或準備切換到下一個工作流之前主動觸發。
-2. **準備內容**：按照上述「紀錄格式標準」整理當前的上下文與結果，盡可能保留資訊，避免斷章取義。
-3. **附加至檔案**：使用系統的文件編輯工具或 Bash 指令，將內容直接附加到目標 `.md` 檔案的結尾。
+1. **Identify Record Points**: Proactively trigger this before completing a sub-task, obtaining important data, or preparing to switch to the next workflow.
+2. **Prepare Content**: Organize the current context and results according to the "Record Format Standards" above, preserving as much information as possible to avoid taking things out of context.
+3. **Append to File**: Use the system's file editing tools or Bash commands to directly append the content to the end of the target `.md` file.
 
-   **Bash 附加操作範例**（若使用 bash 工具）：
+   **Bash Append Operation Example** (if using bash tools):
    ```bash
    cat >> progress.md << 'EOF'
    
-   ### [2026-04-07 16:30] 階段：API 數據初步抓取
-   - **執行狀態**：成功
-   - **關鍵輸出**：
-     已成功獲取 50 頁的商品列表，數據結構確認包含 `id`, `price`, `stock`。
-   - **遺留問題 / 下一步**：開始進行價格欄位的資料清理與正規化。
+   ### [2026-04-07 16:30] Stage: Initial API Data Scraping
+   - **Execution Status**: Success
+   - **Key Output**:
+     Successfully retrieved 50 pages of the product list. Data structure confirmed to include `id`, `price`, `stock`.
+   - **Remaining Issues / Next Steps**: Begin data cleaning and normalization of the price field.
    
    ---
    EOF
    ```
-4. **品質驗證**：確保寫入時沒有覆蓋掉先前的歷史紀錄（必須是 Append 而非 Overwrite）。
+4. **Quality Verification**: Ensure that the write operation did not overwrite previous historical records (it must be Append, not Overwrite).

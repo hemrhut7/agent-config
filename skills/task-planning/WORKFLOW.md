@@ -1,21 +1,21 @@
-# 通用工作流詳細 SOP
+# General Workflow Detailed SOP
 
-## 階段 1：釐清引導
-- 我們現在試圖解決什麼問題？
-- 成功的具體指標是什麼（例如：代碼通過測試、錯誤率低於 1%、文章字數符合需求）？
+## Stage 1: Clarify Guidance
+- What problem are we trying to solve now?
+- What are the specific indicators of success (e.g., code passes tests, error rate below 1%, word count meets requirements)?
 
-## 階段 2：設計引導
-- **拆解**：如果這個任務是一台機器，它的組件是什麼？
-- **假設**：如果我改變變量 A，會發生結果 B 嗎？
-- **驗證器**：我將如何「證明」這個步驟成功了？
+## Stage 2: Design Guidance
+- **Deconstruction**: If this task is a machine, what are its components?
+- **Hypothesis**: If I change variable A, will result B occur?
+- **Validator**: How will I "prove" this step was successful?
 
-## 階段 5：遞迴驗證清單
-當進入此循環時，請 Agent 自問：
-- [ ] 這次嘗試改善了結果嗎？
-- [ ] 失敗的原因是「邏輯錯誤」還是「環境配置問題」？
-- [ ] 我需要調整「目標 (階段 1)」還是調整「方法 (階段 2)」？
+## Stage 5: Recursive Verification Checklist
+When entering this loop, the Agent should ask itself:
+- [ ] Did this attempt improve the result?
+- [ ] Is the cause of failure a "logic error" or an "environment configuration issue"?
+- [ ] Do I need to adjust the "Goal (Stage 1)" or the "Method (Stage 2)"?
 
-**決策路徑**：
-1. **RMSE 下降**：紀錄成功，嘗試進一步優化。
-2. **無顯著變化**：撤銷當前修改，尋找新的證據路徑。
-3. **結果惡化**：立即回退，並重新分析階段 2 的假設。
+**Decision Path**:
+1. **RMSE Drops**: Record success, try to optimize further.
+2. **No Significant Change**: Revert current modification, look for new evidence paths.
+3. **Result Worsens**: Revert immediately and re-analyze the hypothesis in Stage 2.

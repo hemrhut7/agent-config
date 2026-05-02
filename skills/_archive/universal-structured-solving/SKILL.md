@@ -1,42 +1,42 @@
 ---
 name: universal-structured-solving
-description: 執行通用的六階段問題解決與任務管理。透過目標釐清、實驗設計、實證執行、結果評估與遞迴驗證，系統化地完成複雜任務並產出最終報告。適用於開發、分析、實驗與決策場景。
+description: Execute a universal six-stage problem solving and task management workflow. Systematically complete complex tasks and produce final reports through goal clarification, experimental design, empirical execution, result evaluation, and recursive verification. Applicable to development, analysis, experiments, and decision-making scenarios.
 ---
 
-# 通用結構化問題解決技能 (Universal Solver)
+# Universal Structured Problem Solving Skill (Universal Solver)
 
-此技能將任何複雜請求轉化為一個嚴謹的、受控的執行流程，確保任務目標與最終產出高度一致。
+This skill transforms any complex request into a rigorous, controlled execution workflow, ensuring the task goals and final outputs are highly consistent.
 
-## 核心工作流大綱
+## Core Workflow Outline
 
-代理必須按順序執行以下階段，並在階段變更時明確標註：
+The Agent must sequentially execute the following stages and clearly mark stage changes:
 
-### 階段 1：目標或問題原因釐清
-- **目標**：定義「成功」的具體樣貌或找出問題的核心痛點。
-- **產出**：明確的任務定義清單。
+### Stage 1: Clarification of Goal or Problem Cause
+- **Goal**: Define the specific appearance of "success" or identify the core pain points of the problem.
+- **Output**: A clear task definition list.
 
-### 階段 2：設計子項目與實驗設計
-- **目標**：將大任務拆解為可執行的子單元。
-- **行動**：提出假設、規劃實驗參數、定義量化指標。
+### Stage 2: Sub-project and Experimental Design
+- **Goal**: Break down the large task into executable sub-units.
+- **Action**: Propose hypotheses, plan experimental parameters, define quantitative metrics.
 
-### 階段 3：執行與尋找證據
-- **目標**：實作解決方案並蒐集物理證據。
-- **行動**：執行代碼、查詢數據、進行對比測試，證明假設是否成立。
+### Stage 3: Execution and Finding Evidence
+- **Goal**: Implement solutions and gather physical evidence.
+- **Action**: Execute code, query data, conduct comparison tests to prove whether the hypothesis stands.
 
-### 階段 4：結果分析與評估
-- **目標**：對比「實際結果」與「階段 1 的預期目標」。
-- **重點**：分析偏差原因，評估當前路徑的有效性。
+### Stage 4: Result Analysis and Evaluation
+- **Goal**: Compare "actual results" with the "expected goals of Stage 1".
+- **Focus**: Analyze reasons for deviations and evaluate the effectiveness of the current path.
 
-### 階段 5：遞迴驗證循環 (Recursive Loop)
-- **模式**：計畫 → 執行 → 驗證 → 修正。
-- **邏輯**：若階段 4 評估未達標，則回退至階段 2 重新設計，直到結果收斂。
+### Stage 5: Recursive Verification Loop
+- **Pattern**: Plan → Execute → Verify → Correct.
+- **Logic**: If Stage 4 evaluation fails to meet the standard, revert to Stage 2 for redesign until results converge.
 
-### 階段 6：最終報告
-- **產出**：包含過程紀錄、修正歷程、最終數據與結論的完整報告。
+### Stage 6: Final Report
+- **Output**: A complete report containing process records, correction history, final data, and conclusions.
 
-## 漸進式揭露
-- 關於各階段的詳細檢查點 (Checklists)，請參閱 [WORKFLOW.md](WORKFLOW.md)。
+## Progressive Disclosure
+- For detailed checklists of each stage, please refer to [WORKFLOW.md](WORKFLOW.md).
 
-## 核心原則
-- **實證導向**：所有結論必須基於階段 3 蒐集的證據。
-- **拒絕巫毒常數**：任何參數調整或邏輯變更必須有設計依據。
+## Core Principles
+- **Evidence-Oriented**: All conclusions must be based on evidence collected in Stage 3.
+- **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.

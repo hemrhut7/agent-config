@@ -1,109 +1,109 @@
 ---
 name: task-planning
-description: 負責進行深入的問題分析、目標拆解與任務規劃。當用戶提出複雜需求、專案啟動或需要結構化執行步驟時使用。此技能整合了三種工作模式：快速規劃、完整六階段解決、雙角色（執行者/監督者）模式。
+description: Responsible for in-depth problem analysis, goal breakdown, and task planning. Use when users pose complex requirements, start new projects, or need structured execution steps. This skill integrates three working modes: Fast Planning, Complete Six-Stage Solution, and Dual Role (Executor/Supervisor) Mode.
 ---
 
-# 任務規劃與問題解決
+# Task Planning and Problem Solving
 
-此技能整合了三種工作模式，根據任務複雜度自動選擇或由用戶指定。
+This skill integrates three working modes, automatically selected based on task complexity or specified by the user.
 
-## 模式選擇指南
+## Mode Selection Guide
 
-| 複雜度 | 模式 | 適用場景 |
+| Complexity | Mode | Applicable Scenarios |
 |:---|:---|:---|
-| 低 | **快速規劃** | 功能新增、單一模組修改 |
-| 中 | **結構化解決** | 跨模組重構、實驗設計與驗證 |
-| 高 | **雙角色模式** | 高風險修改、多步驟除錯、容易陷入試錯循環的問題 |
+| Low | **Fast Planning** | Feature additions, single module modifications |
+| Medium | **Structured Solution** | Cross-module refactoring, experimental design and verification |
+| High | **Dual Role Mode** | High-risk modifications, multi-step debugging, problems prone to trial-and-error loops |
 
 ---
 
-## 模式 A：快速規劃
+## Mode A: Fast Planning
 
-### 執行流程
-1. **問題分析**：識別核心需求、潛在限制與技術挑戰。
-2. **制定計劃**：將目標拆解為可執行的原子任務。
-3. **產出文檔**：將結果寫入 `plan.md`，不要馬上開始執行。
-4. **驗證循環**：對照 [ANALYSIS_FRAMEWORK.md](ANALYSIS_FRAMEWORK.md) 檢查是否有遺漏的邊界情況。
+### Execution Flow
+1. **Problem Analysis**: Identify core requirements, potential constraints, and technical challenges.
+2. **Formulate Plan**: Break down the goal into executable atomic tasks.
+3. **Produce Document**: Write the results into `plan.md`. Do not start execution immediately.
+4. **Verification Loop**: Check against [ANALYSIS_FRAMEWORK.md](ANALYSIS_FRAMEWORK.md) for any missed edge cases.
 
-### 計畫模板 (plan.md)
+### Plan Template (plan.md)
 
 ```markdown
-# 任務執行計畫：[標題]
+# Task Execution Plan: [Title]
 
-## 1. 需求分析
-- **核心目標**：[簡短描述最終交付物]
-- **範疇說明**：[包含與不包含的部分]
+## 1. Requirement Analysis
+- **Core Goal**: [Brief description of the final deliverable]
+- **Scope Explanation**: [What is included and what is not]
 
-## 2. 任務清單 (Checklist)
-- [ ] **階段一：準備工作**
-    - [ ] 任務 1.1...
-- [ ] **階段二：核心開發/執行**
-    - [ ] 任務 2.1...
-- [ ] **階段三：驗證與優化**
-    - [ ] 任務 3.1...
+## 2. Task Checklist
+- [ ] **Phase 1: Preparation**
+    - [ ] Task 1.1...
+- [ ] **Phase 2: Core Development/Execution**
+    - [ ] Task 2.1...
+- [ ] **Phase 3: Verification and Optimization**
+    - [ ] Task 3.1...
 
-## 3. 風險與對策
-- [風險點] -> [預防或補救措施]
+## 3. Risks and Countermeasures
+- [Risk Point] -> [Prevention or Remediation Measure]
 ```
 
 ---
 
-## 模式 B：結構化解決（六階段）
+## Mode B: Structured Solution (Six Stages)
 
-適用於需要實驗設計、假設驗證的複雜任務。
+Applicable for complex tasks requiring experimental design and hypothesis verification.
 
-### 階段 1：目標或問題原因釐清
-- 定義「成功」的具體樣貌或找出問題的核心痛點。
-- **產出**：明確的任務定義清單。
+### Stage 1: Clarification of Goal or Problem Cause
+- Define the specific appearance of "success" or identify the core pain points of the problem.
+- **Output**: A clear task definition list.
 
-### 階段 2：設計子項目與實驗設計
-- 將大任務拆解為可執行的子單元。
-- 提出假設、規劃實驗參數、定義量化指標。
+### Stage 2: Sub-project and Experimental Design
+- Break down the large task into executable sub-units.
+- Propose hypotheses, plan experimental parameters, define quantitative metrics.
 
-### 階段 3：執行與尋找證據
-- 執行代碼、查詢數據、進行對比測試，證明假設是否成立。
+### Stage 3: Execution and Finding Evidence
+- Execute code, query data, conduct comparison tests to prove whether the hypothesis stands.
 
-### 階段 4：結果分析與評估
-- 對比「實際結果」與「階段 1 的預期目標」。
-- 分析偏差原因，評估當前路徑的有效性。
+### Stage 4: Result Analysis and Evaluation
+- Compare "actual results" with the "expected goals of Stage 1".
+- Analyze reasons for deviations and evaluate the effectiveness of the current path.
 
-### 階段 5：遞迴驗證循環
-- **模式**：計畫 → 執行 → 驗證 → 修正。
-- 若評估未達標，回退至階段 2 重新設計，**最多迭代 3 次**。
+### Stage 5: Recursive Verification Loop
+- **Pattern**: Plan → Execute → Verify → Correct.
+- If evaluation fails to meet the standard, revert to Stage 2 for redesign. **Max iterations: 3**.
 
-### 階段 6：最終報告
-- 包含過程紀錄、修正歷程、最終數據與結論的完整報告。
+### Stage 6: Final Report
+- A complete report containing process records, correction history, final data, and conclusions.
 
-詳細檢查點請參閱 [WORKFLOW.md](WORKFLOW.md)。
-
----
-
-## 模式 C：雙角色模式（高風險任務）
-
-當面對高風險、容易陷入試錯循環的問題時，交替執行「執行者」與「監督者」角色。
-
-### 角色定義
-
-**[Executor Mode] 執行者**：
-- 撰寫程式碼、修改現有邏輯、執行腳本、解讀錯誤訊息。
-- 發生錯誤時，提供具體的修復嘗試而非僅描述問題。
-
-**[Supervisor Mode] 監督者**：
-- 定義成功標準、審查代碼、分析問題根因。
-- 嚴格檢查邊界情況（Edge Cases）與效能問題。
-- 參考 [CHECKLIST.md](CHECKLIST.md) 進行深度檢驗。
-
-### 協作循環
-1. **[Supervisor]** 定義目標與計畫
-2. **[Executor]** 實作與執行
-3. **[Supervisor]** 嚴格審查（對照標準）
-4. **[Supervisor]** 決策：合格則輸出結論，不合格則分析原因並要求修正
-5. **最大迭代次數：5 次**，超過則停止並回報根因分析
+For detailed checkpoints, please refer to [WORKFLOW.md](WORKFLOW.md).
 
 ---
 
-## 核心原則
-- **實證導向**：所有結論必須基於蒐集的證據。
-- **拒絕巫毒常數**：任何參數調整或邏輯變更必須有設計依據。
-- **原子化**：確保清單中的每個任務都能在單次對話輪次中完成。
-- **實驗紀錄**：涉及測試結果時，使用 `recording-stage-progress` 技能保留紀錄。
+## Mode C: Dual Role Mode (High-Risk Tasks)
+
+When facing high-risk problems prone to trial-and-error loops, alternately execute the roles of "Executor" and "Supervisor".
+
+### Role Definitions
+
+**[Executor Mode]**:
+- Write code, modify existing logic, execute scripts, decipher error messages.
+- When an error occurs, provide specific repair attempts instead of just describing the problem.
+
+**[Supervisor Mode]**:
+- Define success criteria, review code, analyze problem root causes.
+- Strictly check edge cases and performance issues.
+- Refer to [CHECKLIST.md](CHECKLIST.md) for deep inspection.
+
+### Collaboration Loop
+1. **[Supervisor]** Define goal and plan
+2. **[Executor]** Implementation and execution
+3. **[Supervisor]** Strict review (against standards)
+4. **[Supervisor]** Decision: if qualified output conclusion, if not analyze cause and request corrections
+5. **Max Iterations: 5**, if exceeded stop and report root cause analysis
+
+---
+
+## Core Principles
+- **Evidence-Oriented**: All conclusions must be based on collected evidence.
+- **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.
+- **Atomization**: Ensure every task in the list can be completed in a single conversation turn.
+- **Experiment Records**: When test results are involved, use the `recording-stage-progress` skill to keep records.

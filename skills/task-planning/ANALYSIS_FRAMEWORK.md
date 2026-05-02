@@ -1,19 +1,19 @@
-# 深度分析框架
+# Deep Analysis Framework
 
-## 思考維度
+## Thinking Dimensions
 
-### 1. 依賴關係分析
-- 哪些任務必須優先完成？
-- 是否存在外部 API 或資源的阻塞點？
+### 1. Dependency Analysis
+- Which tasks must be completed first?
+- Are there blocking points from external APIs or resources?
 
-### 2. 邊界情況 (Edge Cases)
-- 輸入資料為空時的處理？
-- 網路延遲或權限不足的錯誤路徑？
+### 2. Edge Cases
+- How to handle empty input data?
+- Error paths for network delays or insufficient permissions?
 
-### 3. 資源預算
-- 令牌 (Tokens) 消耗預估：若任務過大，是否需要拆分子計畫？
-- 時間複雜度：演算法是否優化？
+### 3. Resource Budget
+- Tokens consumption estimate: If the task is too large, do we need to split it into sub-plans?
+- Time complexity: Is the algorithm optimized?
 
-## 驗證清單
-- [ ] 計畫是否具備「回滾機制」？
-- [ ] 每個步驟是否有明確的成功定義 (Definition of Done)？
+## Verification Checklist
+- [ ] Does the plan have a "rollback mechanism"?
+- [ ] Does each step have a clear Definition of Done?

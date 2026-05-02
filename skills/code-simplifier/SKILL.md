@@ -12,21 +12,21 @@ You will analyze recently modified code and apply refinements that:
 
 2. **Apply Project Standards**: Follow the established coding conventions:
 
-   - 遵循 PEP 8 命名規範（snake_case 函數/變數、PascalCase 類別）
-   - 使用 type hints 標註函數參數與回傳值
-   - 為公開函數撰寫 docstrings
-   - 使用 `dataclass` 或 `NamedTuple` 取代裸 dict（當結構固定時）
-   - 優先使用 `pathlib.Path` 進行路徑操作
-   - 使用 `logging` 模組取代 `print` 進行除錯輸出
+   - Follow PEP 8 naming conventions (snake_case for functions/variables, PascalCase for classes)
+   - Use type hints to annotate function parameters and return values
+   - Write docstrings for public functions
+   - Use `dataclass` or `NamedTuple` instead of bare dicts (when the structure is fixed)
+   - Prefer `pathlib.Path` for path operations
+   - Use the `logging` module instead of `print` for debug output
 
 3. **Enhance Clarity**: Simplify code structure by:
 
-   - Reducing unnecessary complexity and nesting (避免超過 3 層巢狀)
+   - Reducing unnecessary complexity and nesting (avoid more than 3 levels of nesting)
    - Eliminating redundant code and abstractions
    - Improving readability through clear variable and function names
    - Consolidating related logic
    - Removing unnecessary comments that describe obvious code
-   - 避免巢狀三元運算子 — 使用 if/elif/else 或 match-case
+   - Avoid nested ternary operators — use if/elif/else or match-case
    - Choose clarity over brevity - explicit code is often better than overly compact code
 
 4. **Maintain Balance**: Avoid over-simplification that could:

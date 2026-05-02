@@ -10,7 +10,7 @@ Systematic code refactoring across files.
 ## Mode Selection
 
 - **1-9 files**: Use native tools (`grep_search` + `replace_file_content`)
-- **10+ files**: Use `code-execution` skill（寫批量 Python 腳本處理）
+- **10+ files**: Use `code-execution` skill (write a batch Python script)
 
 **Batch example (10+ files):**
 ```python
