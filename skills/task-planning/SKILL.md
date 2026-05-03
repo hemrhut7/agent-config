@@ -24,6 +24,7 @@ This skill integrates three working modes, automatically selected based on task 
 2. **Formulate Plan**: Break down the goal into executable atomic tasks.
 3. **Produce Document**: Write the results into `plan.md`. Do not start execution immediately.
 4. **Verification Loop**: Check against [ANALYSIS_FRAMEWORK.md](ANALYSIS_FRAMEWORK.md) for any missed edge cases.
+5. **Cleanup**: Delete `plan.md` and any temporary scratch files (e.g., from `.agent_scratchpad/` or `scratch/`) once the task is completed and verified.
 
 ### Plan Template (plan.md)
 
@@ -71,8 +72,9 @@ Applicable for complex tasks requiring experimental design and hypothesis verifi
 - **Pattern**: Plan → Execute → Verify → Correct.
 - If evaluation fails to meet the standard, revert to Stage 2 for redesign. **Max iterations: 3**.
 
-### Stage 6: Final Report
+### Stage 6: Final Report and Cleanup
 - A complete report containing process records, correction history, final data, and conclusions.
+- **Cleanup**: Delete all temporary planning files (e.g., `plan.md`) and intermediate scratch scripts. **Crucial**: Do not remove the outputs or results (data, plots, reports) generated during the stages to allow for user review.
 
 For detailed checkpoints, please refer to [WORKFLOW.md](WORKFLOW.md).
 
@@ -99,6 +101,7 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 3. **[Supervisor]** Strict review (against standards)
 4. **[Supervisor]** Decision: if qualified output conclusion, if not analyze cause and request corrections
 5. **Max Iterations: 5**, if exceeded stop and report root cause analysis
+6. **Cleanup**: Upon reaching qualification and documenting the final solution, delete all temporary files and the execution plan.
 
 ---
 
@@ -107,3 +110,4 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 - **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.
 - **Atomization**: Ensure every task in the list can be completed in a single conversation turn.
 - **Experiment Records**: When test results are involved, use the `recording-stage-progress` skill to keep records.
+- **Workspace Hygiene**: All temporary files created for planning or execution (e.g., `plan.md`, `scratch/` scripts, or `.agent_scratchpad/`) must be deleted once the task is completed and verified. Always preserve final results, output data, and reports for user inspection.
