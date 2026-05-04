@@ -1,6 +1,6 @@
 ---
 name: algorithm-error-quantizer
-description: Detect algorithm updates, modify test scripts to extract error metrics (like RMSE, MAE), execute benchmark comparisons, and forcefully restore the environment state upon completion. Use this to quantify algorithm optimization effects while ensuring a clean workspace. Trigger whenever the user asks to measure algorithm improvements, calculate errors, or compare performance metrics.
+description: "Detect algorithm updates, modify test scripts to extract error metrics (like RMSE, MAE), execute benchmark comparisons, and forcefully restore the environment state upon completion. Use this to quantify algorithm optimization effects while ensuring a clean workspace. Trigger whenever the user asks to measure algorithm improvements, calculate errors, or compare performance metrics."
 ---
 
 # Algorithm Error Quantization and Environment Management
@@ -45,4 +45,4 @@ Your reply must include the following structure:
 | [e.g., RMSE] | [Value] | [Value] | [▲/▼ %] |
 
 **Environment Verification**:
-- ✅ The workspace environment has been fully restored with no residual temporary modifications.
+- ✅ The workspace environment has been fully restored with no residual temporary modifications.

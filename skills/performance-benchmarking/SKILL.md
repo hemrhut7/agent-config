@@ -1,6 +1,6 @@
 ---
 name: performance-benchmarking
-description: Verify computational performance differences between multiple code implementations. Includes automated test design, statistical data collection, and performance bottleneck analysis. Use when optimizing algorithms, comparing different libraries, or evaluating system scalability.
+description: "Verify computational performance differences between multiple code implementations. Includes automated test design, statistical data collection, and performance bottleneck analysis. Use when optimizing algorithms, comparing different libraries, or evaluating system scalability."
 ---
 
 # Performance Benchmarking Skill

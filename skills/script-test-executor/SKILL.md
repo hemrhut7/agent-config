@@ -1,6 +1,6 @@
 ---
 name: script-test-executor
-description: Creates, executes, and cleans up temporary test scripts within a hidden directory inside the current project root to avoid external folder permission issues.
+description: "Creates, executes, and cleans up temporary test scripts within a hidden directory inside the current project root to avoid external folder permission issues."
 ---
 
 # Local Project Test Executor Skill

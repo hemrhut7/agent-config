@@ -1,6 +1,6 @@
 ---
 name: task-planning
-description: Responsible for in-depth problem analysis, goal breakdown, and task planning. Use when users pose complex requirements, start new projects, or need structured execution steps. This skill integrates three working modes: Fast Planning, Complete Six-Stage Solution, and Dual Role (Executor/Supervisor) Mode.
+description: "Responsible for in-depth problem analysis, goal breakdown, and task planning. Use when users pose complex requirements, start new projects, or need structured execution steps. This skill integrates three working modes: Fast Planning, Complete Six-Stage Solution, and Dual Role (Executor/Supervisor) Mode."
 ---
 
 # Task Planning and Problem Solving
@@ -110,4 +110,4 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 - **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.
 - **Atomization**: Ensure every task in the list can be completed in a single conversation turn.
 - **Experiment Records**: When test results are involved, use the `recording-stage-progress` skill to keep records.
-- **Workspace Hygiene**: All temporary files created for planning or execution (e.g., `plan.md`, `scratch/` scripts, or `.agent_scratchpad/`) must be deleted once the task is completed and verified. Always preserve final results, output data, and reports for user inspection.
+- **Workspace Hygiene**: All temporary files created for planning or execution (e.g., `plan.md`, `scratch/` scripts, or `.agent_scratchpad/`) must be deleted once the task is completed and verified. Always preserve final results, output data, and reports for user inspection.

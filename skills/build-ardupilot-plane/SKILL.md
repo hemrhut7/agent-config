@@ -1,6 +1,6 @@
 ---
 name: build-ardupilot-plane
-description: Build Ardupilot Plane firmware using waf, featuring state monitoring and automated error analysis. Prioritizes incremental compilation and optimizes output handling to prevent Terminal hanging. Trigger whenever the user asks to compile Ardupilot, build plane firmware, or run waf commands.
+description: "Build Ardupilot Plane firmware using waf, featuring state monitoring and automated error analysis. Prioritizes incremental compilation and optimizes output handling to prevent Terminal hanging. Trigger whenever the user asks to compile Ardupilot, build plane firmware, or run waf commands."
 ---
 
 # Build Ardupilot Plane Skill (Monitored Version)

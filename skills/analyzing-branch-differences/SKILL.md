@@ -1,6 +1,6 @@
 ---
 name: analyzing-branch-differences
-description: Read the differences between two Git branches and perform in-depth analysis. Identify logic changes, architectural impacts, and potential risks. Trigger whenever the user asks to analyze branch differences, perform code reviews, prepare Pull Requests (PR), or track version differences.
+description: "Read the differences between two Git branches and perform in-depth analysis. Identify logic changes, architectural impacts, and potential risks. Trigger whenever the user asks to analyze branch differences, perform code reviews, prepare Pull Requests (PR), or track version differences."
 ---
 
 # Deep Analysis of Branch Differences
@@ -20,4 +20,4 @@ Analysis Progress:
 - [ ] Step 3: Perform Deep Code Walkthrough
 - [ ] Step 4: Assess architectural impacts and potential risks
 - [ ] Step 5: Generate a structured analysis report (refer to [REPORT_TEMPLATE.md](REPORT_TEMPLATE.md))
-```
+```

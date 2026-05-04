@@ -1,6 +1,6 @@
 ---
 name: code-execution
-description: Execute batch file operations or complex multi-step workflows using Python scripts. Use when tasks involve batch processing of 10+ files, data transformation, or automated processes.
+description: "Execute batch file operations or complex multi-step workflows using Python scripts. Use when tasks involve batch processing of 10+ files, data transformation, or automated processes."
 ---
 
 # Batch Code Execution

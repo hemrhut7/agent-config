@@ -1,6 +1,6 @@
 ---
 name: git-committer
-description: Analyze Git changes, generate standardized commit messages, and execute commits. Force trigger this workflow when the user mentions 'commit', 'save', 'stash the changes', or when version control needs to be advanced after completing a long task.
+description: "Analyze Git changes, generate standardized commit messages, and execute commits. Force trigger this workflow when the user mentions 'commit', 'save', 'stash the changes', or when version control needs to be advanced after completing a long task."
 ---
 
 # Git Commit Management Workflow

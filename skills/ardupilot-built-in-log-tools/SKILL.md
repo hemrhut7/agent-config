@@ -1,6 +1,6 @@
 ---
 name: ardupilot-built-in-log-tools
-description: Use built-in pymavlink tools to perform deep analysis on ArduPilot logs (.bin, .tlog). Supports parameter extraction, message filtering, CSV export, and trend plotting. Trigger whenever the user asks to analyze Ardupilot telemetry logs, parse bin files, or plot data from flight logs.
+description: "Use built-in pymavlink tools to perform deep analysis on ArduPilot logs (.bin, .tlog). Supports parameter extraction, message filtering, CSV export, and trend plotting. Trigger whenever the user asks to analyze Ardupilot telemetry logs, parse bin files, or plot data from flight logs."
 ---
 
 # ArduPilot Built-in Tool Management Skill

@@ -1,6 +1,6 @@
 ---
 name: symbolic-math-engine
-description: Execute exact mathematical operations using math_engine.py. Supports symbolic simplification, partial differentiation, Jacobian matrices, and linear algebra (including skew-symmetric matrix generation). Use when handling navigation error models (like EKF observation matrices) or complex physical formula derivations. Verbal reasoning is strictly prohibited.
+description: "Execute exact mathematical operations using math_engine.py. Supports symbolic simplification, partial differentiation, Jacobian matrices, and linear algebra (including skew-symmetric matrix generation). Use when handling navigation error models (like EKF observation matrices) or complex physical formula derivations. Verbal reasoning is strictly prohibited."
 ---
 
 # Mathematical Operations and Symbolic Derivation Engine
@@ -45,4 +45,4 @@ The Agent will use the result $J_v$ from Step A and symbolically multiply it wit
 
 ## Notes
 - **Priority**: You must use this skill when the user mentions "derivation", "Jacobian", or "partial differentiation".
-- **Dependencies**: The execution environment must have `sympy` and `numpy` installed.
+- **Dependencies**: The execution environment must have `sympy` and `numpy` installed.

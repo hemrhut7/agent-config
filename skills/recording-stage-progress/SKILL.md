@@ -1,6 +1,6 @@
 ---
 name: recording-stage-progress
-description: Directly write and append stage results, intermediate data, or decisions to a Markdown file. Use this during long tasks, complex analysis, or when information needs to be retained across turns, preventing information loss due to long contexts.
+description: "Directly write and append stage results, intermediate data, or decisions to a Markdown file. Use this during long tasks, complex analysis, or when information needs to be retained across turns, preventing information loss due to long contexts."
 ---
 
 # Stage Progress Recording

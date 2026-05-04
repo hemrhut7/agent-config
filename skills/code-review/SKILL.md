@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use this skill whenever the user asks for a code review, analyze current code changes (git diff), compare specific branches, or review git logs. It performs a comprehensive analysis of the code change logic, performance implications, maintainability, and identifies potential bugs. Make sure to use this skill whenever the user mentions reviewing code, checking for bugs in recent changes, or comparing branch implementations.
+description: "Use this skill whenever the user asks for a code review, analyze current code changes (git diff), compare specific branches, or review git logs. It performs a comprehensive analysis of the code change logic, performance implications, maintainability, and identifies potential bugs. Make sure to use this skill whenever the user mentions reviewing code, checking for bugs in recent changes, or comparing branch implementations."
 ---
 
 # Code Review Skill

@@ -1,6 +1,6 @@
 ---
 name: compiling-platformio-projects
-description: Use PlatformIO (PIO) to compile and build embedded development projects. Trigger when the user requests compiling code, running a build, running pio run, or handling .ino/.cpp hardware projects.
+description: "Use PlatformIO (PIO) to compile and build embedded development projects. Trigger when the user requests compiling code, running a build, running pio run, or handling .ino/.cpp hardware projects."
 ---
 # PlatformIO Compilation Skill
 

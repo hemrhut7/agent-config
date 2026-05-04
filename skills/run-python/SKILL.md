@@ -1,6 +1,6 @@
 ---
 name: run-python
-description: Executes Python commands strictly through the project's `.venv`. Includes output monitoring to prevent terminal hanging during high-volume logging.
+description: "Executes Python commands strictly through the project's `.venv`. Includes output monitoring to prevent terminal hanging during high-volume logging."
 ---
 
 # Python Venv Executor (Monitored)
