@@ -18,7 +18,7 @@ This skill ensures that all temporary diagnostic or test scripts are self-contai
    - **Mandatory**: Use a unique filename to avoid overwriting existing files.
 
 3. **Execution (Follow Rules)**:
-   - For Python: Execute using the `python-venv-executor` skill (via `./.venv`).
+   - For Python: Execute using the `run-python` (python-executor) skill.
    - For C++: Use the local compiler or `make` within the project context.
 
 4. **Guaranteed Cleanup**:
@@ -32,5 +32,5 @@ This skill ensures that all temporary diagnostic or test scripts are self-contai
 ### Running a local Python diagnostic
 1. `mkdir -p .agent_scratchpad`
 2. Write `diag.py` to `.agent_scratchpad/diag.py`
-3. `./.venv/bin/python -u .agent_scratchpad/diag.py`
+3. `./.venv/bin/python -u .agent_scratchpad/diag.py` (Following `run-python` logic)
 4. `rm -rf .agent_scratchpad`
