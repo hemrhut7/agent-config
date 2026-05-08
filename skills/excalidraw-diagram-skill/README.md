@@ -8,7 +8,7 @@ Compatible with any coding agent that supports skills. For agents that read from
 
 - **Diagrams that argue, not display.** Every shape/group of shapes mirrors the concept it represents — fan-outs for one-to-many, timelines for sequences, convergence for aggregation. No uniform card grids.
 - **Evidence artifacts.** As an example, technical diagrams include real code snippets and actual JSON payloads.
-- **Built-in visual validation.** A Playwright-based render pipeline lets the agent see its own output, catch layout issues (overlapping text, misaligned arrows, unbalanced spacing), and fix them in a loop before delivering.
+- **Structural Integrity.** Emphasizes mathematical verification of element sizes and mandatory two-way binding for all connections to ensure the diagram remains robust even when the local renderer is unavailable.
 - **Brand-customizable.** All colors and brand styles live in a single file (`references/color-palette.md`). Swap it out and every diagram follows your palette.
 
 ## Installation

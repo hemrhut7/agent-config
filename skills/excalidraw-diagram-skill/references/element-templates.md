@@ -2,6 +2,29 @@
 
 Copy-paste JSON templates for each Excalidraw element type. The `strokeColor` and `backgroundColor` values are placeholders — always pull actual colors from `color-palette.md` based on the element's semantic purpose.
 
+## CRITICAL RULES FOR GENERATION
+
+### 1. Two-Way Binding (Mandatory)
+For ALL connections and text containers, you MUST perform two-way binding:
+- **Arrows**: 
+    - Arrow object must have `startBinding` and `endBinding`.
+    - BOTH source and target shapes MUST include the arrow's ID in their `boundElements` array: `{"id": "arrow_id", "type": "arrow"}`.
+- **Text Containers**: 
+    - The Text element MUST have `containerId: "shape_id"`.
+    - The Shape element MUST include the text element's ID in its `boundElements` array: `{"id": "text_id", "type": "text"}`.
+- **Why**: Failure to do this causes "redundant text boxes" (text acting as a separate object) and broken connections when moving shapes.
+
+### 2. Arrow Penetration Prevention
+To prevent arrows from piercing into the shape's interior:
+- **Gap**: Always set `gap: 8` (or higher) in `startBinding` and `endBinding`.
+- **Coordinates**: Ensure the arrow's `x`, `y` and `points` end exactly at the boundary of the shape's bounding box, not the center.
+
+### 3. Box Sizing (Prevent Overflow)
+Use these mathematical safeguards for boxes containing text (fontSize 16):
+- **Width**: `(longest_line_char_count * 12) + 60` (increased for safety)
+- **Height**: `(number_of_lines * 25) + 40`
+- **Minimums**: Never use a width smaller than 150 or a height smaller than 70 for labeled boxes.
+
 ## Free-Floating Text (no container)
 ```json
 {
