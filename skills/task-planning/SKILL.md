@@ -1,11 +1,16 @@
 ---
 name: task-planning
-description: "Responsible for in-depth problem analysis, goal breakdown, and task planning. Use when users pose complex requirements, start new projects, or need structured execution steps. This skill integrates three working modes: Fast Planning, Complete Six-Stage Solution, and Dual Role (Executor/Supervisor) Mode."
+description: "Use when users pose complex requirements, start new projects, or need structured execution steps - provides multi-mode analysis (Fast, Structured, Dual Role) and enforces workspace hygiene."
 ---
 
 # Task Planning and Problem Solving
 
-This skill integrates three working modes, automatically selected based on task complexity or specified by the user.
+## Red Flags
+
+- Starting execution without a committed `plan.md`.
+- Combining multiple complex tasks into one turn.
+- Using "TBD" or placeholders in the plan.
+- **Skipping TDD or Systematic Debugging** during implementation. See `test-driven-development`.
 
 ## Mode Selection Guide
 

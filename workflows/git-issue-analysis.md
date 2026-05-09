@@ -1,55 +1,56 @@
 ---
-description: 讀取特定的 GitHub Issue，分析相關的 Git Commit 內容與執行結果，並在 Issue 下方自動回覆分析報告。當用戶要求追蹤 Issue 進度或確認程式碼變更對 Issue 的影響時使用。
+description: Read a specific GitHub Issue, analyze related Git commits and execution results, and automatically reply with an analysis report under the issue. Use when the user requests to track issue progress or confirm the impact of code changes on an issue.
 ---
 
-# Git Issue 分析與回覆工作流
-讀取特定的 GitHub Issue，分析相關的 Git Commit 內容與執行結果，並在 Issue 下方自動回覆分析報告。當用戶要求追蹤 Issue 進度或確認程式碼變更對 Issue 的影響時使用。
+# Git Issue Analysis & Response Workflow
 
-## 核心工作流
+Reads a specific GitHub Issue, analyzes related Git commits and execution results, and automatically replies with an analysis report under the issue. Use when the user requests to track issue progress or confirm the impact of code changes on an issue.
 
-請複製以下清單並在執行過程中追蹤進度：
+## Core Workflow
 
-任務進度：
+Please copy this checklist and track progress during execution:
 
-    [ ] 步驟 1：讀取 Issue 詳情與上下文
+Task Progress:
 
-    [ ] 步驟 2：提取關鍵關鍵字並檢索 Git Log
+    [ ] Step 1: Read Issue details and context
 
-    [ ] 步驟 3：分析 Commit 內容與程式差異 (Diff)
+    [ ] Step 2: Extract key terms and retrieve Git Log
 
-    [ ] 步驟 4：撰寫分析報告並回覆於 Issue
+    [ ] Step 3: Analyze commit content and code differences (Diff)
 
-### 步驟 1：讀取 Issue 詳情
-使用 `github:get_issue` 工具獲取 Issue 的標題、描述以及既有的留言內容。識別該 Issue 核心要解決的問題點。
+    [ ] Step 4: Draft analysis report and reply to the Issue
 
-### 步驟 2：分析 Git 提交
-檢索與該 Issue 相關的近期程式碼變更：
-1. 使用 `git:log` 查看近期的 Commit Messages。
-2. 尋找包含 Issue 編號或相關關鍵字的提交。
-3. 對於關鍵的提交，使用 `git:show` 或 `git:diff` 查看實際的程式碼改動。
+### Step 1: Read Issue Details
+Use the `github:get_issue` tool to retrieve the title, description, and existing comments of the issue. Identify the core problem to be solved.
 
-### 步驟 3：確認執行結果
-根據 Commit 內容與註解，判斷：
-- 是否修復了目標 Bug 或完成了新功能。
-- 是否包含測試通過的記錄（例如 CI/CD 狀態或 Commit 中的測試輸出）。
-- 是否有遺留的邊界情況未處理。
+### Step 2: Analyze Git Commits
+Retrieve recent code changes related to the issue:
+1. Use `git:log` to view recent commit messages.
+2. Search for commits containing the issue number or related keywords.
+3. For key commits, use `git:show` or `git:diff` to view actual code changes.
 
-### 步驟 4：回覆 Issue
-使用 `github:create_issue_comment` 提交回覆。回覆內容應保持專業、簡潔，並遵循以下結構：
+### Step 3: Confirm Execution Results
+Based on commit content and comments, determine:
+- Whether the target bug was fixed or the new feature was completed.
+- Whether there are records of passed tests (e.g., CI/CD status or test output in commits).
+- Whether there are remaining edge cases left unhandled.
 
-**回覆模板：**
-> ### 🔍 自動化分析報告
+### Step 4: Reply to Issue
+Use `github:create_issue_comment` to submit a reply. The content should be professional, concise, and follow this structure:
+
+**Reply Template:**
+> ### 🔍 Automated Analysis Report
 > 
-> **相關提交：** [列出短 Hash 或 Commit 標題]
-> **執行結果分析：**
-> - [簡述程式碼變更點]
-> - [確認目前的執行狀態/測試結果] (可根據更新內容評估是否量化有測試結果可以量化 `algorithm-error-quantizer` )
+> **Related Commits:** [List short hashes or commit titles]
+> **Execution Result Analysis:**
+> - [Briefly describe code change points]
+> - [Confirm current execution status/test results] (If applicable, reference quantification results from `algorithm-error-quantizer`)
 > 
-> **結論：** (例如：已修復 / 尚需進一步測試 / 已部署至開發環境)
+> **Conclusion:** (e.g., Fixed / Further testing required / Deployed to development environment)
 
 ---
 
-## 最佳實踐準則
-- **保持客觀**：僅根據 Git Diff 與 Issue 描述進行分析，不臆測開發者的意圖。
-- **引用路徑**：若提及特定程式碼行數，請註明檔案路徑。
-- **避免重複**：若 Issue 下方已有相同資訊的留言，則更新分析角度或僅摘要新進度。
+## Best Practice Guidelines
+- **Maintain Objectivity**: Analyze solely based on Git Diff and issue description; do not speculate on developer intent.
+- **Reference Paths**: If specific code lines are mentioned, provide the file path.
+- **Avoid Redundancy**: If the issue already contains a comment with identical information, provide a new analytical perspective or summarize only the latest progress.

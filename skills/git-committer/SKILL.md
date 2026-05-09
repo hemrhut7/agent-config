@@ -15,6 +15,10 @@ description: "Analyze Git changes, generate standardized commit messages, and ex
 - **Plan Before Action**: After analysis, always present a comprehensive plan (including any necessary submodule repairs or intermediate commits) and the proposed message. Wait for user approval before modifying any files or executing any state-changing git commands.
 - **Commit Confirmation**: Ensure you confirm the message content and the sequence of actions with the user before executing `commit`.
 
+<EXTREMELY-IMPORTANT>
+You MUST STOP and ask the user to confirm the final commit message before running any commit command. DO NOT assume the proposed message is final.
+</EXTREMELY-IMPORTANT>
+
 ## Execution Workflow
 
 1. **One-Click Extraction Analysis**:

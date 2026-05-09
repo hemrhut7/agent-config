@@ -1,6 +1,6 @@
 ---
 name: algorithm-error-quantizer
-description: "Detect algorithm updates, modify test scripts to extract error metrics (like RMSE, MAE), execute benchmark comparisons, and forcefully restore the environment state upon completion. Use this to quantify algorithm optimization effects while ensuring a clean workspace. Trigger whenever the user asks to measure algorithm improvements, calculate errors, or compare performance metrics."
+description: "Use when algorithm updates are detected or when the user asks to measure performance improvements - quantifies optimization effects (RMSE, MAE) and ensures workspace hygiene via environment restoration."
 ---
 
 # Algorithm Error Quantization and Environment Management
@@ -8,6 +8,14 @@ description: "Detect algorithm updates, modify test scripts to extract error met
 ## Core Principles
 - **Accuracy First**: Prioritize error and accuracy metrics over system execution speed.
 - **Zero Persistence**: Strictly prohibit submitting temporarily modified test scripts to the version control system.
+
+## Red Flags
+
+| Violation | Reality |
+| :--- | :--- |
+| Submitting temporary logs or scripts. | Pollutes repo. **MUST** restore state before reporting. |
+| Using "feel" instead of metrics. | Subjective. **MUST** use quantitative improvement data. |
+| Skipping baseline testing. | No comparison possible. **MUST** establish baseline first. |
 
 ## Execution Workflow
 
