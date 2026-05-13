@@ -1,42 +1,118 @@
 ---
 name: task-planning
-description: 負責進行深入的問題分析、目標拆解與任務規劃。當用戶提出複雜需求、專案啟動或需要結構化執行步驟時使用。此技能會產出或更新 plan.md 文件。
+description: "Use when users pose complex requirements, start new projects, or need structured execution steps - provides multi-mode analysis (Fast, Structured, Dual Role) and enforces workspace hygiene."
 ---
 
-# 任務規劃與分析
+# Task Planning and Problem Solving
 
-## 執行流程
+## Red Flags
 
-1. **問題分析**：識別核心需求、潛在限制與技術挑戰。
-2. **制定計劃**：將目標拆解為可執行的原子任務。
-3. **產出文檔**：將結果寫入 `plan.md`，不要馬上開始執行。
-4. **驗證循環**：對照 [ANALYSIS_FRAMEWORK.md](ANALYSIS_FRAMEWORK.md) 檢查是否有遺漏的邊界情況。
+- Starting execution without a committed `plan.md`.
+- Combining multiple complex tasks into one turn.
+- Using "TBD" or placeholders in the plan.
+- **Skipping TDD or Systematic Debugging** during implementation. See `test-driven-development`.
 
-## 計畫模板 (plan.md)
+## Mode Selection Guide
 
-執行規劃時，必須嚴格遵守以下 `plan.md` 結構：
+| Complexity | Mode | Applicable Scenarios |
+|:---|:---|:---|
+| Low | **Fast Planning** | Feature additions, single module modifications |
+| Medium | **Structured Solution** | Cross-module refactoring, experimental design and verification |
+| High | **Dual Role Mode** | High-risk modifications, multi-step debugging, problems prone to trial-and-error loops |
+
+---
+
+## Mode A: Fast Planning
+
+### Execution Flow
+1. **Problem Analysis**: Identify core requirements, potential constraints, and technical challenges.
+2. **Formulate Plan**: Break down the goal into executable atomic tasks.
+3. **Produce Document**: Write the results into `plan.md`. Do not start execution immediately.
+4. **Verification Loop**: Check against [ANALYSIS_FRAMEWORK.md](ANALYSIS_FRAMEWORK.md) for any missed edge cases.
+5. **Cleanup**: Delete `plan.md` and any temporary scratch files (e.g., from `.agent_scratchpad/` or `scratch/`) once the task is completed and verified.
+
+### Plan Template (plan.md)
 
 ```markdown
-# 任務執行計畫：[標題]
+# Task Execution Plan: [Title]
 
-## 1. 需求分析
-- **核心目標**：[簡短描述最終交付物]
-- **範疇說明**：[包含與不包含的部分]
+## 1. Requirement Analysis
+- **Core Goal**: [Brief description of the final deliverable]
+- **Scope Explanation**: [What is included and what is not]
 
-## 2. 任務清單 (Checklist)
-- [ ] **階段一：準備工作**
-    - [ ] 任務 1.1...
-- [ ] **階段二：核心開發/執行**
-    - [ ] 任務 2.1...
-- [ ] **階段三：驗證與優化**
-    - [ ] 任務 3.1...
+## 2. Task Checklist
+- [ ] **Phase 1: Preparation**
+    - [ ] Task 1.1...
+- [ ] **Phase 2: Core Development/Execution**
+    - [ ] Task 2.1...
+- [ ] **Phase 3: Verification and Optimization**
+    - [ ] Task 3.1...
 
-## 3. 風險與對策
-- [風險點] -> [預防或補救措施]
+## 3. Risks and Countermeasures
+- [Risk Point] -> [Prevention or Remediation Measure]
 ```
 
-## 最佳實踐
-- **原子化**：確保清單中的每個任務都能在單次對話輪次中完成。
-- **動態更新**：隨著任務進度，應即時更新 `plan.md` 中的狀態。
-- **預防推卸**：若規劃中涉及環境設置，需提供具體指令而非僅描述步驟。
-- **實驗紀錄**：若規劃中包含實際測試的實驗結果，新建立一個 markdown 檔案來紀錄這些結果，避免記憶遺失 (`recording-stage-progress`)。
+---
+
+## Mode B: Structured Solution (Six Stages)
+
+Applicable for complex tasks requiring experimental design and hypothesis verification.
+
+### Stage 1: Clarification of Goal or Problem Cause
+- Define the specific appearance of "success" or identify the core pain points of the problem.
+- **Output**: A clear task definition list.
+
+### Stage 2: Sub-project and Experimental Design
+- Break down the large task into executable sub-units.
+- Propose hypotheses, plan experimental parameters, define quantitative metrics.
+
+### Stage 3: Execution and Finding Evidence
+- Execute code, query data, conduct comparison tests to prove whether the hypothesis stands.
+
+### Stage 4: Result Analysis and Evaluation
+- Compare "actual results" with the "expected goals of Stage 1".
+- Analyze reasons for deviations and evaluate the effectiveness of the current path.
+
+### Stage 5: Recursive Verification Loop
+- **Pattern**: Plan → Execute → Verify → Correct.
+- If evaluation fails to meet the standard, revert to Stage 2 for redesign. **Max iterations: 3**.
+
+### Stage 6: Final Report and Cleanup
+- A complete report containing process records, correction history, final data, and conclusions.
+- **Cleanup**: Delete all temporary planning files (e.g., `plan.md`) and intermediate scratch scripts. **Crucial**: Do not remove the outputs or results (data, plots, reports) generated during the stages to allow for user review.
+
+For detailed checkpoints, please refer to [WORKFLOW.md](WORKFLOW.md).
+
+---
+
+## Mode C: Dual Role Mode (High-Risk Tasks)
+
+When facing high-risk problems prone to trial-and-error loops, alternately execute the roles of "Executor" and "Supervisor".
+
+### Role Definitions
+
+**[Executor Mode]**:
+- Write code, modify existing logic, execute scripts, decipher error messages.
+- When an error occurs, provide specific repair attempts instead of just describing the problem.
+
+**[Supervisor Mode]**:
+- Define success criteria, review code, analyze problem root causes.
+- Strictly check edge cases and performance issues.
+- Refer to [CHECKLIST.md](CHECKLIST.md) for deep inspection.
+
+### Collaboration Loop
+1. **[Supervisor]** Define goal and plan
+2. **[Executor]** Implementation and execution
+3. **[Supervisor]** Strict review (against standards)
+4. **[Supervisor]** Decision: if qualified output conclusion, if not analyze cause and request corrections
+5. **Max Iterations: 5**, if exceeded stop and report root cause analysis
+6. **Cleanup**: Upon reaching qualification and documenting the final solution, delete all temporary files and the execution plan.
+
+---
+
+## Core Principles
+- **Evidence-Oriented**: All conclusions must be based on collected evidence.
+- **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.
+- **Atomization**: Ensure every task in the list can be completed in a single conversation turn.
+- **Experiment Records**: When test results are involved, use the `recording-stage-progress` skill to keep records.
+- **Workspace Hygiene**: All temporary files created for planning or execution (e.g., `plan.md`, `scratch/` scripts, or `.agent_scratchpad/`) must be deleted once the task is completed and verified. Always preserve final results, output data, and reports for user inspection.

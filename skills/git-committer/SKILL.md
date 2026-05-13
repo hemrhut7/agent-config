@@ -1,45 +1,48 @@
 ---
-name: managing-git-commits
-description: 分析 Git 暫存區變更、生成符合規範的提交訊息並執行 commit。於用戶要求提交程式碼或完成任務後需存檔時使用。
+name: git-committer
+description: "Analyze Git changes, generate standardized commit messages, and execute commits. Force trigger this workflow when the user mentions 'commit', 'save', 'stash the changes', or when version control needs to be advanced after completing a long task."
 ---
 
-# Git 提交管理工作流
+# Git Commit Management Workflow
 
-## 核心規則
-- **自動化優先**：優先調用 `.agents/skills/git-committer/scripts/git_helper.py` 獲取變更內容。
-- **分析全面**：在提交前，應分析包括已暫存（Staged）與未暫存（Unstaged）的所有變更，並參考最近的提交紀錄以確保上下文一致。
-- **格式合規**：請區分用戶要使用中文還是英文進行訊息撰寫，若沒特別說明則預設使用英文，
-   - 若判斷使用英文撰寫，訊息必須符合 [EN_FORMAT.md](EN_FORMAT.md) 的 規範。
-   - 若判斷使用中文撰寫，訊息必須符合 [CH_FORMAT.md](CH_FORMAT.md) 的 規範。
-- **提交確認**：執行 `commit` 前務必向使用者確認訊息內容是否需要調整。
 
-## 分析變更範圍
-在大型專案或變動較多時，**強烈建議使用暫存檔案模式**來執行以下指令，以避免 Agent 卡死：
-1. **狀態摘要**：`python .agents/skills/git-committer/scripts/git_helper.py --action get_status --file .agent_scratchpad/status.txt`
-2. **開發日誌**：`python .agents/skills/git-committer/scripts/git_helper.py --action get_log --file .agent_scratchpad/log.txt`
-3. **完整變更分析**：`python .agents/skills/git-committer/scripts/git_helper.py --action get_all_diff --file .agent_scratchpad/all_diff.txt`
+## Core Rules
+- **Automation First**: Prioritize invoking `.agents/skills/git-committer/scripts/git_helper.py --action analyze_all` to obtain all background information with one click.
+- **Comprehensive Analysis**: All changes should be confirmed before committing. The script automatically detects "Staged" and "Unstaged" changes, conflict status, and submodule status.
+- **Format Compliance**: Select language based on context (default is English).
+   - English messages: Comply with [EN_FORMAT.md](EN_FORMAT.md).
+   - Chinese messages: Comply with [CH_FORMAT.md](CH_FORMAT.md).
+- **Plan Before Action**: After analysis, always present a comprehensive plan (including any necessary submodule repairs or intermediate commits) and the proposed message. Wait for user approval before modifying any files or executing any state-changing git commands.
+- **Commit Confirmation**: Ensure you confirm the message content and the sequence of actions with the user before executing `commit`.
 
-## 大型變更優化與安全讀取協議
-對於任何可能產生大量輸出的指令，請遵循以下「安全讀取協議」：
-1. **輸出重新導向**：一律加上 `--file .agent_scratchpad/[檔名].txt`。
-2. **行數預檢**：讀取前先檢查檔案大小：`wc -l .agent_scratchpad/[檔名].txt`。
-3. **分段讀取策略**：
-   - 若行數 <= 100：可直接使用 `cat` 或 `view_file` 讀取。
-   - 若行數 > 100：使用 `head -n 100` 了解概況，並配合 `view_file` 的行號範圍功能（如 `StartLine: 101, EndLine: 200`）進行分段深入分析。
+<EXTREMELY-IMPORTANT>
+You MUST STOP and ask the user to confirm the final commit message before running any commit command. DO NOT assume the proposed message is final.
+</EXTREMELY-IMPORTANT>
 
-## 執行工作流
-1. **提取變更**：
-   - 根據分析結果，將相關變更加入暫存區（`git add`）。
-   - 對於大型變更，建議先執行 `get_diff --file [path]` 將最終提交內容暫存分析。
-   - 運行 `python .agents/skills/git-committer/scripts/git_helper.py --action get_diff` 獲取最終提交內容。
-2. **撰寫草稿**：根據 diff 內容（或暫存檔內容）與分析所得的上下文，參考 [EN_FORMAT.md](EN_FORMAT.md) 或 [CH_FORMAT.md](CH_FORMAT.md) 生成提交訊息。
-3. **驗證與修訂**：
-   - 檢查是否保留技術專有名詞（如 `EKF`, `DMA`）。
-   - 確保訊息反映了「分析變更範圍」中發現的所有核心異動。
-   - 驗證與修訂完後，須先向使用者進行內容確認。
-4. **執行提交**：運行 `python .agents/skills/git-committer/scripts/git_helper.py --action commit --message "[訊息內容]"` 執行提交。
-5. **確認提交**：執行提交後，使用 `git log -n 1` 確認完成提交。
+## Execution Workflow
 
-## 錯誤處理
-- 若無暫存變更（No staged changes），先執行 `git add`。
-- 若腳本返回錯誤，分析錯誤訊息並修正（例如：解決檔案鎖定問題）。
+1. **One-Click Extraction Analysis**:
+   Run `python .agents/skills/git-committer/scripts/git_helper.py --action analyze_all`.
+   - **Note**: If the change content is too large, the script will automatically save the report to `.agent_scratchpad/auto_analysis.md` and display a summary in the terminal. Finally, please delete the automatically generated report so it does not occupy space ('auto_analysis.md').
+   - Write the Commit Message based on the report content (read the temporary file if one exists).
+
+2. **Drafting**:
+   Generate the commit message by referencing the `Detailed Staged Diff` and `Recent Commits Context` in the report.
+
+3. **Plan and Verification**:
+   - Present the proposed commit message and a list of all intended actions (e.g., submodule updates, file additions).
+   - Check if technical jargon (e.g., `EKF`, `DMA`) is retained.
+   - Ensure the message reflects all core modifications found in the report.
+   - **STOP**: Wait for explicit user approval before proceeding to any execution.
+
+4. **Execute Commit**:
+   Run `python .agents/skills/git-committer/scripts/git_helper.py --action commit --message "[Message Content]"`.
+   - **Protection Mechanism**: If there are unresolved conflicts, the script will automatically abort the commit.
+
+5. **Confirm Commit**:
+   Use `git log -n 1` to confirm.
+
+## Error Handling
+- **No staged changes**: Run `git add` first.
+- **Conflict Warning**: If the script warns of conflicts, please resolve the conflicts first, then re-run `analyze_all`.
+- **Submodule Dirty**: If there are changes in the submodule, include the plan to process them (e.g., `cd` into submodule, commit/reset) in your proposal to the user. DO NOT process them without approval.

@@ -1,108 +1,60 @@
 ---
 name: code-execution
-description: Execute Python code locally with marketplace API access for 90%+ token savings on bulk operations. Activates when user requests bulk operations (10+ files), complex multi-step workflows, iterative processing, or mentions efficiency/performance.
+description: "Execute batch file operations or complex multi-step workflows using Python scripts. Use when tasks involve batch processing of 10+ files, data transformation, or automated processes."
 ---
 
-# Code Execution
+# Batch Code Execution
 
-Execute Python locally with API access. **90-99% token savings** for bulk operations.
+Use Python scripts to handle batch operations involving large numbers of files or multiple steps, avoiding manual processing one by one.
 
 ## When to Use
 
-- Bulk operations (10+ files)
+- Batch operations (10+ files)
 - Complex multi-step workflows
-- Iterative processing across many files
-- User mentions efficiency/performance
+- Iterative processing across multiple files
 
-## How to Use
+## Execution Strategy
 
-Use direct Python imports in Claude Code:
+### 1. Write Batch Processing Script
+Write the batch logic into a temporary Python script inside `.agent_scratchpad/`:
 
 ```python
-from execution_runtime import fs, code, transform, git
-
-# Code analysis (metadata only!)
-functions = code.find_functions('app.py', pattern='handle_.*')
-
-# File operations
-code_block = fs.copy_lines('source.py', 10, 20)
-fs.paste_code('target.py', 50, code_block)
-
-# Bulk transformations
-result = transform.rename_identifier('.', 'oldName', 'newName', '**/*.py')
-
-# Git operations
-git.git_add(['.'])
-git.git_commit('feat: refactor code')
-```
-
-**If not installed:** Run `~/.claude/plugins/marketplaces/mhattingpete-claude-skills/execution-runtime/setup.sh`
-
-## Available APIs
-
-- **Filesystem** (`fs`): copy_lines, paste_code, search_replace, batch_copy
-- **Code Analysis** (`code`): find_functions, find_classes, analyze_dependencies - returns METADATA only!
-- **Transformations** (`transform`): rename_identifier, remove_debug_statements, batch_refactor
-- **Git** (`git`): git_status, git_add, git_commit, git_push
-
-## Pattern
-
-1. **Analyze locally** (metadata only, not source)
-2. **Process locally** (all operations in execution)
-3. **Return summary** (not data!)
-
-## Examples
-
-**Bulk refactor (50 files):**
-```python
-from execution_runtime import transform
-result = transform.rename_identifier('.', 'oldName', 'newName', '**/*.py')
-# Returns: {'files_modified': 50, 'total_replacements': 247}
-```
-
-**Extract functions:**
-```python
-from execution_runtime import code, fs
-
-functions = code.find_functions('app.py', pattern='.*_util$')  # Metadata only!
-for func in functions:
-    code_block = fs.copy_lines('app.py', func['start_line'], func['end_line'])
-    fs.paste_code('utils.py', -1, code_block)
-
-result = {'functions_moved': len(functions)}
-```
-
-**Code audit (100 files):**
-```python
-from execution_runtime import code
+# .agent_scratchpad/batch_process.py
 from pathlib import Path
+import re
 
-files = list(Path('.').glob('**/*.py'))
-issues = []
+results = {"modified": 0, "skipped": 0, "errors": []}
 
-for file in files:
-    deps = code.analyze_dependencies(str(file))  # Metadata only!
-    if deps.get('complexity', 0) > 15:
-        issues.append({'file': str(file), 'complexity': deps['complexity']})
+for py_file in Path("src").rglob("*.py"):
+    content = py_file.read_text(encoding="utf-8")
+    new_content = re.sub(r"old_pattern", "new_pattern", content)
+    if new_content != content:
+        py_file.write_text(new_content, encoding="utf-8")
+        results["modified"] += 1
+    else:
+        results["skipped"] += 1
 
-result = {'files_audited': len(files), 'high_complexity': len(issues)}
+print(f"Modified: {results['modified']}, Skipped: {results['skipped']}")
 ```
+
+### 2. Execute using venv
+Follow the execution specifications of the `run-python` skill:
+```bash
+.\.venv\Scripts\python.exe -u .agent_scratchpad/batch_process.py
+```
+
+### 3. Report Summary
+Return a statistical summary (how many files were modified, how many skipped), rather than the complete file contents.
+
+### 4. Cleanup Temporary Files
+Delete the temporary script in `.agent_scratchpad/` after execution is complete.
 
 ## Best Practices
 
-✅ Return summaries, not data
-✅ Use code_analysis (returns metadata, not source)
-✅ Batch operations
-✅ Handle errors, return error count
+✅ Return statistical summaries, do not return complete file contents  
+✅ Batch process rather than operate one by one  
+✅ Use `pathlib` for cross-platform path handling  
+✅ Include error counting and handling  
 
-❌ Don't return all code to context
-❌ Don't read full source when you need metadata
-❌ Don't process files one by one
-
-## Token Savings
-
-| Files | Traditional | Execution | Savings |
-|-------|-------------|-----------|---------|
-| 10 | 5K tokens | 500 | 90% |
-| 50 | 25K tokens | 600 | 97.6% |
-| 100 | 150K tokens | 1K | 99.3% |
+❌ Do not return all code content back to the context  
+❌ Do not use editing tools file-by-file (when > 10 files)  

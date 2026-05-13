@@ -1,11 +1,11 @@
 ---
 name: file-operations
-description: Analyze files and get detailed metadata including size, line counts, modification times, and content statistics. Use when users request file information, statistics, or analysis without modifying files.
+description: "Analyze files and get detailed metadata including size, line counts, modification times, and content statistics. Use when users request file information, statistics, or analysis without modifying files."
 ---
 
 # File Operations
 
-Analyze files and retrieve metadata using Claude's native tools without modifying files.
+Analyze files and retrieve metadata using native tools without modifying files.
 
 ## When to Use
 
@@ -18,67 +18,60 @@ Analyze files and retrieve metadata using Claude's native tools without modifyin
 ## Core Operations
 
 ### File Size & Metadata
+
+**Windows (PowerShell):**
+```powershell
+Get-Item [file_path] | Select-Object Length, LastWriteTime
+Get-ChildItem [directory] | Format-Table Name, Length, LastWriteTime
+```
+
+**Linux:**
 ```bash
-stat -f "%z bytes, modified %Sm" [file_path]  # Single file
-ls -lh [directory]                             # Multiple files
-du -h [file_path]                              # Human-readable size
+stat -c "%s bytes, modified %y" [file_path]
+ls -lh [directory]
 ```
 
 ### Line Counts
+
+**Cross-platform (PowerShell):**
+```powershell
+(Get-Content [file_path]).Count                         # Single file
+Get-ChildItem [dir] -Filter *.py -Recurse | ForEach-Object { "$($_.Name): $((Get-Content $_.FullName).Count) lines" }
+```
+
+**Linux:**
 ```bash
-wc -l [file_path]                              # Single file
-wc -l [file1] [file2]                          # Multiple files
-find [dir] -name "*.py" | xargs wc -l          # Directory total
+wc -l [file_path]
+find [dir] -name "*.py" | xargs wc -l
 ```
 
 ### Content Analysis
-Use **Read** to analyze structure, then count functions/classes/imports.
+Use `view_file` to analyze structure, then use `grep_search` to count functions/classes/imports.
 
 ### Pattern Search
 ```
-Grep(pattern="^def ", output_mode="count", path="src/")        # Count functions
-Grep(pattern="TODO|FIXME", output_mode="content", -n=true)    # Find TODOs
-Grep(pattern="^import ", output_mode="count")                 # Count imports
+grep_search: pattern="^def ", SearchPath="src/"         # Find functions
+grep_search: pattern="TODO|FIXME", SearchPath="."       # Find TODOs
+grep_search: pattern="^import ", SearchPath="."         # Find imports
 ```
 
 ### Find Files
-```
-Glob(pattern="**/*.py")
-```
+Use `list_dir` to explore directory structure.
 
 ## Workflow Examples
 
 ### Comprehensive File Analysis
-1. Get size/mod time: `stat -f "%z bytes, modified %Sm" file.py`
-2. Count lines: `wc -l file.py`
-3. Read file: `Read(file_path="file.py")`
-4. Count functions: `Grep(pattern="^def ", output_mode="count")`
-5. Count classes: `Grep(pattern="^class ", output_mode="count")`
-
-### Compare File Sizes
-1. Find files: `Glob(pattern="src/**/*.py")`
-2. Get sizes: `ls -lh src/**/*.py`
-3. Total size: `du -sh src/*.py`
+1. View file: `view_file [file_path]`
+2. Count functions: `grep_search pattern="def " SearchPath="[file]"`
+3. Count classes: `grep_search pattern="class " SearchPath="[file]"`
 
 ### Code Quality Metrics
-1. Total lines: `find . -name "*.py" | xargs wc -l`
-2. Test files: `find . -name "test_*.py" | wc -l`
-3. TODOs: `Grep(pattern="TODO|FIXME|HACK", output_mode="count")`
-
-### Find Largest Files
-```bash
-find . -type f -not -path "./node_modules/*" -exec du -h {} + | sort -rh | head -20
-```
+1. Find all Python files: `list_dir [src_dir]`
+2. Search TODOs: `grep_search pattern="TODO|FIXME|HACK"`
+3. Find test files: `grep_search pattern="test_" SearchPath="."`
 
 ## Best Practices
 
-- **Non-destructive**: Use Read/stat/wc, never modify
-- **Efficient**: Read small files fully, use Grep for large files
+- **Non-destructive**: Only read and analyze, never modify
+- **Efficient**: Use `grep_search` for large codebases, `view_file` for small files
 - **Context-aware**: Compare to project averages, suggest optimizations
-
-## Integration
-
-Works with:
-- **code-auditor**: Comprehensive analysis
-- **code-transfer**: After identifying large files
-- **codebase-documenter**: Understanding file purposes

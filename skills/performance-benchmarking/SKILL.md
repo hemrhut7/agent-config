@@ -1,33 +1,33 @@
 ---
 name: performance-benchmarking
-description: 驗證多個程式碼實作之間的運算效能差異。包含自動化測試設計、統計數據收集與效能瓶頸分析。在優化演算法、比較不同庫或評估系統擴展性時使用。
+description: "Verify computational performance differences between multiple code implementations. Includes automated test design, statistical data collection, and performance bottleneck analysis. Use when optimizing algorithms, comparing different libraries, or evaluating system scalability."
 ---
 
-# 效能基準測試技能 (Performance Benchmarking)
+# Performance Benchmarking Skill
 
-此技能負責對不同的代碼實作進行科學化的效能對比。
+This skill is responsible for conducting scientific performance comparisons between different code implementations.
 
-## 核心流程
+## Core Process
 
-### 步驟 1：實驗計畫 (Experimental Design)
-在開始測試前，必須定義：
-- **受測對象**：明確標記 A 方案與 B 方案。
-- **輸入規模**：定義測試數據的大小（如：n=10, 1000, 1000000）。
-- **迭代次數**：預設為 100 次，以降低環境隨機干擾。
-**若未定義則需要向使用者確認**
+### Step 1: Experimental Design
+Before starting the test, you must define:
+- **Test Subjects**: Clearly mark Solution A and Solution B.
+- **Input Scale**: Define the size of the test data (e.g., n=10, 1000, 1000000).
+- **Iteration Count**: Defaults to 100 times to reduce random environmental interference.
+**If undefined, you need to confirm with the user.**
 
-### 步驟 2：執行測試 (Execution)
-使用 `scripts/profiler_tool.py` 或內建的 `timeit` 模組。
-- **熱身運行 (Warm-up)**：在正式計時前先運行一次，以排除快取影響。
-- **基準測量**：收集執行時間、記憶體佔用。
+### Step 2: Execution
+Use `scripts/profiler_tool.py` or the built-in `timeit` module.
+- **Warm-up**: Run once before formal timing to eliminate cache effects.
+- **Baseline Measurement**: Collect execution time and memory usage.
 
-### 步驟 3：產出結論 (Conclusion)
-結論必須包含以下結構：
-1. **數據統計**：平均值 (Mean)、中位數 (Median) 與標準差 (Standard Deviation)。
-2. **勝出者標記**：明確指出在該測試規模下表現較佳的方案。
-3. **分析建議**：解釋為什麼 A 比 B 快（如：時間複雜度、記憶體存取、語言特性）。
+### Step 3: Conclusion
+The conclusion must include the following structure:
+1. **Data Statistics**: Mean, Median, and Standard Deviation.
+2. **Winner Tagging**: Clearly indicate the solution that performed better at that test scale.
+3. **Analysis Advice**: Explain why A is faster than B (e.g., time complexity, memory access, language characteristics).
 
-## 撰寫規範
-- **避免單次測量**：嚴禁只運行一次就下結論。
-- **控制變因**：確保所有方案在完全相同的輸入與環境下運行。
-- **路徑規範**：腳本調用一律使用 `scripts/profiler_tool.py`。
+## Writing Specifications
+- **Avoid Single Measurements**: It is strictly forbidden to draw conclusions after running only once.
+- **Control Variables**: Ensure all solutions run under exactly the same inputs and environment.
+- **Path Specifications**: Script calls must always use `scripts/profiler_tool.py`.
