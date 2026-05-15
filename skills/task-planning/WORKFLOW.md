@@ -8,6 +8,7 @@
 - **Deconstruction**: If this task is a machine, what are its components?
 - **Hypothesis**: If I change variable A, will result B occur?
 - **Validator**: How will I "prove" this step was successful?
+- **Skill Matching**: Identify which specialized skills (e.g., TDD, debugging) apply to each component.
 
 ## Stage 5: Recursive Verification Checklist
 When entering this loop, the Agent should ask itself:

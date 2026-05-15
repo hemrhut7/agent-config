@@ -15,6 +15,10 @@ The supervisor must check item by item before approving the executor's results:
 - [ ] Is the time/space complexity of the algorithm within an acceptable range?
 - [ ] Are there hard-coded voodoo constants?
 
+## Planning & Skill Alignment
+- [ ] Were specialized skills properly identified and assigned during the planning phase?
+- [ ] Are high-risk tasks properly routed to `test-driven-development` or `systematic-debugging`?
+
 ## Failure Analysis (If an error occurs)
 - [ ] Was the error due to environmental issues, syntax errors, or logic paradoxes?
 - [ ] Will the next repair plan avoid repeating the same mistake?
