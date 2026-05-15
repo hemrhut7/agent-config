@@ -18,6 +18,7 @@ The supervisor must check item by item before approving the executor's results:
 ## Planning & Skill Alignment
 - [ ] Were specialized skills properly identified and assigned during the planning phase?
 - [ ] Are high-risk tasks properly routed to `test-driven-development` or `systematic-debugging`?
+- [ ] **Model Alignment**: Was a high-tier model used for Mode B/C planning?
 
 ## Failure Analysis (If an error occurs)
 - [ ] Was the error due to environmental issues, syntax errors, or logic paradoxes?

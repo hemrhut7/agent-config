@@ -10,6 +10,7 @@ description: "Use when users pose complex requirements, start new projects, or n
 - Starting execution without a committed `plan.md`.
 - Combining multiple complex tasks into one turn.
 - Using "TBD" or placeholders in the plan.
+- **Using a low-tier/flash model for Mode B or Mode C planning.** (Ensure high-reasoning models are active for complex tasks).
 - **Skipping TDD or Systematic Debugging** during implementation. See `test-driven-development`.
 
 ## Mode Selection Guide
@@ -114,6 +115,7 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 
 ## Core Principles
 - **Evidence-Oriented**: All conclusions must be based on collected evidence.
+- **Model Optimization**: For Mode B (Structured) and Mode C (Dual Role), the user should be prompted or the system should be configured to use high-tier reasoning models (e.g., Gemini 1.5 Pro) to ensure deep architectural insight. Use Flash models only for Mode A or simple script execution.
 - **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.
 - **Atomization**: Ensure every task in the list can be completed in a single conversation turn.
 - **Experiment Records**: When test results are involved, use the `recording-stage-progress` skill to keep records.

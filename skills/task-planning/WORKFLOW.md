@@ -3,6 +3,7 @@
 ## Stage 1: Clarify Guidance
 - What problem are we trying to solve now?
 - What are the specific indicators of success (e.g., code passes tests, error rate below 1%, word count meets requirements)?
+- **Model Check**: Is the current model level appropriate for this task's complexity? (Pro for B/C planning).
 
 ## Stage 2: Design Guidance
 - **Deconstruction**: If this task is a machine, what are its components?
