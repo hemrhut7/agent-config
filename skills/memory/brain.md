@@ -1,13 +1,16 @@
-<!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
-# Brain — Working Memory
+# Daily Summary - 2026-05-15
 
-## Last Updated: 2026-05-14 15:50
+## Context
+Implementing Global Batch Optimization (Scheme C) as a baseline for EKF evaluation.
 
-### Active Tasks
-- (none yet)
+## Achievements
+- Implemented `GlobalBatchOptimizer.py` for trajectory smoothing using non-linear least squares.
+- Successfully modeled and estimated GNSS Delay as a global parameter.
+- Developed `tester/GlobalBatchTester.py` for performance evaluation against existing EKF framework.
+- Extended `CoordinateTransformation.py` with `ENU2llh` support.
+- **Stabilized GlobalBatchOptimizer**: Fixed mathematical Jacobian errors and implemented dynamic pre-integration.
+- **Resolved Output Anomalies**: Fixed unit scaling and coordinate conversion bugs in analysis output, achieving 0.06m horizontal error.
 
-### Session Notes
-- Memory skill system initialized.
-
-### Pending Decisions
-- (none)
+## Pending
+- Integration of magnetic field calibration into the batch optimization loop.
+- Comparison of Batch LSM results with EKF replay for long-duration datasets.
