@@ -6,3 +6,8 @@
 - **Trigger**: cannot import name ENU2llh; TypeError: len() of unsized object in KF_Plot; AttributeError: MockKF missing my_EKF, device_name, reset_time"}
 - **Fix**: (to be determined after root cause analysis)
 - **Prevention**: (to be determined)
+
+**Pitfall: Math Header Circular Dependency**
+- **Trigger**: `Location.h` needs `Vector2F`, but `Vector2.h` needs `AP_Common.h`, which needs `Location.h`.
+- **Fix**: Move `HAL_WITH_EKF_DOUBLE` to `HAL_Config.h`, centralize types in `AP_Math_Types.h`, and remove `AP_Common.h` from math headers (use `ftype.h` for macros).
+- **Prevention**: Keep math headers leaf-like and avoid including global config headers if possible.

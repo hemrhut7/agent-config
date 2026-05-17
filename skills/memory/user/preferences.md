@@ -1,3 +1,4 @@
 - **Estimation Philosophy**: Prefers Global Batch Least Squares (Scheme C/Factor Graph) with IMU pre-integration for baseline data generation.
 - **Initialization Rule**: Avoid using EKF results for initializing baseline smoothing to prevent feedback loops. Use sensor-based initialization (accLeveling + GPS diff).
 - **Parameter Observation**: Explicitly track GNSS delay, wind states, and airspeed parameters in global optimization.
+- **Agent Workflow**: Values "Deep Memory" cycles (`@[/memory]`) to maintain context across sessions and ensure technical discipline in complex refactoring tasks.
