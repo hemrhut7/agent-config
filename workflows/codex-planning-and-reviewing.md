@@ -8,10 +8,16 @@ This workflow is designed for complex tasks where structural planning and rigoro
 
 ---
 
+## Core Directive: The Second Agent
+- **Terminal Isolation**: All `codex` commands MUST be executed in a dedicated persistent terminal session (e.g., `RequestedTerminalID: "codex_agent"`). This mimics a "Second Agent" acting as a supervisor.
+- **Primary Consultant**: For ANY troubleshooting, errors, or ambiguity, **Codex is the primary point of discussion**. Do not attempt local fixes or ask the user until Codex has been consulted for an analysis and a proposed solution.
+
+---
+
 ## Stage 1: Planning with Codex
 *Goal: Leverage Codex to analyze requirements and formulate a robust plan.*
 
-1. **Invoke Codex Planning**: Agent 1 runs `codex` in the terminal to process the `task-planning` skill.
+1. **Invoke Codex Planning**: Agent 1 runs `codex` in the dedicated **"codex_agent"** terminal to process the `task-planning` skill.
    - **Command Example**: `codex "Follow the task-planning skill to create a plan for: [USER_REQUEST]"`
 2. **Review & Solidify Plan**: Agent 1 ensures the plan is committed to `plan.md` as per the `task-planning` skill requirements.
 3. **User Approval**: Present the `plan.md` to the user and wait for approval if required.
@@ -30,10 +36,12 @@ This workflow is designed for complex tasks where structural planning and rigoro
 ## Stage 3: Audit & Recursive Review Loop
 *Goal: Ensure code quality through external validation.*
 
-1. **Invoke Codex Review**: Agent 1 runs the non-interactive review command.
+1. **Invoke Codex Review**: Agent 1 runs the non-interactive review command in the **"codex_agent"** terminal.
    - **Command**: `codex review --uncommitted`
-2. **Analyze Results**:
-   - **If issues are found**: Agent 1 must address every point raised by Codex.
+2. **Troubleshoot with Codex**:
+   - **If issues are found**: Do not fix them immediately. Prompt Codex in the **"codex_agent"** terminal for a root cause analysis and a step-by-step fix plan.
+   - **Command Example**: `codex "The review found these issues: [COPIED_RESULTS]. How should I fix these? Provide a plan."`
+   - **Address Issues**: Agent 1 follows the Codex-provided fix plan.
    - **If no issues are found**: Proceed to Stage 4.
 3. **Recursive Correction**: After applying fixes, **Return to Step 1** of this stage to re-verify the code. This loop continues until Codex provides a clean review.
 
@@ -51,10 +59,10 @@ This workflow is designed for complex tasks where structural planning and rigoro
 ## Task Progress Checklist
 
 ```markdown
-- [ ] **Stage 1**: Codex planning complete and `plan.md` created.
+- [ ] **Stage 1**: Codex planning complete in dedicated terminal.
 - [ ] **Stage 2**: Implementation complete according to plan.
 - [ ] **Stage 3**: `codex review --uncommitted` executed.
-- [ ] **Stage 3**: All issues from Codex review resolved.
+- [ ] **Stage 3**: Issues troubleshot with Codex and resolved.
 - [ ] **Stage 3**: Re-review confirmed no remaining issues (Recursive Loop closed).
 - [ ] **Stage 4**: Workspace hygiene completed (cleanup).
 ```

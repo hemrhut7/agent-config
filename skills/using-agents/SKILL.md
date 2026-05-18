@@ -17,6 +17,7 @@ YOU DO NOT HAVE A CHOICE. YOU CANNOT RATIONALIZE YOUR WAY OUT OF THIS.
 **Check for relevant skills BEFORE ANY response or action.** Even a "simple" question might be part of a complex process that requires a skill (like `task-planning`).
 
 ### Skill Priority
+0. **Memory Skills** (`memory`) - Recall background BEFORE starting any new task. Always call `Recall_Background(topic)` first.
 1. **Process Skills** (`task-planning`, `using-agents`) - These determine HOW to approach the task.
 2. **Foundational Skills** (`test-driven-development`, `systematic-debugging`) - Core engineering standards.
 3. **Domain Skills** (`algorithm-error-quantizer`, `web-artifacts-builder`) - Specific task execution.

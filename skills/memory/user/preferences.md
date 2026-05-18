@@ -21,7 +21,6 @@
 - Prefers structured planning (task-planning skill) for complex tasks
 - Values TDD and systematic debugging
 - Uses git-committer skill for version control
-
 ## Plotting & Visualization Style
 - **Matplotlib Theme**: Always use `plt.style.use('ggplot')` for all charts to ensure visual consistency.
 - **Flight Mode Backgrounds**: For time-domain plots, color-code flight modes as backgrounds (e.g., `STABILIZE` -> `lightcyan`, `FBWA` -> `lightyellow`, `CRUISE` -> `lightgreen`, `AUTO` -> `palegreen`, `QLOITER` -> `skyblue`). Label mode names at the top of the plot.

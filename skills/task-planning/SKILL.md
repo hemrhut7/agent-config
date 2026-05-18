@@ -10,6 +10,7 @@ description: "Use when users pose complex requirements, start new projects, or n
 - Starting execution without a committed `plan.md`.
 - Combining multiple complex tasks into one turn.
 - Using "TBD" or placeholders in the plan.
+- **Using a low-tier/flash model for Mode B or Mode C planning.** (Ensure high-reasoning models are active for complex tasks).
 - **Skipping TDD or Systematic Debugging** during implementation. See `test-driven-development`.
 
 ## Mode Selection Guide
@@ -29,7 +30,8 @@ description: "Use when users pose complex requirements, start new projects, or n
 2. **Formulate Plan**: Break down the goal into executable atomic tasks.
 3. **Produce Document**: Write the results into `plan.md`. Do not start execution immediately.
 4. **Verification Loop**: Check against [ANALYSIS_FRAMEWORK.md](ANALYSIS_FRAMEWORK.md) for any missed edge cases.
-5. **Cleanup**: Delete `plan.md` and any temporary scratch files (e.g., from `.agent_scratchpad/` or `scratch/`) once the task is completed and verified.
+5. **Skill Mapping**: Check if each task in the checklist can be proceeded with specialized skills.
+6. **Cleanup**: Delete `plan.md` and any temporary scratch files (e.g., from `.agent_scratchpad/` or `scratch/`) once the task is completed and verified.
 
 ### Plan Template (plan.md)
 
@@ -65,6 +67,7 @@ Applicable for complex tasks requiring experimental design and hypothesis verifi
 ### Stage 2: Sub-project and Experimental Design
 - Break down the large task into executable sub-units.
 - Propose hypotheses, plan experimental parameters, define quantitative metrics.
+- Map sub-tasks to available specialized skills.
 
 ### Stage 3: Execution and Finding Evidence
 - Execute code, query data, conduct comparison tests to prove whether the hypothesis stands.
@@ -101,7 +104,7 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 - Refer to [CHECKLIST.md](CHECKLIST.md) for deep inspection.
 
 ### Collaboration Loop
-1. **[Supervisor]** Define goal and plan
+1. **[Supervisor]** Define goal and plan (including skill check for each task)
 2. **[Executor]** Implementation and execution
 3. **[Supervisor]** Strict review (against standards)
 4. **[Supervisor]** Decision: if qualified output conclusion, if not analyze cause and request corrections
@@ -112,7 +115,9 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 
 ## Core Principles
 - **Evidence-Oriented**: All conclusions must be based on collected evidence.
+- **Model Optimization**: For Mode B (Structured) and Mode C (Dual Role), the user should be prompted or the system should be configured to use high-tier reasoning models (e.g., Gemini 1.5 Pro) to ensure deep architectural insight. Use Flash models only for Mode A or simple script execution.
 - **Reject Voodoo Constants**: Any parameter adjustment or logic change must have a design basis.
 - **Atomization**: Ensure every task in the list can be completed in a single conversation turn.
 - **Experiment Records**: When test results are involved, use the `recording-stage-progress` skill to keep records.
+- **Skill Assessment**: After finishing the task-planning, verify if each task can be handled by existing specialized skills to ensure execution quality.
 - **Workspace Hygiene**: All temporary files created for planning or execution (e.g., `plan.md`, `scratch/` scripts, or `.agent_scratchpad/`) must be deleted once the task is completed and verified. Always preserve final results, output data, and reports for user inspection.
