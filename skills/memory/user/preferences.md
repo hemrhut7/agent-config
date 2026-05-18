@@ -21,3 +21,7 @@
 - Prefers structured planning (task-planning skill) for complex tasks
 - Values TDD and systematic debugging
 - Uses git-committer skill for version control
+## Plotting & Visualization Style
+- **Matplotlib Theme**: Always use `plt.style.use('ggplot')` for all charts to ensure visual consistency.
+- **Flight Mode Backgrounds**: For time-domain plots, color-code flight modes as backgrounds (e.g., `STABILIZE` -> `lightcyan`, `FBWA` -> `lightyellow`, `CRUISE` -> `lightgreen`, `AUTO` -> `palegreen`, `QLOITER` -> `skyblue`). Label mode names at the top of the plot.
+- **GNSS Outages**: Shade simulated GNSS outages with transparent faces (`facecolor='none'`), red diagonal hatching (`edgecolor='red'`, `hatch='//'`, `alpha=0.25`), and distinct red vertical dashed borders (`ax.axvline(s_t, color='red', linestyle='--', alpha=0.25)`) to prevent color muddying with flight mode backgrounds.
