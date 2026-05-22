@@ -1,17 +1,21 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
-## Last Updated: 2026-05-20 09:27
+## Last Updated: 2026-05-22 09:15
 
 ### Active Tasks
-- [x] Integrate EKF POS geodetic coordinate parsing and llh2enu projection mapping.
-- [x] Overwrite EKF reference trajectory (XKF1 PN/PE/PD) with POS-based ENU projected coords to ensure coordinate consistency.
-- [x] Regenerate slide deck `H35_Project_Navigation_Analysis.pptx` showing horizontal tracking error is ~6.18 m, and copy it to the weekly report directory.
+- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
+- [x] Re-organize default output directories to route to `output/<log_name>/` subfolders.
+- [x] Implement robust candidate directory search paths for CSV logs when referencing relative paths.
+- [x] Complete end-to-end verification of all five tools.
+- [x] Update `tools/README.md` to reflect unified usage and options.
 
 ### Session Notes
-- Resolved the 39m tracking error anomaly: EKF's internal `XKF1` PN/PE outputs deviate from a standard flat-earth tangent plane (`llh2enu`) over long distances (20.4 km).
-- By parsing `POS` geodetic data and applying standard `llh2enu` projection, the max horizontal tracking error is corrected from 39.14m to **6.18m** (drift rate 0.3 cm/s, distance traveled error 0.01%).
-- Updated PPTX copy and logs placed in `/media/hank/B0D4B41ED4B3E4AE/文件/週報/`.
+- Standardized all tools on `--input` and `--out` CLI parameters.
+- Re-organized analysis outputs to dynamically target `output/<log_name>/<analysis_type>_Analysis/`.
+- Fixed a bug in `plot_AP-EKF_ILB-INS.py` where processing logs without InertialLabs EKF/INS replay data caused `NameError: name 't0' is not defined`.
+- Verified all tools successfully via CLI on local logs.
+- Documented new usage paradigms and formats in `tools/README.md`.
 
 ### Pending Decisions
 - none
