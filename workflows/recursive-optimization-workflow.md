@@ -35,22 +35,32 @@ This workflow is specialized for optimizing and developing mathematical models o
 
 ---
 
-## Stage 4: Automated Verification & Recursive Loop
-*Goal: Determine if further optimization is needed via strict metric checks.*
+## Stage 4: Agent-Driven Automated Verification & Recursive Loop
+*Goal: Leverage an autonomous subagent to continuously execute, evaluate, and optimize parameters/logic in a closed loop until strict quantitative KPIs are achieved.*
 
-1. **Execute Automated Tests**: Launch test scripts for full-scale data playback or simulation.
-2. **KPI Evaluation**:
-   - **Residual Stability**: Do residuals/innovation exhibit zero-mean white noise characteristics?
-   - **Convergence Path**: Is the system state stable and converging rather than oscillating or diverging?
-   - **Improvement Rate**: Is the error reduction or KPI improvement significant (>50% or as specified) compared to the Baseline?
+1. **Deploy Autonomous Optimization Agent (Subagent)**:
+   - Define or invoke a `self` subagent (or specialized optimizer) specifically tasked with driving the parameter-sweeping and evaluation loop.
+   - Provide the subagent with the active parameter configuration file (e.g., `config.py` or `EKF_params.py`), the test runner execution command (e.g., `python tester/ABC_Tester.py`), and target KPI thresholds (e.g., 2D RMSE < 0.08m).
 
-3. **Recursive Decision Logic**:
-   - **If KPIs are NOT met**:
-     - Analyze logs to determine if it is a "Model Logic Error" or "Parameter Tuning Issue."
-     - **Return to Stage 2** (Logic error) or **Stage 3** (Parameter issue) and restart the loop.
-   - **If KPIs are met but optimization potential remains**:
-     - Record the current best result and attempt to fine-tune parameters for peak performance, triggering verification again.
-   - **If all termination conditions are met**: Proceed to Stage 5.
+2. **Subagent-Driven Autonomous Execution & Verification Loop**:
+   - **Step A: Execute Test**: The subagent runs the automated test runner inside a temporary scratchpad/command runner.
+   - **Step B: Parse & Evaluate KPIs**: The subagent reads the output metrics (RMSE, MAE, residuals, covariances, state bounds).
+     - **Residual Stability**: Check if innovation residuals exhibit zero-mean white noise characteristics.
+     - **Convergence Path**: Confirm EKF covariance bounds shrink and estimate states converge without oscillation.
+     - **Improvement Rate**: Verify if the error reduction meets target benchmarks compared to the Baseline.
+   - **Step C: Recursive Decision & Self-Adjustment**:
+     - **If KPIs are NOT met (and max iterations not reached)**:
+       - The subagent analyzes the EKF state history to determine if it is a tuning issue (e.g. Q/R covariance balance) or a logic bug.
+       - If it is a tuning issue, the subagent dynamically adjusts the parameters in the config file (or runs an optimization search algorithm like Simulated Annealing or Grid Sweep) and **autonomously loops back to Step A**.
+       - If a potential code logic error is diagnosed, the subagent halts and notifies the parent agent with diagnostic details.
+     - **If KPIs are met**:
+       - The subagent records the optimal parameters, locks the configuration, and terminates the loop, reporting the final optimal KPI improvements to the parent agent.
+
+3. **Termination Criteria**:
+   - The recursive loop terminates automatically when:
+     - All KPI target metrics are fully met (Success).
+     - The improvement delta drops below a convergence threshold (e.g., $\Delta < 1\%$).
+     - The maximum iterations limit (e.g., 20 autonomous sweeps) is reached.
 
 ---
 
@@ -70,7 +80,8 @@ This workflow is specialized for optimizing and developing mathematical models o
 - [ ] **Stage 1**: Recorded Baseline KPIs for comparison.
 - [ ] **Stage 2**: Passed unit tests for core mathematical modules.
 - [ ] **Stage 3**: Completed initial parameter sweep and sensitivity analysis.
-- [ ] **Stage 4**: Residuals/Innovation satisfy zero-mean distribution.
-- [ ] **Stage 4**: KPI improvement targets met.
+- [ ] **Stage 4**: Deployed Autonomous Optimization Agent with target KPI thresholds.
+- [ ] **Stage 4**: Subagent completed autonomous recursive parameter-sweeping and evaluation loop.
+- [ ] **Stage 4**: Verified residuals, convergence, and quantitative benchmark criteria are met.
 - [ ] **Stage 5**: Completed final comparison report and documentation.
 ```
