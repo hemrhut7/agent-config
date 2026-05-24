@@ -1,6 +1,6 @@
 ---
 name: pdf
-description: "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables, high-resolution conversion for visual analysis (e.g., schematics), merging, splitting, watermarking, OCR, and form filling. If text extraction is insufficient for graphics, use the visual analysis workflow."
+description: "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill."
 license: Proprietary. LICENSE.txt has complete terms
 ---
 
@@ -230,21 +230,7 @@ pdftk input.pdf rotate 1east output rotated.pdf
 
 ## Common Tasks
 
-### High-Resolution Visual Analysis (e.g., Schematics)
-
-When standard text extraction (`pdfplumber`, `pypdf`) fails to provide enough context for complex graphics, diagrams, or schematics, use the bundled conversion script to generate high-resolution images for manual visual analysis.
-
-```bash
-# Convert PDF to high-res PNGs (300 DPI by default)
-python .agents/skills/pdf/scripts/convert_pdf_to_images.py input.pdf ./output_images --dpi 300
-```
-
-This is especially useful for:
-- Reading circuit diagrams/schematics.
-- Analyzing detailed floor plans.
-- Inspecting high-resolution photos embedded in PDFs.
-
-### OCR for Scanned PDFs
+### Extract Text from Scanned PDFs
 ```python
 # Requires: pip install pytesseract pdf2image
 import pytesseract

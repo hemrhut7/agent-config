@@ -11,8 +11,8 @@ license: Proprietary. LICENSE.txt has complete terms
 | Task | Guide |
 |------|-------|
 | Read/analyze content | `python -m markitdown presentation.pptx` |
-| Create or edit slides (Default) | **Use Node.js + PptxGenJS (Read [pptxgenjs.md](pptxgenjs.md))** |
-| Edit via XML Unpack (Fallback) | Read [editing.md](editing.md) |
+| Edit or create from template | Read [editing.md](editing.md) |
+| Create from scratch | Read [pptxgenjs.md](pptxgenjs.md) |
 
 ---
 
@@ -31,24 +31,22 @@ python scripts/office/unpack.py presentation.pptx unpacked/
 
 ---
 
-## Creating and Editing Slides (Default Method)
+## Editing Workflow
 
-**Use PptxGenJS via Node.js as the primary default method for creating or editing presentations.** Read [pptxgenjs.md](pptxgenjs.md) for full syntax and guidelines.
-
-### Workflow:
-1. Write a Node.js script (e.g., `make_presentation.js`) utilizing `pptxgenjs` to programmatically build the slides.
-2. Structure slides using professional designs, cards, colors, and shadows.
-3. Automatically embed required charts, tables, and images directly.
-4. Run the script: `node make_presentation.js`.
-
----
-
-## Editing Workflow (XML Unpack Fallback)
-
-**Read [editing.md](editing.md) for full details.** Use this only when direct XML manipulation of an existing slide is specifically preferred.
+**Read [editing.md](editing.md) for full details.**
 
 1. Analyze template with `thumbnail.py`
 2. Unpack → manipulate slides → edit content → clean → pack
+
+---
+
+## Creating from Scratch
+
+**Read [pptxgenjs.md](pptxgenjs.md) for full details.**
+
+Use when no template or reference presentation is available.
+
+---
 
 ## Design Ideas
 
