@@ -111,6 +111,19 @@ When facing high-risk problems prone to trial-and-error loops, alternately execu
 5. **Max Iterations: 5**, if exceeded stop and report root cause analysis
 6. **Cleanup**: Upon reaching qualification and documenting the final solution, delete all temporary files and the execution plan.
 
+## Codebase Research with Graphify
+
+When a task requires analyzing the codebase architecture, finding relationships between modules, or searching for specific concepts/APIs, you should prioritize using the `graphify` knowledge graph tool:
+
+1. **Leveraging the Graph**:
+   - Use `/graphify query "<question>"` to traverse the knowledge graph and locate relevant files, functions, and cross-community relationships.
+   - Use `/graphify path "ConceptA" "ConceptB"` to find shortest dependency paths between components.
+   - Use `/graphify explain "Concept"` to quickly grasp the context and connections of a core abstraction.
+
+2. **Synchronization & Quick Updates (Incremental Mode)**:
+   - **Crucial Warning**: Before query or search, always check the difference between the current codebase state and the generated graphify data version (`graphify-out/graph.json` modified timestamp vs recent git commits).
+   - **Quick Update**: If the codebase has changed since the last graphify run, run `/graphify --update` to perform a very fast incremental update. This only scans new/modified files, avoiding redundant LLM semantic processing and completing code-only updates deterministically using fast AST extraction with zero token cost.
+
 ---
 
 ## Core Principles
