@@ -57,6 +57,13 @@ Use it for:
 
 If no path was given, use `.` (current directory). Do not ask the user for a path.
 
+## Critical Windows, Shell & CLI Compatibility Guidelines
+
+When executing on **Windows (PowerShell)**, you MUST follow the **Windows Environment Memory Rules** defined under `memory/topics/topic-windows_environment.md` (specifically avoiding PowerShell stdout redirection `>` and long terminal command one-liners).
+
+For path/directory exclusions:
+- **Exclusion handling**: The `graphify.detect.detect()` API does not accept an exclusion parameter directly. Write all requested exclusions (e.g. `examples/results/**`, `data/**`) to the `.graphifyignore` file in the root directory before running file detection.
+
 Follow these steps in order. Do not skip steps.
 
 ### Step 1 - Ensure graphify is installed
@@ -637,7 +644,7 @@ print('graph.graphml written - open in Gephi, yEd, or any GraphML tool')
 ### Step 7d - MCP server (only if --mcp flag)
 
 ```bash
-python3 -m graphify.serve graphify-out/graph.json
+$(cat graphify-out/.graphify_python) -m graphify.serve graphify-out/graph.json
 ```
 
 This starts a stdio MCP server that exposes tools: `query_graph`, `get_node`, `get_neighbors`, `get_community`, `god_nodes`, `graph_stats`, `shortest_path`. Add to Claude Desktop or any MCP-compatible agent orchestrator so other agents can query the graph live.
@@ -1224,7 +1231,7 @@ Supported URL types (auto-detected):
 Start a background watcher that monitors a folder and auto-updates the graph when files change.
 
 ```bash
-python3 -m graphify.watch INPUT_PATH --debounce 3
+$(cat graphify-out/.graphify_python) -m graphify.watch INPUT_PATH --debounce 3
 ```
 
 Replace INPUT_PATH with the folder to watch. Behavior depends on what changed:
