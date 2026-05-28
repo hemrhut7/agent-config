@@ -1,5 +1,6 @@
-<!-- SCOPE: Knowledge about gps. Read when related tasks arise. -->
-# Gps
+<!-- SCOPE: Knowledge about GPS switchover and EKF integration. -->
+# GPS
 
-### [2026-05-22 17:43] Tags: gps, ekf
-ArduPilot GPS switchover logic summary: 1. AP_GPS: update_primary() selects primary_instance based on GPS_AUTO_SWITCH. A failure (timeout > 2s or quality drop) triggers a switch to GPS 2. 2. EKF3: update_gps_selection() updates selected_gps. In SelectVelPosFusion(), gpsDataDelayed.sensor_idx != last_gps_idx triggers ResetPositionNE() (and ResetPositionD() if GPS is height source) to align states with the new GPS position, compensating the jump in output observer to prevent control spikes.
+### [2026-05-22] Switchover Logic
+1. **AP_GPS Selection**: `update_primary()` selects instance based on `GPS_AUTO_SWITCH`. Failure (timeout > 2s) triggers switch.
+2. **EKF3 Alignment**: `update_gps_selection()` detects index change. `ResetPositionNE()` (and `ResetPositionD`) align states with new GPS position to prevent control spikes.

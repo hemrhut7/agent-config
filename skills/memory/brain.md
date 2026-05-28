@@ -14,13 +14,10 @@
 
 ### Session Notes
 - **InertialLabs INS-U Driver Audited and Fixed**: Audited the custom GPS lock detection and solution mapping against the INS-U ICD rev-1.43. Fixed a critical safety mapping issue where `ins_sol_status = 2` (no GNSS) was mapped to `FIX_2D`. Corrected the centidegrees scaling for `track_over_ground_raw` (which was set directly to float `yaw` degrees). Made the external GPS lock detection robust to custom packet configurations lacking `FULL_SAT_INFO` by falling back to `GNSS_POS_VALID` and `ins_sol_status`.
-- **Replay Verification of INS GPS2 Logic**: Developed post-processing script `apply_ilb_gps2.py` to rewrite GPS2/GPA2 messages in binary logs based on the new driver's status-mapping and scaling rules. Ran successful offline EKF3 replay and comparative analysis on `log_17`, confirming stable EKF3 dead-reckoning (3.25 m/s drift) during a 212-second simulated outage.
-- **Orchestrator Argument Extension**: Fixed an argument parsing limitation in `AP_Replay_Orchestrator.py` by adding support for `--parm` command line argument, allowing users to override vehicle parameters (e.g. `--parm GPS_AUTO_SWITCH=4`) dynamically during re-simulation.
-- **Log Header Corruption Resolved**: Implemented a resilient byte-by-byte resynchronization loop in `AP_LoggerFileReader::update` within `Tools/Replay/DataFlashFileReader.cpp`. The replayer now skips corrupted frames/headers and resumes reading, successfully parsing the entire log timeline (4821s vs. previously being cut off at ~3000s).
-- **Orchestrator Target Priority**: Prioritized `build/sitl/tool/Replay` over `build/linux/tool/Replay` in `AP_Replay_Orchestrator.py` because the Linux target version checks serial/GPIO arguments first and exits on custom arguments like `--outage`.
-- **Plot Labels Fixed**: Shifted flight mode labels to `y=0.95` inside the plot boundaries in `AP_ILB_Replay_Analyzer.py` to prevent text truncation.
-- **Verification**: Successfully replayed and analyzed 6 simulated outages simultaneously covering the full 4821.74s timeline.
-- **Log Parsing Knowledge Persisted**: Saved the premium "pure byte-level in-place log modification" algorithm to long-term memory under `topics/topic-log-parsing.md` for future reuse.
+- **Replay Verification of INS GPS2 Logic**: Developed post-processing script `apply_ilb_gps2.py` to rewrite GPS2/GPA2 messages in binary logs based on the new driver's status-mapping and scaling rules. Optimized the C++ replayer's online GPS1 drop logic to allow selective outage simulations without needing the deprecated `inject_outage_gps1.py` script (which has been removed).
+- **Verification**: Successfully simulated EKF3 GPS2 auto-switching on `log_26` under 6 simultaneous outages. The replayed EKF3 successfully switched to GPS2 (ILB data), keeping the estimation drift exceptionally low (down to 0.780 m/s in Outage 5, matching the external INS trajectory almost perfectly).
+- **Documentation**: Updated `Tools/Replay/README.md` to document the new simplified simulation workflow and deprecated the `inject_outage_gps1.py` script.
+- **Log Parsing Knowledge Persisted**: Saved the premium "pure byte-level in-place log modification" algorithm to long-term memory under `topics/topic-log-processing.md` for future reuse.
 ## Workspace Conventions
 - Build config files (.cmake, Makefile, platformio.ini): **read-only** without explicit permission
 - Temp files go in `.agent_scratchpad/`, never `/tmp`

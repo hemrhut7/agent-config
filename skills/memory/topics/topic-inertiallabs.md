@@ -1,5 +1,7 @@
-<!-- SCOPE: Knowledge about inertiallabs. Read when related tasks arise. -->
-# Inertiallabs
+<!-- SCOPE: Knowledge about InertialLabs INS-U driver. -->
+# InertialLabs
 
-### [2026-05-26 09:57] Tags: inertiallabs, ins-u, driver
-InertialLabs INS-U driver maps solution status 2 (no GNSS) to FIX_2D, which is unsafe. Also track_over_ground_raw needs scaling * 100.0f from float yaw degrees. SolnSVs > 3 check fails if FULL_SAT_INFO is missing from custom packet configurations, so fallback to GNSS_POS_VALID is needed.
+### [2026-05-26] INS-U Driver Fixes
+- **Status Mapping**: Corrected unsafe mapping of `solution status 2` (no GNSS) to `FIX_2D`.
+- **Scaling**: Applied `* 100.0f` scaling to `track_over_ground_raw` (float yaw degrees).
+- **Lock Detection**: Added `GNSS_POS_VALID` fallback for custom packets lacking `FULL_SAT_INFO`.
