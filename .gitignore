@@ -1,2 +1,3 @@
 *.pyc
 /.agent_scratchpad
+/skills/memory/vectordb/
