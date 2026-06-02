@@ -7,44 +7,36 @@ description: "Persistent cross-conversation memory system with file-based recall
 # Memory — Agent Persistent Knowledge System
 
 ## When to Read Sub-Files
-
-| File | Read When... |
-|:---|:---|
-| `brain.md` | Starting a conversation — resume today's context |
-| `user/preferences.md` | Composing output or choosing workflows |
-| `topics/<name>.md` | `Recall_Background` finds a match |
-| `temp_skills/<name>.md` | A generated skill is invoked |
-| `archive/*` | Deep search finds no file-level match |
+- `brain.md`: Starting a conversation — resume today's context.
+- `user/preferences.md`: Composing output or choosing workflows.
+- `topics/<name>.md`: When `Recall_Background` finds a match.
+- `temp_skills/<name>.md`: When a generated skill is invoked.
+- `archive/*`: If deep search finds no file-level match.
 
 ## Core Skills (Callable Actions)
 
 ### `Recall_Background(topic)`
-**Mandatory before new tasks.** Scans file headers → reads matching file → falls back to archive search.
-Script: `scripts/recall.py`
+Mandatory pre-task. Scans headers, reads matching file, or falls back to archive. (Script: `scripts/recall.py`)
 
 ### `Save_To_LongTerm(tags, content, storage_type)`
-Persists knowledge after task completion, user corrections, or new discoveries.
-- `storage_type`: `"file"` (topics/user) | `"vector"` (archive, future) | `"auto"`
-Script: `scripts/save.py`
+Persists knowledge after task completion or user corrections. (Script: `scripts/save.py`)
 
 ### `Reflect_On_Error(error_message)`
-Auto-triggered on script errors. Extracts pitfall patterns and persists them.
-Script: `scripts/reflect.py`
+Auto-triggered on script errors to extract pitfalls. (Script: `scripts/reflect.py`)
 
 ### `Generate_New_Skill(requirement, constraints)`
-Creates a temp skill via `skill-creator`, stores in `temp_skills/`.
-After 5 successful invocations → auto-promoted to `.agents/skills/`.
-Script: `scripts/promote.py`
+Creates temp skills pending promotion after 5 runs. (Script: `scripts/promote.py`)
+
+### `Record_Stage_Progress()`
+During complex workflows, record active tasks, milestones, and results directly in `brain.md` or a progress file to maintain context.
 
 ## Automated Processes
 
 ### Daily Summarize (Time-Gated)
-If >8 hours since last `brain.md` update, auto-suggest summarization.
-Script: `scripts/daily_summarize.py`
+If >8 hours since last update, auto-suggest summarization. (Script: `scripts/daily_summarize.py`)
 
 ### Line-Limit Enforcement
-`SKILL.md` ≤60 | `user/preferences.md` ≤40 | `topics/*.md` ≤100 per file.
-Script: `scripts/compress.py`
+`SKILL.md` ≤60 | `user/preferences.md` ≤40 | `topics/*.md` ≤100. (Script: `scripts/compress.py`)
 
 ## Directory Map
 ```
