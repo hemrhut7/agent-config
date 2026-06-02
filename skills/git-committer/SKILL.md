@@ -7,8 +7,8 @@ description: "Analyze Git changes, generate standardized commit messages, and ex
 
 
 ## Core Rules
-- **Automation First**: Prioritize invoking `.agents/skills/git-committer/scripts/git_helper.py --action analyze_all` to obtain all background information with one click.
-- **Comprehensive Analysis**: All changes should be confirmed before committing. The script automatically detects "Staged" and "Unstaged" changes, conflict status, and submodule status.
+- **Automation First & Mandatory Analysis**: You MUST execute `.agents/skills/git-committer/scripts/git_helper.py --action analyze_all` before drafting any commit message. Never draft a message based solely on memory or recent conversation history.
+- **Comprehensive Scope**: The commit message must describe all modifications detected by the analysis tool, rather than just the partial fragments discussed during the conversation.
 - **Format Compliance**: Select language based on context (default is English).
    - English messages: Comply with [EN_FORMAT.md](EN_FORMAT.md).
    - Chinese messages: Comply with [CH_FORMAT.md](CH_FORMAT.md).
