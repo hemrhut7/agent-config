@@ -39,7 +39,7 @@
 - **Replay Verification of INS GPS2 Logic**: Developed post-processing script `apply_ilb_gps2.py` to rewrite GPS2/GPA2 messages in binary logs based on the new driver's status-mapping and scaling rules. Optimized the C++ replayer's online GPS1 drop logic to allow selective outage simulations without needing the deprecated `inject_outage_gps1.py` script (which has been removed).
 - **Verification**: Successfully simulated EKF3 GPS2 auto-switching on `log_26` under 6 simultaneous outages. The replayed EKF3 successfully switched to GPS2 (ILB data), keeping the estimation drift exceptionally low (down to 0.780 m/s in Outage 5, matching the external INS trajectory almost perfectly).
 - **Documentation**: Updated `Tools/Replay/README.md` to document the new simplified simulation workflow and deprecated the `inject_outage_gps1.py` script.
-- **Log Parsing Knowledge Persisted**: Saved the premium "pure byte-level in-place log modification" algorithm to long-term memory under `topics/topic-log-processing.md` for future reuse.
+- **Log Parsing Knowledge Persisted**: Saved the premium "pure byte-level in-place log modification" algorithm to long-term memory under `topics/topic-log-parsing.md` for future reuse.
 
 
 ## Last Updated: 2026-05-31 09:15

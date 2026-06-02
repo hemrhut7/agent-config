@@ -3,5 +3,6 @@
 - **Parameter Observation**: Explicitly track GNSS delay, wind states, and airspeed parameters in global optimization.
 - **Agent Workflow**: Values "Deep Memory" cycles (`@[/memory]`) to maintain context across sessions and ensure technical discipline in complex refactoring tasks.
 - **Windows Environment Redirection**: Avoid PowerShell stdout redirection (`>`) for JSON/text files to prevent UTF-16LE conversion. Always use Python-based UTF-8 writing or specify explicit UTF-8 encoding options.
+- **Windows CLI Command Execution**: Avoid executing complex multi-line command strings on Windows. Proactively write multi-step operations to a temporary Python script in `.agent_scratchpad/`, execute it, and clean up afterwards.
 - **Codebase Research Philosophy**: Prioritize using `graphify` (`/graphify query`, `/graphify path`, `/graphify explain`) for codebase exploration and architectural searches. Always ensure the graph is in sync with the latest code updates by performing a fast incremental update (`/graphify --update`) if code changes are detected.
 
