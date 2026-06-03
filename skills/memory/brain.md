@@ -72,6 +72,9 @@
 - **Validation**: Run multi-scenario evaluations across other UDP-recorded datasets.
 - **SLAM Tuning**: Fine-tune Ceres scan-matching covariances in Cartographer configuration (`my_2d.lua`).
 - **Hardware Integration**: Verify IMU/Odometry performance on physical AGV hardware.
+- [x] Fix flight mode switching command destination synchronization mismatch in MAVLink connector
+- [x] Sort the MAVLink message rate list tree alphabetically by message name
+
 
 ## Workspace Conventions
 - Build config files (.cmake, Makefile, platformio.ini): **read-only** without explicit permission
