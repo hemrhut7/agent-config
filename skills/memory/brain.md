@@ -1,7 +1,29 @@
 # Daily Summary
-## Last Updated: 2026-05-22 09:15
+## Last Updated: 2026-06-04 11:00
 
 ### Active Tasks
+- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
+- [x] GPS switching failsafe optimization.
+
+### Achievements (GPS Switching Failsafe Optimization & InertialLabs Bugfix)
+- **Primary GPS GCS Notification**: Added `GCS_SEND_TEXT` when the primary GPS changes in `AP_GPS::update()` to print a clear notification `"GPS primary changed to %u"`.
+- **InertialLabs GPS Accuracy Unit Conversion Bug Fixed**: Discovered and resolved a unit-mismatch bug in `AP_ExternalAHRS_InertialLabs.cpp` where the raw latitude, longitude, and altitude accuracies reported by the InertialLabs INS-U (in millimeters) were passed directly to AP_GPS without converting to meters. This magnified the reported error by 1000x (e.g. 6.75cm error became 67.5m), triggering EKF pre-check rejections and locking the system in a failsafe alarm. Fixed by multiplying accuracies by `1e-3f` and populated `horizontal_vel_accuracy`.
+- **GPS Switch Grace Period Optimization in EKF3**:
+  - Reset EKF position drift accumulator `gpsDriftNE = 0.0f` and reference coordinate `gpsloc_prev` when the EKF detects a GPS switch (`preferred_gps != last_preferred_gps`). This eliminates the ground-based 12-second drift failsafe transient.
+  - Instantly reset accuracy variables to raw new GPS metrics on switch to prevent 20-second decay lag.
+  - Dynamically reduced EKF quality check recovery threshold (`align_recover_threshold`) and EKF stability recovery threshold (`stable_recover_threshold`) to **2 seconds** instead of 10 seconds if the target GPS is reported as healthy by its driver (`status >= GPS_OK_FIX_3D`). This reduces the EKF Ground Switch recovery time from 32 seconds to 4 seconds, avoiding unwanted EKF failsafes while maintaining core EKF checks.
+
+## Last Updated: 2026-06-02 16:15
+- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
+- [x] GPS switching failsafe optimization.
+
+### Achievements (GPS Switching Failsafe Optimization & EKF Aiding Recovery)
+- **Primary GPS GCS Notification**: Added `GCS_SEND_TEXT` when the primary GPS changes in `AP_GPS::update()` to print a clear notification `"GPS primary changed to %u"`.
+- **GPS Switch Grace Period Optimization in EKF3**:
+  - Reset EKF position drift accumulator `gpsDriftNE = 0.0f` and reference coordinate `gpsloc_prev` when the EKF detects a GPS switch (`preferred_gps != last_preferred_gps`). This eliminates the ground-based 12-second drift failsafe transient.
+  - Dynamically reduced EKF quality check recovery threshold (`align_recover_threshold`) and EKF stability recovery threshold (`stable_recover_threshold`) to **2 seconds** instead of 10 seconds if the target GPS is reported as healthy by its driver (`status >= GPS_OK_FIX_3D`). This reduces the EKF Ground Switch recovery time from 32 seconds to 4 seconds, avoiding unwanted EKF failsafes while maintaining core EKF checks.
+
+## Last Updated: 2026-05-22 09:15
 - [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
 - [x] Re-organize default output directories to route to `output/<log_name>/` subfolders.
 - [x] Implement robust candidate directory search paths for CSV logs when referencing relative paths.
