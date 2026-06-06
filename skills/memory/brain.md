@@ -1,109 +1,22 @@
-# Daily Summary
+<!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
+# Brain — Working Memory
 
-## Last Updated: 2026-06-04 16:41
-
-### Achievements (Multi-Log Vibration Comparison Graph & Report Integration)
-- Updated `tools/single_log_vibration_analysis.py` to include `ap_vibe_ilb` in the returned data of `analyze_log_file`.
-- Implemented `gvt_vibration_comparison.png` generation inside `generate_multi_log_comparison` which aligns and overlays the accelerometer vibration magnitude over time for the InertialLabs ILB IMU across all logs.
-- Preserved the existing dampening ball color coding (green, slate, dark charcoal, red, amber) and line styles from the FFT comparison graph in the new vibration magnitude comparison graph.
-- Appended a new section "5. Vibration Magnitude Comparison Plot" in `GVT_COMPARISON_REPORT.md` referencing the newly generated comparison plot.
-
-## Last Updated: 2026-06-04 14:18
-
-### Achievements (Active Vibration Analysis Refactoring, PPTX Report & ILB Exclusion)
-- Modified `tools/single_log_vibration_analysis.py` to crop all DataFrames to the active phase first to guarantee that all downstream analysis calculations (vibration estimation, FFT, overlays, stats) use ONLY active test data.
-- Raised the RPM active phase detection threshold from 100.0 to 1000.0.
-- Explicitly set `standby_seg` to `None` to cleanly disable standby phase computations and format tables with N/A.
-- Removed the first data point (index 0) from the calculated vibration and gyroscope vibration DataFrames to prevent the initial filter startup zero from skewing charts and statistical analysis.
-- Generated a professional 5-slide weekly report presentation (`減震球震動實驗分析週報.pptx`) in `/media/hank/B0D4B41ED4B3E4AE/文件/週報` using Node.js and PptxGenJS, detailing the performance comparison of different dampening balls using InertialLabs high-precision data with Green as baseline.
-- Refactored `generate_multi_log_comparison` to generate an improved `gvt_fft_comparison.png` chart, removing the ArduPilot IMU subplot and displaying only the InertialLabs ILB IMU data with custom line styles and color coding mapped to physical dampening ball colors (green, slate, black, red, amber).
-- Restricted all markdown quantitative comparison tables in `GVT_COMPARISON_REPORT.md` to only display InertialLabs ILB IMU data, completely removing ArduPilot internal IMU rows to focus solely on high-precision external sensor measurements.
-- Verified parsing and analysis execution successfully using `.venv` Python environment on `data/ground_vibration_test/log_72_black.bin`.
-
-## Last Updated: 2026-05-22 09:15
+## Last Updated: 2026-06-06 15:00
 
 ### Active Tasks
-- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
-- [x] GPS switching failsafe optimization.
-
-### Achievements (GPS Switching Failsafe Optimization & InertialLabs Bugfix)
-- **Primary GPS GCS Notification**: Added `GCS_SEND_TEXT` when the primary GPS changes in `AP_GPS::update()` to print a clear notification `"GPS primary changed to %u"`.
-- **InertialLabs GPS Accuracy Unit Conversion Bug Fixed**: Discovered and resolved a unit-mismatch bug in `AP_ExternalAHRS_InertialLabs.cpp` where the raw latitude, longitude, and altitude accuracies reported by the InertialLabs INS-U (in millimeters) were passed directly to AP_GPS without converting to meters. This magnified the reported error by 1000x (e.g. 6.75cm error became 67.5m), triggering EKF pre-check rejections and locking the system in a failsafe alarm. Fixed by multiplying accuracies by `1e-3f` and populated `horizontal_vel_accuracy`.
-- **GPS Switch Grace Period Optimization in EKF3**:
-  - Reset EKF position drift accumulator `gpsDriftNE = 0.0f` and reference coordinate `gpsloc_prev` when the EKF detects a GPS switch (`preferred_gps != last_preferred_gps`). This eliminates the ground-based 12-second drift failsafe transient.
-  - Instantly reset accuracy variables to raw new GPS metrics on switch to prevent 20-second decay lag.
-  - Dynamically reduced EKF quality check recovery threshold (`align_recover_threshold`) and EKF stability recovery threshold (`stable_recover_threshold`) to **2 seconds** instead of 10 seconds if the target GPS is reported as healthy by its driver (`status >= GPS_OK_FIX_3D`). This reduces the EKF Ground Switch recovery time from 32 seconds to 4 seconds, avoiding unwanted EKF failsafes while maintaining core EKF checks.
-
-## Last Updated: 2026-06-02 16:15
-- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
-- [x] GPS switching failsafe optimization.
-
-### Achievements (GPS Switching Failsafe Optimization & EKF Aiding Recovery)
-- **Primary GPS GCS Notification**: Added `GCS_SEND_TEXT` when the primary GPS changes in `AP_GPS::update()` to print a clear notification `"GPS primary changed to %u"`.
-- **GPS Switch Grace Period Optimization in EKF3**:
-  - Reset EKF position drift accumulator `gpsDriftNE = 0.0f` and reference coordinate `gpsloc_prev` when the EKF detects a GPS switch (`preferred_gps != last_preferred_gps`). This eliminates the ground-based 12-second drift failsafe transient.
-  - Dynamically reduced EKF quality check recovery threshold (`align_recover_threshold`) and EKF stability recovery threshold (`stable_recover_threshold`) to **2 seconds** instead of 10 seconds if the target GPS is reported as healthy by its driver (`status >= GPS_OK_FIX_3D`). This reduces the EKF Ground Switch recovery time from 32 seconds to 4 seconds, avoiding unwanted EKF failsafes while maintaining core EKF checks.
-
-## Last Updated: 2026-05-22 09:15
-- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
-- [x] Re-organize default output directories to route to `output/<log_name>/` subfolders.
-- [x] Implement robust candidate directory search paths for CSV logs when referencing relative paths.
-- [x] Complete end-to-end verification of all five tools.
-- [x] Update `tools/README.md` to reflect unified usage and options.
-- [x] Port parallel high-performance binary parsing to `LogPlotter.py` and fix the `mlog.offsets` list AttributeError bug.
-- [x] Analyze and fix the ILB gyroscope unit mismatch (57.3x scaling bug) in `AP_ILB_Replay_Analyzer.py`.
-- [x] Modify `vibration_analysis_runner.py` to use the longest continuous segments for all analyses, crop ILB data to the IMU0 segment window, and remove the vibration trend and rate aliasing comparison plots.
-- [x] Implement ArduPilot-style dynamic filtered vibration calculation and plotting in `tools/vibration_analysis_runner.py`.
-
-### Session Notes
-- Standardized all tools on `--input` and `--out` CLI parameters.
-- Re-organized analysis outputs to dynamically target `output/<log_name>/<analysis_type>_Analysis/`.
-- Fixed a bug in `plot_AP-EKF_ILB-INS.py` where processing logs without InertialLabs EKF/INS replay data caused `NameError: name 't0' is not defined`.
-- Verified all tools successfully via CLI on local logs.
-- Documented new usage paradigms and formats in `tools/README.md`.
-- Implemented high-performance binary file parsing (mmap, struct) in `LogPlotter.py`.
-- Fixed the `AttributeError: 'list' object has no attribute 'get'` in `LogPlotter.py` by using index boundary check + list indexing. Verified speedup and correct behavior on real BIN logs.
-- Fixed a gyroscope unit mismatch bug in `AP_ILB_Replay_Analyzer.py` where the ILB1 native gyroscope values (already in rad/s in the log) were incorrectly scaled by `np.radians` again. Removing the redundant conversion matches the AP IMU scale (e.g. standard deviation of ~9.5 deg/s vs ~6.2 deg/s) and fixes EKF vs ILB comparisons.
-- Modified `tools/vibration_analysis_runner.py` to:
-  - Extract the longest continuous segment for the master reference sensor (`IMU0`) first.
-  - Crop all other sensors' DataFrames (`IMU1`, `IMU2`, high-rate ILB, standard-rate ILB) to this master segment window to enforce temporal alignment.
-  - Extract the longest continuous segments from the cropped DataFrames for all subsequent analyses, stats calculations, FFT computations, and overlay plots.
-  - Suppressed generation of the vibration trend plot (`vibration_trends.png`) and rate aliasing comparison plot (`rate_aliasing_comparison.png`).
-  - Updated the markdown report generator (`VIBRATION_REPORT.md`) to reflect these changes, removing references/sections for the deleted plots.
-- Implemented ArduPilot-style dynamic low-pass filtered vibration calculation (`compute_ap_vibration`) using a 5.0 Hz floor LPF and 2.0 Hz vibration LPF to mirror `AP_InertialSensor.cpp` logic.
-- Added generation of `vibration_levels_comparison.png` (a 2x2 subplot comparing X, Y, Z, and Mag vibration levels over time for all IMUs and the high-rate ILB log).
-- Updated the report template in `tools/vibration_analysis_runner.py` to compile detailed per-axis and magnitude statistics under a new section "3. ArduPilot-Style Vibration Analysis (5Hz Floor / 2Hz Vibe LPF)" and embed the comparison plot, omitting the standard-rate ILB sensor from all vibration metrics, plots, and report tables.
-
-### Pending Decisions
-- none
-
-## Achievements (EKF3 Replay & INS-U AHRS Integration) - Master Config
-- **InertialLabs INS-U Driver Audited and Fixed**: Audited the custom GPS lock detection and solution mapping against the INS-U ICD rev-1.43. Fixed a critical safety mapping issue where `ins_sol_status = 2` (no GNSS) was mapped to `FIX_2D`. Corrected the centidegrees scaling for `track_over_ground_raw` (which was set directly to float `yaw` degrees). Made the external GPS lock detection robust to custom packet configurations lacking `FULL_SAT_INFO` by falling back to `GNSS_POS_VALID` and `ins_sol_status`.
-- **GPS Per-Instance Disable Bugs Audited and Fixed (Centralized Design)**:
-  - Fixed a parameter-swapping bug in `AP_ExternalAHRS_InertialLabs` where `force_disable(0, true)` enabled GPS2 instead of disabling GPS1.
-  - Centralized the disable override logic inside `AP_GPS::update_instance()` (right after raw logging), rewriting `state[instance].status` to `NO_FIX` if that instance is disabled.
-  - This centralized override automatically propagates to EKF, blending, notify, and all external status readers via `status()`, completely eliminating the confusion of mixing raw `state[i].status` and `status(i)` calls throughout the codebase.
-  - Added boundary checks (`instance < GPS_MAX_RECEIVERS`) on the `disabled_gps` array to guarantee safety.
-- **Log Parsing Knowledge Persisted**: Saved the premium "pure byte-level in-place log modification" algorithm to long-term memory under `topics/topic-log-parsing.md` for future reuse.
-
-
-## Last Updated: 2026-05-31 09:15
-
-## Achievements (Google Cartographer 2D LiDAR SLAM & EKF Fusion) - EKF Pipeline
-- **Dockerized SLAM Setup**: Compiled Google Cartographer ROS Noetic inside a lightweight Docker image and automated master/offline-node lifecycle execution in entrypoint.sh.
-- **Automated Data Pipeline**: Implemented pure Python `npz_to_rosbag.py`, `run_slam.py`, and `slam_result_injector.py` to seamlessly convert point clouds, execute offline SLAM, and inject trajectories back to telemetry files.
-- **EKF LiDAR Fusion**: Addressed LLA origin misalignment between EKF (`pos0` = [0, 0, 0] LLA) and LiDAR SLAM (`origin_lla` = [25.0, 121.0, 10.0] LLA). Aligned EKF origin to Taipei LLA, successfully reducing EKF 2D closure error with only-LiDAR updates to 0.85m.
-- **LiDAR Map Stitching**: Implemented global coordinate transformation mapping in `plot_slam_only.py`, successful stitching of 231,011 points, producing high-resolution environmental vector maps.
-- **Visualization & UI**: Updated `KF_Plot.py` with LiDAR heading update indicators and recorded all analysis plots to walkthrough resources.
-- **EKF Bias & Constraints Calibration**: Initialized gyro biases to `[4600, -6500, -10500]` dph and accelerometer biases to `[-15, -20, 20]` mg, and enabled wheel odometry constraints (`enable_agv=True`). Set `K_threshold = 5` in `KalmanFilter.py` to prevent gating rejections under dynamics, dropping baseline 2D RMSE from `0.3133 m` to `0.0832 m`.
-- **LiDAR Yaw Offset Optimization**: Swept `lidar_yaw_offset_deg` from `-30.0` to `+30.0` degrees at $0.1^\circ$ resolution. Discovered that Cartographer LiDAR SLAM heading contains an absolute coordinate offset of **`+8.2°`** relative to vehicle absolute coordinates. Applying this offset reduced 2D RMSE to a spectacular **`0.0713 m` (7.13 cm)** and 2D closure error to **`0.0481 m` (4.81 cm)**.
-- **Temporal Mismatch Excised**: Removed the redundant `lidar_time_offset` variable entirely as raw timestamp alignment without temporal compensation yielded the cleanest result under optimal bias calibration.
-- **EKF Parameter Synchronization**: Synced EKF default `TuningConfig` parameter constants in `nav_ekf/filters/config.py` to match the legacy `MyLib/Navigation/EKF_params.py` values exactly.
-- **Tester Script Path Migration**: Corrected image, plot, and experiment result save directories in the migrated `examples/` tester scripts (`ArduPilotTester.py`, `ArduPilot_ILB_ATT_ARSPD_Tester.py`, `ArduPilot_ILB_GNSS-denied_Tester.py`, `ArduPilot_ILB_Combined_Tester.py`, `EKFTester_ABC.py`) to save results locally under `examples/results/` instead of `tester/results/`.
-- **Log GUI Refactoring**: Refactored `examples/log_gui.py` imports to load `plot_data`, etc. from the local `log_playback` module inside `examples/`.
-- **Unified EKF Execution Validation**: Successfully ran the multi-log parallel experiment runner (`ArduPilotTester.py`) to verify correct execution with the synchronized EKF config, saving EKF NPZ logs and plots cleanly under `examples/results/ArduPilot_Multi/`.
-
-## Active & Pending Tasks
+- [x] Display IMU initialization failure as "IMU INIT FAILED!" on screen at boot and during execution.
+- [x] Analyze IMU peak spikes and identify connection to firmware/hardware.
+- [x] Implement a byte-wise sum checksum in telemetry for `FORMAT_DEFAULT`, `FORMAT_PID`, and `FORMAT_LIDAR`.
+- [x] Implement a direct `Wire.read() == -1` timeout detection in `hal_imu_read()` on the ESP32 side to reject corrupted samples mid-stream.
+- [x] Implement FreeRTOS PortMUX spinlocks around `ahrs_data` writes in `update()` and reads in `get_ahrs_data()` to prevent multi-core/multitasking data tearing.
+- [x] Decouple I2C read blocking delay and complementary filter update: created `AHRS_Task` at **1000Hz** pinned to **Core 0**, while keeping the critical `Control_Task` at **200Hz** on **Core 1** reading pre-validated data instantly from memory.
+- [x] Compile and verify the build using PlatformIO and successfully flash directly to COM7.
+- [x] Implement a real-time I2C Bus Error Counter (`hal_imu_get_error_count()`) and display it dynamically on the LCD screen (`y=155`) in green (if zero) or red (if positive).
+- [x] Solve QMI8658 Register Tearing by bypassing status register polling and using continuous block reads starting from 0x33.
+- [x] Solve Byte Alignment Shifts by implementing Multi-Factor Physical Validation (temperature delta, gyro delta, accel delta checks).
+- [x] Create [verify_spikes.py](file:///c:/Users/hemrh/Documents/GitHub/C Language/ABC_Controller/ABC_Controller/verify_spikes.py) and execute automated 120-second telemetry validation: **23,731 packets** parsed at **230400 baud** with a highly strict **3.5 dps threshold** and **ZERO spikes detected**!
+- [x] Implement Scheme A: Configured QMI8658 to output DRDY hardware interrupts on `INT1` (`GPIO3`), set Accel/Gyro ODR to 500Hz, and synchronized `AHRS_Task` to block on the GPIO interrupt semaphore (`hal_imu_wait_for_data`).
+- [x] Calculate battery voltage ADC LSB calibration coefficients using least-squares linear regression (Slope: `0.00680089f`, Offset: `3.43306268f`) and update `src/hal/hal_battery.h`.
 - [x] Resolve EKF analysis log truncation
 - [x] Implement robust log header resynchronization in DataFlashFileReader
 - [x] Fix orchestrator path resolution to prioritize SITL target binary
@@ -111,13 +24,71 @@
 - [x] Audit and fix InertialLabs INS-U external AHRS driver (track_over_ground scaling, fix mapping, GPS lock detection)
 - [x] Verify GPS2 mapping logic via log post-processing and EKF3 Replay
 - [x] Verify and implement GPS auto-switching logic in EKF3 Replay
-- **EKF Tuning & Refactoring**: Refactor `nav_ekf/filters/kalman_filter.py` namespace imports from `from .ekf_params import *` to `from . import ekf_params` to support dynamic parameter tuning.
-- **Validation**: Run multi-scenario evaluations across other UDP-recorded datasets.
-- **SLAM Tuning**: Fine-tune Ceres scan-matching covariances in Cartographer configuration (`my_2d.lua`).
-- **Hardware Integration**: Verify IMU/Odometry performance on physical AGV hardware.
+- [x] Implement adaptive PID gains: standstill soft-tuning (Rule 1) and pitch recovery gain boost (Rule 2) in AppMode, verified via successful build compilation.
+- [x] Analyze and resolve the joystick reconnection and thread-safety issues (Guru Meditation Error crashes) in `HAL_Joystick` by introducing a FreeRTOS Mutex and robust pointer lifecycle management, verified via successful build compilation.
+- [x] Optimize LIDAR telemetry transmission (using single PSRAM buffer to let LwIP handle IP fragmentation) and increase Serial2 RX buffer size to 1024 bytes to prevent serial data buffer overflow under high rates (230400 baud), committed as `e532ff9`.
+- [x] Migrate board-integrated QMI8658 IMU to external MPU6050 via raw Wire I2C driver, configuring 250Hz ODR and interrupt-driven semaphore trigger.
+- [x] Standardize command-line arguments for all log analysis tools (`INS_log_extractor.py`, `AP_ILB_Replay_Analyzer.py`, `plot_AP-EKF_ILB-INS.py`, `GNSS_Denied_Analysis.py`, `Attitude_Airspeed_Analysis.py`).
+- [x] GPS switching failsafe optimization.
 - [x] Fix flight mode switching command destination synchronization mismatch in MAVLink connector
 - [x] Sort the MAVLink message rate list tree alphabetically by message name
 
+### Session Notes & Achievements
+
+- **MPU6050 IMU Migration (250Hz, Interrupt-Driven)**:
+  - Re-implemented `hal_imu.cpp` with a lightweight, raw I2C Wire driver for MPU6050 (default address `0x68`) operating at 250Hz ODR (divisor = 3) and 44Hz DLPF.
+  - Configured MPU6050 hardware Data Ready Interrupts (DRDY) on GPIO 14 (configured as `IMU_INT1_PIN` in `config.h`).
+  - Set up a FreeRTOS binary semaphore (`imu_sem`) and ISR (`imu_isr_handler`) on the rising edge of GPIO 14 to block-trigger the main `Control_Task` in `main.cpp` (Architecture B), eliminating loop timing jitter.
+  - Set control and communication loop periods to 4ms (250Hz) in `main.cpp` and added a 10ms timeout fallback.
+  - Restored original MPU6050 axis mapping (`raw_x = -ax`, `raw_y = ay`, `raw_z = -az`, `raw_gx = -gx`, `raw_gy = gy`, `raw_gz = -gz`).
+  - Initialized IMU calibration parameters to identity matrix (R = I) and zero biases (B = 0).
+  - Removed temperature delta and spike outlier checks to simplify processing.
+  - Verification & Flash: Successfully compiled and flashed directly to COM7 (`pio run -t upload`) in 24.56 seconds.
+
+- **Ground Vibration Test & Dampening Balls Weekly PPTX Report**:
+  - Updated `tools/single_log_vibration_analysis.py` to include `ap_vibe_ilb` in the returned data of `analyze_log_file`.
+  - Implemented `gvt_vibration_comparison.png` generation inside `generate_multi_log_comparison` which aligns and overlays the accelerometer vibration magnitude over time for the InertialLabs ILB IMU across all logs.
+  - Preserved the existing dampening ball color coding (green, slate, dark charcoal, red, amber) and line styles from the FFT comparison graph in the new vibration magnitude comparison graph.
+  - Appended a new section "5. Vibration Magnitude Comparison Plot" in `GVT_COMPARISON_REPORT.md` referencing the newly generated comparison plot.
+  - Generated a professional 5-slide weekly report presentation (`減震球震動實驗分析週報.pptx`) in `/media/hank/B0D4B41ED4B3E4AE/文件/週報` using Node.js and PptxGenJS, detailing the performance comparison of different dampening balls using InertialLabs high-precision data with Green as baseline.
+  - Refactored `generate_multi_log_comparison` to generate an improved `gvt_fft_comparison.png` chart, removing the ArduPilot IMU subplot and displaying only the InertialLabs ILB IMU data with custom line styles and color coding mapped to physical dampening ball colors (green, slate, black, red, amber).
+
+- **Adaptive PID Gains & Safety Enhancements**:
+  - **Rule 1 (Standstill Soft-tuning):** When targets are low and the robot is static (RPM < 25, velocity < 0.1 m/s) for over 2.0 seconds, dynamically divides velocity KP by 10 and multiplies KD by 2. Reverts instantly when commands or speeds exceed thresholds.
+  - **Rule 2 (Tilt Recovery Boost):** Boosts angle PID KP and KI by 20% when the actual pitch angle exceeds the `MAX_PITCH` threshold (6.0 degrees) to accelerate recovery.
+  - **Bumpless Transfer:** Implemented proportional scaling of the integral accumulator when KI changes inside `PID::setTunings` to prevent holding torque drop or control sags during Rule 2 deactivation.
+  - **Cross-Core Spinlock:** Wrapped writes in `set_pid_gains()` and reads/transitions in `update()` with FreeRTOS `portENTER_CRITICAL(&app_mode_mux)` to prevent telemetry tearing and multi-core data races.
+  - **Input Sanitization Failsafe:** Implemented strict non-negative, finite, and non-NaN boundaries checks in `AppScript` for serial PID commands to block catastrophic crash-inducing data.
+  - **Type-safe Math:** Switched all float absolute comparisons to `std::abs()` to prevent compiler-dependent integer casting.
+
+- **Joystick Reconnection & Thread Safety Fix**:
+  - Solved reconnection failure by accepting new gamepads in `on_connected()` if the old pointer is stale (`!gamepad_->isConnected()`), and setting `gamepad_ = nullptr` immediately in the main loop upon disconnect detection.
+  - Eliminated data races and Guru Meditation crashes between the BTstack background task and the main gamepad task by wrapping all pointer operations in a FreeRTOS Mutex.
+  - Compilation verified successfully via PlatformIO (12.76 seconds).
+
+- **InertialLabs INS-U Driver Audited and Fixed**:
+  - Audited the custom GPS lock detection and solution mapping against the INS-U ICD rev-1.43. Fixed a critical safety mapping issue where `ins_sol_status = 2` (no GNSS) was mapped to `FIX_2D`. Corrected the centidegrees scaling for `track_over_ground_raw` (which was set directly to float `yaw` degrees).
+  - Made the external GPS lock detection robust to custom packet configurations lacking `FULL_SAT_INFO` by falling back to `GNSS_POS_VALID` and `ins_sol_status`.
+  - Discovered and resolved a unit-mismatch bug in `AP_ExternalAHRS_InertialLabs.cpp` where raw lat/lon/alt accuracies reported by INS-U (in mm) were passed directly to AP_GPS without converting to meters. Fixed by multiplying accuracies by `1e-3f` and populated `horizontal_vel_accuracy`.
+
+- **GPS Switching Failsafe & Switch Grace Period Optimization in EKF3**:
+  - **Primary GPS GCS Notification**: Added `GCS_SEND_TEXT` when the primary GPS changes in `AP_GPS::update()` to print a clear notification `"GPS primary changed to %u"`.
+  - **GPS Switch Grace Period Optimization in EKF3**:
+    - Reset EKF position drift accumulator `gpsDriftNE = 0.0f` and reference coordinate `gpsloc_prev` when the EKF detects a GPS switch (`preferred_gps != last_preferred_gps`). This eliminates the ground-based 12-second drift failsafe transient.
+    - Instantly reset accuracy variables to raw new GPS metrics on switch to prevent 20-second decay lag.
+    - Dynamically reduced EKF quality check recovery threshold (`align_recover_threshold`) and EKF stability recovery threshold (`stable_recover_threshold`) to **2 seconds** instead of 10 seconds if the target GPS is reported as healthy by its driver (`status >= GPS_OK_FIX_3D`). This reduces EKF Ground Switch recovery time from 32s to 4s.
+
+- **Google Cartographer 2D LiDAR SLAM & EKF Fusion**:
+  - Dockerized SLAM setup using lightweight ROS Noetic container.
+  - Built pure Python pipelines (`npz_to_rosbag.py`, `run_slam.py`, `slam_result_injector.py`) for offline SLAM injection.
+  - Resolved LLA origin misalignment between EKF (`pos0` = [0, 0, 0] LLA) and LiDAR SLAM (`origin_lla` = [25.0, 121.0, 10.0] LLA), reducing EKF LiDAR-only closure error to 0.85m.
+  - Enabled wheel odometry constraints and tuned biases, reducing AGV 2D RMSE from `0.3133 m` to `0.0832 m`.
+  - Discovered absolute Cartographer heading coordinate offset of `+8.2°` relative to vehicle body frame. Applying this reduced EKF 2D RMSE to a spectacular `7.13 cm` (0.0713m).
+
+- **Log Parsing & Extractor CLI Standardization**:
+  - Standardized all log analysis tools on `--input` and `--out` parameters, routing outputs to `output/<log_name>/<analysis_type>_Analysis/`.
+  - Implemented high-performance binary file parsing (mmap, struct) in `LogPlotter.py` and resolved `AttributeError` on `mlog.offsets`.
+  - Corrected ILB gyroscope double-conversion unit mismatch (57.3x scaling bug) in `AP_ILB_Replay_Analyzer.py`.
 
 ## Workspace Conventions
 - Build config files (.cmake, Makefile, platformio.ini): **read-only** without explicit permission
