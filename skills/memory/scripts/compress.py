@@ -39,7 +39,7 @@ def get_memory_root() -> Path:
 def get_line_limit(filepath: Path, memory_root: Path) -> int:
     """Determine the line limit for a file based on its relative path."""
     try:
-        rel = str(filepath.relative_to(memory_root))
+        rel = filepath.relative_to(memory_root).as_posix()
     except ValueError:
         return 200
 
