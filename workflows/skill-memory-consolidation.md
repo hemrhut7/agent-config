@@ -50,10 +50,7 @@ Task Progress:
 3. Re-run tests to confirm 100% pass rates.
 
 ### Step 6: Commit and Record in Version Control
-1. Stage all changes inside the `.agents/` repository using `git add -A`.
-2. Commit with a conventional prefix, e.g. `docs(memory, compilation): consolidate memory topics and integrate compilation skills`.
-3. Inform the user and confirm if the submodule pointer should be updated in the parent repository.
-
+1. Run 'git-committer' skill
 ---
 
 ## Best Practice Guidelines

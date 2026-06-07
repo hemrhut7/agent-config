@@ -5,4 +5,8 @@
 - **Windows Environment Redirection**: Avoid PowerShell stdout redirection (`>`) for JSON/text files to prevent UTF-16LE conversion. Always use Python-based UTF-8 writing or specify explicit UTF-8 encoding options.
 - **Windows CLI Command Execution**: Avoid executing complex multi-line command strings on Windows. Proactively write multi-step operations to a temporary Python script in `.agent_scratchpad/`, execute it, and clean up afterwards.
 - **Codebase Research Philosophy**: Prioritize using `graphify` (`/graphify query`, `/graphify path`, `/graphify explain`) for codebase exploration and architectural searches. Always ensure the graph is in sync with the latest code updates by performing a fast incremental update (`/graphify --update`) if code changes are detected.
+- **Configuration File Integrity**: Build configuration files (e.g., `.cmake`, `Makefile`, `platformio.ini`, `pyproject.toml`) are considered **read-only** and must not be modified without explicit user permission.
+- **Workspace Hygiene**: All temporary files and scratch scripts MUST be placed in the `.agent_scratchpad/` directory. Avoid using system-wide temporary folders like `/tmp` or `C:\Temp`.
+- **Python Execution Standard**: Always use the `-u` flag (unbuffered) for all Python executions to ensure logs are captured in real-time.
+- **Reporting**: Maintain the weekly report at the specified path: `/media/hank/B0D4B41ED4B3E4AE/文件/週報`.
 
