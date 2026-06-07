@@ -31,3 +31,10 @@ Use aligned path RMSE/MAE as primary metrics for SLAM evaluation, not just closu
 
 ### [2026-05-17 17:05] Tags: slam, abc, sweep
 Three-stage sweep for ABC dataset found optimal yaw offset (+19°), timing (+0.1s), and lever arm (-0.13, -0.07) m, reducing RMSE_2D to 0.27m. Remaining error suggests URDF/TF inconsistencies.
+
+### [2026-06-07 17:21] Tags: navigation-slam
+#### GlobalBatchOptimizer Bias & Scale Factor Calibration
+- **Issue**: Hardcoded priors on attitude and noise bounds allowed the optimizer to fit trajectories by slightly wiggling states rather than updating biases, causing bias values to remain near zero and scale factors to remain flat.
+- **Fix**: Calculate and apply continuous-time noise parameters (ARW, VRW) scaled by \
+p.sqrt(dt)\ for the state integration model, add GNSS velocity factor constraints, and set realistic prior bounds on Node 0. This successfully recovers realistic, slowly-varying bias estimation (gyro bias 5~45 DPH, accel bias -0.5~0 mg) and scale factor drift.
+- **Unit Scale**: Gyro bias extraction from raw EKF logs must convert rad/s to DPH using \*(180.0 / np.pi * 3600.0)\.
