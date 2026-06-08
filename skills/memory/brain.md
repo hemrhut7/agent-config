@@ -1,6 +1,13 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-08 10:22
+
+### Achievements (Multi-Log FFT Plot Styling & Spectral Smoothing)
+- **Fixed Syntax Error in FFT Plotting Loop**: Resolved a SyntaxError in `tools/single_log_vibration_analysis.py` introduced in a prior merge, restoring the correct loop structure and indentation for the InertialLabs ILB IMU FFT spectrum comparison.
+- **Configured Comparison Plot Line Styles**: Updated the multi-log comparison charts to use default line widths, all solid line styles (no dashed/dotted), and custom alpha values (1.0 for baseline, 0.75 for other test logs).
+- **Implemented Spectral Smoothing**: Applied a centered rolling average (window=7) to both the reference Cube line and the InertialLabs ILB lines in the FFT comparison chart. This significantly reduces high-frequency noise and overlaps, making the peak frequencies and absolute magnitudes much easier to observe.
+
 ## Last Updated: 2026-06-07 14:43
 
 ### Achievements (Standard GRMS Vibration Spectrum Plot, Dual Units, and Sampling Rate Bugfix)

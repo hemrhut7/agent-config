@@ -7,6 +7,59 @@ description: Use this skill to interact with the Codex CLI, an expert AI agent t
 
 This skill allows you to leverage the `codex` CLI tool to perform advanced software engineering tasks. `codex` is a powerful agent capable of understanding large codebases, providing architectural insights, and executing complex modifications.
 
+## Mandatory Usage Logging
+
+To ensure traceability and audit execution, **every call to Codex must be logged** to `.agents/skills/codex-skill/history.md` immediately after execution.
+
+### Log Format
+```markdown
+### [YYYY-MM-DD HH:MM] Codex Call
+- **Task**: [Brief description of the work]
+- **Command**: [codex command used, e.g., exec / review]
+- **Status**: [Success / Error]
+- **Details**: [Key output or summary of changes]
+---
+```
+
+### Logging Instruction
+After running `codex`, use a non-interactive append or a file edit tool to update `.agents/skills/codex-skill/history.md`. For example:
+```bash
+cat << 'EOF' >> .agents/skills/codex-skill/history.md
+### [YYYY-MM-DD HH:MM] Codex Call
+- **Task**: [Brief description of the work]
+- **Command**: [codex command used, e.g., exec / review]
+- **Status**: [Success / Error]
+- **Details**: [Key output or summary of changes]
+---
+EOF
+```
+Using `cat << 'EOF'` prevents terminal hangs that can happen with interactive `cat >>`.
+
+## Sub-Agent Delegation Strategy
+
+Codex is a primary candidate for **Sub-Agent Delegation** via the `invoke_subagent` tool. Use it to "compress" high-complexity engineering tasks, keeping the main session history lean.
+
+### When to Delegate to Codex:
+- **Complex Feature Implementation:** Tasks requiring deep codebase context.
+- **Architectural Reviews:** Analysis of patterns across multiple modules.
+- **Bulk Code Refactoring:** Systematic changes across many files.
+
+### How to Invoke as Sub-Agent:
+When using `invoke_subagent` with the `self` or `research` agent type, specify a clear `Prompt` and `Role`.
+
+```json
+{
+  "Subagents": [
+    {
+      "TypeName": "self",
+      "Role": "Codebase Investigator",
+      "Prompt": "Use the codex CLI to [TASK_DESCRIPTION]. Ensure all changes follow existing patterns. Return a summary of the implementation."
+    }
+  ]
+}
+```
+*Note: Since 'codex' is a CLI tool, it can be run via the `self` sub-agent or directly within the current workspace using `run_command`.*
+
 ## Core Capabilities
 - **Technical Inquiries:** Ask complex technical questions or request explanations (e.g., "如何計算經緯度之間的距離").
 - **Code Review:** Perform non-interactive code reviews using `codex review`.
