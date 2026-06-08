@@ -3,6 +3,34 @@
 
 ## Last Updated: 2026-06-07 14:43
 
+### Achievements (Standard GRMS Vibration Spectrum Plot, Dual Units, and Sampling Rate Bugfix)
+- Integrated `scipy.signal` in `tools/single_log_vibration_analysis.py` to calculate standard Power Spectral Density (PSD in $g^2/Hz$) and Cumulative GRMS (in $g_{rms}$) from raw acceleration data.
+- **Fixed Sampling Rate Estimation Bug**: Discovered and resolved an issue where the bimodal timing intervals (3.33ms / 6.66ms spacing) on the InertialLabs ILB IMU caused the median `dt` logic to underestimate `fs` as 153.4 Hz instead of 200 Hz. Fixed by computing `fs` using segment length and duration. This successfully aligned the vibration peaks (e.g. at 41.73 Hz) of both sensors perfectly.
+- **Added Dual Units for GRMS**: Added both $g$ and $\text{m/s}^2$ units to the cumulative GRMS chart legends and the summary tables in `VIBRATION_REPORT.md` (e.g. `0.2367 g (2.321 m/s²)`). This directly addresses unit interpretation differences and ensures consistent comparison.
+- Verified successful execution of the entire GVT log analysis pipeline.
+
+## Last Updated: 2026-06-04 16:41
+
+### Achievements (Multi-Log Vibration Comparison Graph & Report Integration)
+- Updated `tools/single_log_vibration_analysis.py` to include `ap_vibe_ilb` in the returned data of `analyze_log_file`.
+- Implemented `gvt_vibration_comparison.png` generation inside `generate_multi_log_comparison` which aligns and overlays the accelerometer vibration magnitude over time for the InertialLabs ILB IMU across all logs.
+- Preserved the existing dampening ball color coding (green, slate, dark charcoal, red, amber) and line styles from the FFT comparison graph in the new vibration magnitude comparison graph.
+- Appended a new section "5. Vibration Magnitude Comparison Plot" in `GVT_COMPARISON_REPORT.md` referencing the newly generated comparison plot.
+
+## Last Updated: 2026-06-04 14:18
+
+### Achievements (Active Vibration Analysis Refactoring, PPTX Report & ILB Exclusion)
+- Modified `tools/single_log_vibration_analysis.py` to crop all DataFrames to the active phase first to guarantee that all downstream analysis calculations (vibration estimation, FFT, overlays, stats) use ONLY active test data.
+- Raised the RPM active phase detection threshold from 100.0 to 1000.0.
+- Explicitly set `standby_seg` to `None` to cleanly disable standby phase computations and format tables with N/A.
+- Removed the first data point (index 0) from the calculated vibration and gyroscope vibration DataFrames to prevent the initial filter startup zero from skewing charts and statistical analysis.
+- Generated a professional 5-slide weekly report presentation (`減震球震動實驗分析週報.pptx`) in `/media/hank/B0D4B41ED4B3E4AE/文件/週報` using Node.js and PptxGenJS, detailing the performance comparison of different dampening balls using InertialLabs high-precision data with Green as baseline.
+- Refactored `generate_multi_log_comparison` to generate an improved `gvt_fft_comparison.png` chart, removing the ArduPilot IMU subplot and displaying only the InertialLabs ILB IMU data with custom line styles and color coding mapped to physical dampening ball colors (green, slate, black, red, amber).
+- Restricted all markdown quantitative comparison tables in `GVT_COMPARISON_REPORT.md` to only display InertialLabs ILB IMU data, completely removing ArduPilot internal IMU rows to focus solely on high-precision external sensor measurements.
+- Verified parsing and analysis execution successfully using `.venv` Python environment on `data/ground_vibration_test/log_72_black.bin`.
+
+## Last Updated: 2026-05-22 09:15
+
 ### Active Tasks
 - [x] 調查專案中 `num_range_data`、`min_z`、`rotation_weight` 參數是否設定及其預設值。
 - [x] 在 `my_2d.lua` 中優化調整這三個參數（分別設為 45, -0.1, 150.0）。
@@ -26,4 +54,3 @@
 
 ### Pending Decisions
 - (none)
-
