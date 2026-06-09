@@ -35,9 +35,22 @@ EOF
 ```
 Using `cat << 'EOF'` prevents terminal hangs that can happen with interactive `cat >>`.
 
-## Sub-Agent Delegation Strategy
+## Continuous Task Delegation (Session Isolation)
 
-Hermes is a primary candidate for **Sub-Agent Delegation** via the `invoke_subagent` tool. Use it to "compress" complex or repetitive work, keeping the main session history lean.
+To allow `hermes` to act as a persistent worker without blocking your terminal, you must use its session management.
+**CRITICAL: Do NOT use the `-c` (continue) flag.** The `-c` flag resumes the *globally* most recent session, which will cause catastrophic cross-contamination if you or the user are working on multiple projects simultaneously.
+**CRITICAL: Do NOT use the `-z` (oneshot) flag.** It prevents contextual continuity.
+
+### How to Delegate Tasks Continuously & Safely:
+1. **Initial Task:** Start the work by running a standard chat query. This creates a new session.
+   ```bash
+   hermes chat -q "[INITIAL_TASK_DESCRIPTION]"
+   ```
+2. **Capture Session ID:** In the output of the command above, look for the text `Session: <SESSION_ID>` (e.g., `Session: 20260609_102223_eecac7`).
+3. **Follow-up Tasks:** When you need Hermes to continue working on the same context or correct a previous output, you **MUST explicitly use the `-r <SESSION_ID>` flag** to resume that exact session.
+   ```bash
+   hermes chat -r [SESSION_ID] -q "[NEXT_TASK_OR_CORRECTION]"
+   ```
 
 ### Skill Integration (Accessing Local Skills)
 To allow Hermes to use skills from `./.agents/skills/` (e.g., `pptx`, `xlsx`, `code-review`), use one of the following methods:
@@ -49,45 +62,23 @@ hermes config set skills.paths '["~/.hermes/skills", "./.agents/skills"]'
 ```
 
 #### Scheme B: Dynamic Preloading (Task-Specific)
-When delegating a specific task, use the `-s` or `--skills` flag to load the necessary capabilities.
+When starting a session, use the `-s` or `--skills` flag to load the necessary capabilities.
 ```bash
-# Example: Using Hermes to generate a PPTX report
-hermes -s pptx -z "Create a presentation based on output/report.md"
+hermes chat -s pptx -q "Create a presentation based on output/report.md"
 ```
-
-### When to Delegate to Hermes:
-- **Repetitive Batch Tasks:** Processing multiple files (e.g., "Summarize 20 log files").
-- **High-Volume Output:** Commands that return massive data streams.
-- **Speculative Research:** Trial-and-error investigations before a clear path is found.
-
-### How to Invoke as Sub-Agent:
-When using `invoke_subagent` with the `self` or `research` agent type, specify a clear `Prompt` and `Role`.
-
-```json
-{
-  "Subagents": [
-    {
-      "TypeName": "self",
-      "Role": "Generalist Assistant",
-      "Prompt": "Use hermes to [TASK_DESCRIPTION]. Use model [MODEL_NAME] to respect quotas. Return a structured summary of the findings."
-    }
-  ]
-}
-```
-*Note: Since 'hermes' is a CLI tool, it is typically invoked via the `self` or `research` sub-agent or directly using `run_command`.*
 
 ## Core Capabilities
 - **Task Delegation:** Offload simple or routine tasks to Hermes.
 - **Model Intelligence:** Automatically switches between Flash and Pro models to optimize usage.
-- **Oneshot Mode:** Execute single prompts and get direct output for integration.
+- **Contextual Memory:** Remembers conversation history across invocations when using the `-r <SESSION_ID>` flag.
 
 ## Usage Guidelines
 
 ### 1. General Usage
-Use `hermes -z` (oneshot mode) for simple tasks where you just need the result.
+Always use `hermes chat -q` for tasks to ensure the session is recorded and can be resumed if follow-up is needed. **Never use the `-z` flag** as it prevents contextual continuity.
 
 ```bash
-hermes -z "[PROMPT]"
+hermes chat -q "[PROMPT]"
 ```
 
 ### 2. Complexity-Based Model Selection
@@ -95,16 +86,15 @@ Refer to `Gemini Model Limit.csv` for the latest quotas. The following strategy 
 
 | Task Type | Complexity | Recommended Model | Command Example |
 | :--- | :--- | :--- | :--- |
-| Simple query, summary | Low | `gemini-3.1-flash-lite` | `hermes -m google/gemini-3.1-flash-lite -z "..."` |
-| **Quota Fallback** | **Low** | **`gemma-4-31b`** | **`hermes -m google/gemma-4-31b -z "..."`** |
-| Code generation, analysis | Medium | `gemini-2.5-flash` | `hermes -m google/gemini-2.5-flash -z "..."` |
-| Deep research, complex logic | High | `gemini-3.5-flash` or `gemini-3-flash` | `hermes -m google/gemini-3.5-flash -z "..."` |
+| Simple query, summary | Low | `gemini-3.1-flash-lite` | `hermes chat -m google/gemini-3.1-flash-lite -q "..."` |
+| **Quota Fallback** | **Low** | **`gemma-4-31b`** | **`hermes chat -m google/gemma-4-31b -q "..."`** |
+| Code generation, analysis | Medium | `gemini-2.5-flash` | `hermes chat -m google/gemini-2.5-flash -q "..."` |
+| Deep research, complex logic | High | `gemini-3.5-flash` or `gemini-3-flash` | `hermes chat -m google/gemini-3.5-flash -q "..."` |
 
-### 3. Interactive Sessions
-For tasks requiring multiple steps, use the `chat` command.
-
+### 3. Interactive Continuity
+If the first attempt isn't perfect, just tell Hermes to fix it in the exact same session using its ID:
 ```bash
-hermes chat -q "[PROMPT]"
+hermes chat -r [SESSION_ID] -q "That looks good, but please change the output format to JSON."
 ```
 
 ## Usage Limits (Summary from Gemini Model Limit.csv)
@@ -121,17 +111,19 @@ hermes chat -q "[PROMPT]"
 
 ## Examples
 
-**Example 1: Batch Data Summary**
-Input: Use hermes to summarize these 10 log files using Flash Lite.
-Action: `hermes -m google/gemini-3.1-flash-lite -z "Summarize the following logs: [LOG_CONTENTS]"`
+**Example 1: Batch Data Summary & Follow-up**
+Input: Use hermes to summarize these 10 log files using Flash Lite, then ask it to extract just the errors.
+Action 1: `hermes chat -m google/gemini-3.1-flash-lite -q "Summarize the following logs: [LOG_CONTENTS]"`
+*(Agent observes `Session: 20260609_123456_abcdef` in the output)*
+Action 2: `hermes chat -r 20260609_123456_abcdef -q "Now extract only the critical errors from those logs."`
 
 **Example 2: Code Refactoring**
 Input: Ask hermes to refactor this function for better performance using 2.5 Flash.
-Action: `hermes -m google/gemini-2.5-flash -z "Refactor this Python function for performance: [CODE]"`
+Action: `hermes chat -m google/gemini-2.5-flash -q "Refactor this Python function for performance: [CODE]"`
 
 **Example 3: Complex Investigation**
 Input: Use hermes 3.5 Flash to investigate the root cause of the memory leak reported in the logs.
-Action: `hermes -m google/gemini-3.5-flash -z "Investigate memory leak in: [CONTEXT]"`
+Action: `hermes chat -m google/gemini-3.5-flash -q "Investigate memory leak in: [CONTEXT]"`
 
 ## Safety and Security
 Always review the output of Hermes before applying changes to the codebase. Ensure sensitive information is not sent to the models unless necessary for the task.

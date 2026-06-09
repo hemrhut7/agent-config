@@ -35,35 +35,25 @@ EOF
 ```
 Using `cat << 'EOF'` prevents terminal hangs that can happen with interactive `cat >>`.
 
-## Sub-Agent Delegation Strategy
+## Continuous Task Delegation (Session Resumption)
 
-Codex is a primary candidate for **Sub-Agent Delegation** via the `invoke_subagent` tool. Use it to "compress" high-complexity engineering tasks, keeping the main session history lean.
+To allow `codex` to act as a persistent, continuous worker that remembers context across multiple codebase changes, you MUST use its session resumption features rather than background terminal processes (which block standard input).
 
-### When to Delegate to Codex:
-- **Complex Feature Implementation:** Tasks requiring deep codebase context.
-- **Architectural Reviews:** Analysis of patterns across multiple modules.
-- **Bulk Code Refactoring:** Systematic changes across many files.
-
-### How to Invoke as Sub-Agent:
-When using `invoke_subagent` with the `self` or `research` agent type, specify a clear `Prompt` and `Role`.
-
-```json
-{
-  "Subagents": [
-    {
-      "TypeName": "self",
-      "Role": "Codebase Investigator",
-      "Prompt": "Use the codex CLI to [TASK_DESCRIPTION]. Ensure all changes follow existing patterns. Return a summary of the implementation."
-    }
-  ]
-}
-```
-*Note: Since 'codex' is a CLI tool, it can be run via the `self` sub-agent or directly within the current workspace using `run_command`.*
+### How to Delegate Tasks Continuously:
+1. **Initial Task:** Start the work by running a standard `exec` command. This creates a new session and applies the initial changes.
+   ```bash
+   codex exec "[INITIAL_TASK_DESCRIPTION]"
+   ```
+2. **Follow-up Tasks:** When you need Codex to continue working on the same context, fix an error it made, or refine its previous changes, use the `resume --last` command to pick up exactly where it left off.
+   ```bash
+   codex exec resume --last "[NEXT_TASK_OR_CORRECTION]"
+   ```
 
 ## Core Capabilities
-- **Technical Inquiries:** Ask complex technical questions or request explanations (e.g., "如何計算經緯度之間的距離").
+- **Task Execution:** Execute complex multi-file codebase instructions using `codex exec`.
+- **Contextual Memory:** Remembers previous file changes and conversation history when using `codex exec resume --last`.
 - **Code Review:** Perform non-interactive code reviews using `codex review`.
-- **Task Execution:** Execute specific instructions within the codebase using `codex exec`.
+- **Technical Inquiries:** Ask complex technical questions (e.g., "如何計算經緯度之間的距離").
 
 ## Usage Guidelines
 
@@ -91,21 +81,21 @@ codex review
 ### 4. Advanced Options
 - **Model Selection:** Use `-m <MODEL>` to specify a model (e.g., `gpt-4o`, `o3-mini`).
 - **Sandbox Policy:** Use `-s <SANDBOX_MODE>` (read-only, workspace-write, danger-full-access) to control permissions.
-- **Full Auto:** Use `--full-auto` for a low-friction experience with workspace-write access.
 
 ## Examples
 
-**Example 1: General Inquiry**
+**Example 1: Complex Implementation & Follow-up**
+Input: Ask codex to implement JWT authentication, then ask it to fix a missing import it forgot.
+Action 1: `codex exec "Implement JWT-based authentication in the current project following existing patterns."`
+Action 2: `codex exec resume --last "You forgot to import the jwt library in auth.py, please fix it."`
+
+**Example 2: General Inquiry**
 Input: Ask codex how to calculate distance between coordinates.
 Action: `codex exec --skip-git-repo-check "如何計算經緯度之間的距離"`
 
-**Example 2: Code Review**
+**Example 3: Code Review**
 Input: Use codex to review my recent changes.
 Action: `codex review`
-
-**Example 3: Complex Implementation**
-Input: Ask codex to implement a new feature for user authentication in this project.
-Action: `codex exec --full-auto "Implement JWT-based authentication in the current project following existing patterns."`
 
 ## Safety and Security
 `codex` runs in a sandbox by default. Always review the commands it proposes if not using `--full-auto`. Never share secrets or credentials with the agent.
