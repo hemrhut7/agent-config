@@ -1,6 +1,26 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-08 16:45
+
+### Achievements (EKF Lane Switch Log Scan, Parallel Parsing Optimization & Root-Cause Analysis)
+- **Scanned 32 ArduPilot Binary Logs**: Analyzed EKF lane switch events across all `.bin` files in the `data` directory using `ProcessPoolExecutor` with 18 parallel workers to maximize performance (scanned in under 1.5 minutes).
+- **Identified EKF Lane Switch Events**: Found 3 logs with EKF lane switches/primary core switches:
+  1. [log_9_2026-3-20-15-30-32.bin](file:///home/hank/文件/Python/logReader/data/log_9_2026-3-20-15-30-32.bin) (3 core switches between Core 0 and 2)
+  2. [log_26_2026-5-21-14-40-54.bin](file:///home/hank/文件/Python/logReader/data/log_26_2026-5-21-14-40-54.bin) (3 core switches between Core 0 and 2)
+  3. [log_20_2026-5-12-15-13-54.bin](file:///home/hank/文件/Python/logReader/data/log_20_2026-5-12-15-13-54.bin) (5 core switches among Core 0, 2, and 1)
+- **Generated Markdown Report**: Saved the complete scan result table and EKF details to [output/ekf_lane_switch_analysis.md](file:///home/hank/文件/Python/logReader/output/ekf_lane_switch_analysis.md) and created a corresponding UI artifact.
+- **Diagnosed Root Cause of EKF Lane Switches**: Conducted a deep analysis of EKF innovation ratios, vibration levels, and GPS data around switch timestamps. Confirmed that Z-axis vibration spikes (up to 97g) during the VTOL-to-Fixed-Wing transition triggered the lane switches (no GPS or compass anomalies). Saved the complete diagnosis report in Traditional Chinese to [output/ekf_lane_switch_causes.md](file:///home/hank/文件/Python/logReader/output/ekf_lane_switch_causes.md).
+- **Verified EKF Lane Switch Code Location in `CIRC_Ardupilot`**: Found that `ArduPlane/ekf_check.cpp` triggers `ahrs.check_lane_switch()` when EKF variance failsafe is imminent. This routes to `NavEKF3::checkLaneSwitch()` in `AP_NavEKF3/AP_NavEKF3.cpp` which switches lanes if an alternative core is healthy and has a lower `errorScore()` (defined in `AP_NavEKF3_Outputs.cpp` based on Vel, Pos, Hgt, and Mag test ratios). Vibration triggers switches by raising innovation test ratios.
+
+## Last Updated: 2026-06-08 15:26
+
+### Achievements (Vibration Analysis Bugfixes & Markdown Indentation Formatting)
+- **Fixed LaTeX Escaping Issue in Reports**: Resolved a Python f-string escaping bug where `\text{Hz}` was parsed as a tab character (`\t`) followed by `ext{Hz}` in [single_log_vibration_analysis.py](file:///home/hank/文件/Python/logReader/tools/single_log_vibration_analysis.py).
+- **Fixed Indentation in Runner Markdown Reports**: Corrected 4-space indentation formatting inside the triple-quoted report content f-string in [vibration_analysis_runner.py](file:///home/hank/文件/Python/logReader/tools/vibration_analysis_runner.py) to prevent standard Markdown parsers from rendering paragraphs, tables, and images as pre-formatted code blocks.
+- **Verified Data Consistency in g/m/s² Units**: Confirmed that both single log and log-pair runner analysis scripts successfully process Accelerometer/Vibration data converting $m/s^2$ to $g$ and rendering plots and reports with consistent labels.
+- **Changed Default Output Directory**: Set the default output folder of [single_log_vibration_analysis.py](file:///home/hank/文件/Python/logReader/tools/single_log_vibration_analysis.py) to `output/vibration_analysis` to keep all vibration analysis results consolidated.
+
 ## Last Updated: 2026-06-08 10:22
 
 ### Achievements (Multi-Log FFT Plot Styling & Spectral Smoothing)
