@@ -57,6 +57,8 @@
 - Verified parsing and analysis execution successfully using `.venv` Python environment on `data/ground_vibration_test/log_72_black.bin`.
 
 ## Last Updated: 2026-05-22 09:15
+## Last Updated: 2026-05-28 16:22
+
 
 ### Active Tasks
 - [x] 調查專案中 `num_range_data`、`min_z`、`rotation_weight` 參數是否設定及其預設值。
@@ -78,6 +80,16 @@
 - **Lidar & SLAM Tuning**: 由於 N10 雷達量程只有 15m 且本專案無里程計限制，直接套用官方 10~30 秒（90 幀以上）的子圖長度會導致嚴重的平移累積誤差扭曲。故實務上調小 `num_range_data` 至 45（4.5 秒）能有效保障子圖一致性；搭配調高 `rotation_weight` 至 150.0 能充分發揮高精度 IMU 對 Yaw 角的約束力。
 - **Ground Noise**: 調高 `min_z` 至 -0.1m 能濾除因小車晃動或地面不平造成的噪聲反射。
 - **GlobalBatchTester NPZ logs**: Modified `GlobalBatchTester.py` to automatically save the optimization result dictionary as a compressed `.npz` file (`ekf_log.npz`) in the test directory, enabling rapid cross-model EKF analysis and performance comparison.
+- Restored missing Plotly annotations (modes, events, params) in `uavlogviewer`.
+- Implemented async rendering for annotations to prevent UI hangs.
+- Added y-axis reset logic to fix stale title bugs.
+- Fixed legend statistics calculation (Min, Max, Mean, Std) in `Plotly.vue` and `PlotlyPopup.vue`:
+  - Resolved stack overflow error (`RangeError: Maximum call stack size exceeded`) caused by `Math.min(...yInside)` on large logs.
+  - Switched from `Plotly.relayout` to `Plotly.restyle` for updating trace name strings to ensure the legend updates correctly.
+  - Handled undefined initial range cases by accessing `_fullLayout` fallback.
+  - Ensured initial calculation triggers during initial plot generation using `requestAnimationFrame`.
+  - Recalculated statistics when synchronized zooming occurs across multiple charts.
+- Committed all changes to master.
 
 ### Pending Decisions
 - (none)
