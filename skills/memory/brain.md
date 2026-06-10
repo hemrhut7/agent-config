@@ -1,6 +1,17 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-10 09:40
+
+### Achievements (Standard Reusable Vibration & FFT Library)
+- **Created and verified reusable library modules under `src/`**:
+  - [log_reader.py](file:///home/hank/文件/Python/logReader/src/log_reader.py): Implements high-performance binary parsing via `pymavlink` format detection combined with parallel `mmap` + `struct` workers, continuous segment detection, `(N-1)/duration_s` sampling rate estimation (robust to bimodal spacing), IMU instance filtering, and magnitude calculations.
+  - [fft_utils.py](file:///home/hank/文件/Python/logReader/src/fft_utils.py): Implements 1-D FFT spectral analysis, convolved rolling-average spectral smoothing, band-limited RMS calculation, standard matplotlib `ggplot` styling, and multi-series/multi-subplot comparative plotting.
+- **Tested and Verified End-to-End**:
+  - Created a verification script at [.agent_scratchpad/test_lib.py](file:///home/hank/文件/Python/logReader/.agent_scratchpad/test_lib.py) and successfully tested the full parsing, segment extraction, FFT calculation, smoothing, and plotting pipeline using a flight log [log_10_2026-1-20-17-06-58.bin](file:///home/hank/文件/Python/logReader/data/log_10_2026-1-20-17-06-58.bin). All verification steps completed with clean results and correct data rates.
+  - Verified reading performance on two large test flight logs [2026-05-27 16-29-21.bin](file:///home/hank/文件/Python/logReader/data/2026-05-27 16-29-21.bin) (144.85 MB parsed in 3.0 seconds, 1.18M rows) and [log80_2026-05-27 16-29-21.bin](file:///home/hank/文件/Python/logReader/data/ilb_logger/log80_2026-05-27 16-29-21.bin) (264.73 MB parsed in 43.1 seconds, 2.08M rows) containing `IMU`, `ILB1`, and `VIBE` messages using the script [.agent_scratchpad/verify_two_logs.py](file:///home/hank/文件/Python/logReader/.agent_scratchpad/verify_two_logs.py).
+  - **Identified and Optimized GPS-less Log Scanning Bottleneck**: Discovered that when log files contain no GPS messages (like the 264 MB ground log), pymavlink's `init_clock()` sequentially scans the entire file twice in Python to search for clock anchors, causing connection setup to take ~32 seconds. Solved this by setting `ignore_gps_clock="auto"` as the default behavior in `parse_bin_log` inside [log_reader.py](file:///home/hank/文件/Python/logReader/src/log_reader.py), which uses the fast Cython-indexed offsets to check if `GPS`, `GPS2`, or `TIME` messages exist. If none are present, it automatically monkeypatches the clock init to bypass the slow scans and fallback directly to the microsecond clock. This yielded full automated parsing speed on both logs without manual settings (Log 1: **2.12 seconds**, Log 2: **3.34 seconds**), verified using [.agent_scratchpad/test_auto_mode.py](file:///home/hank/文件/Python/logReader/.agent_scratchpad/test_auto_mode.py).
+
 ## Last Updated: 2026-06-08 16:45
 
 ### Achievements (EKF Lane Switch Log Scan, Parallel Parsing Optimization & Root-Cause Analysis)

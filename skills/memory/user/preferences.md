@@ -10,3 +10,30 @@
 - **Python Execution Standard**: Always use the `-u` flag (unbuffered) for all Python executions to ensure logs are captured in real-time.
 - **Reporting**: Maintain the weekly report at the specified path: `/media/hank/B0D4B41ED4B3E4AE/文件/週報`.
 
+
+## Project Standards
+
+### Python Documentation Requirements
+All Python scripts in the `tools/` directories MUST include a standardized top-level docstring.
+
+**Standard Docstring Format:**
+```python
+"""
+module_name — Brief one-line overview of the script/module.
+
+Detailed description of core functionality and features.
+Explain the specific purpose, algorithms, or data handling logic.
+
+Dependencies: list of key dependencies (e.g., numpy, pandas, src.log_reader).
+
+Typical usage::
+
+    python tools/example_script.py --arg value
+"""
+```
+
+**Key Components:**
+- **Header**: Short name and high-level summary.
+- **Description**: Technical details and functional scope.
+- **Dependencies**: Explicit list of internal and external requirements.
+- **Usage**: Reproducible CLI or API examples.
