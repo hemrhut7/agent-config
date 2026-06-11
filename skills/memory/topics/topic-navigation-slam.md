@@ -38,3 +38,25 @@ Three-stage sweep for ABC dataset found optimal yaw offset (+19°), timing (+0.1
 - **Fix**: Calculate and apply continuous-time noise parameters (ARW, VRW) scaled by \
 p.sqrt(dt)\ for the state integration model, add GNSS velocity factor constraints, and set realistic prior bounds on Node 0. This successfully recovers realistic, slowly-varying bias estimation (gyro bias 5~45 DPH, accel bias -0.5~0 mg) and scale factor drift.
 - **Unit Scale**: Gyro bias extraction from raw EKF logs must convert rad/s to DPH using \*(180.0 / np.pi * 3600.0)\.
+
+### [2026-06-11] Tags: navigation, gpu, optimization, cupy
+#### GPU Acceleration Investigation for Global Batch Optimizer
+- **Feasibility**: High. GPU acceleration for the Hessian $H = J^T J$ and sparse linear solve is feasible for large-scale problems.
+- **CuPy Strategy**: Transfer Jacobian $J$ (COO) and residual $r$ to GPU. Compute $H = J^T J$ and solve for $dx$ using `cupyx.scipy.sparse.linalg.spsolve` (which uses cuSolver).
+- **Bottlenecks**: 
+    - **Host-to-Device Overhead**: For systems < 10,000 nodes, CPU (Numba + SciPy) might be faster due to transfer latency.
+    - **Serial Dependencies**: The block-tridiagonal Cholesky solver has serial dependencies along the time axis. Direct parallelization requires specialized algorithms like Parallel Cyclic Reduction (PCR).
+- **Recommended Tools**: 
+    - **Theseus (Meta)**: Best for native GPU-accelerated batch optimization (BaSpaCho).
+    - **NVIDIA cuDSS**: Latest high-performance sparse solver, significantly faster than `cuSolverSp`.
+- **Performance Threshold**: GPU typically shows clear benefits when matrix dimensions exceed 20,000.
+
+### [2026-06-11] Tags: navigation, ekf, performance, optimization, numba, python-overhead
+#### EKF Performance Optimization Analysis for Large Logs
+Current EKF core is highly efficient due to `numba.njit(cache=True)`, but high-frequency loops (200-400Hz) in Python wrappers introduce significant overhead.
+- **Identified Bottlenecks**:
+    1. **Redundant Logic**: `any(start <= t <= end for ...)` in hot loops creates expensive generator objects. Use vectorized pre-computation.
+    2. **Memory churn**: Excessive `.copy()` calls on state vectors and constant dictionary instantiation (`sensor_data = {...}`) triggers heavy GC. Use in-place updates or reusable objects.
+    3. **Sensor Flag Logic**: Computing sensor enablement per-step is redundant. Pre-calculate boolean arrays for `in_bar`, `in_mag`, etc.
+    4. **Sync Latency**: Linear scanning in `_sync_gnss` can be replaced with `numpy.searchsorted` for $O(\log n)$ mapping before the loop.
+- **Key Strategy**: Move toward a "Vectorized Input, Jitted Core" architecture. Python should only handle flow control and indexing, not per-step data processing or object creation.

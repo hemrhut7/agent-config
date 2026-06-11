@@ -1,6 +1,31 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-11 13:40
+
+### Achievements (EKF Wind Model Upgrade to FOGM & Performance Evaluation)
+- **Compared Estimator Parameters**:
+  - Conducted a comprehensive comparative audit of estimator parameters and model structures between EKF ([kalman_filter.py](file:///home/hank/文件/Python/INS_python/nav_ekf/filters/kalman_filter.py)) and Batch Optimizer ([global_batch_optimizer.py](file:///home/hank/文件/Python/INS_python/nav_ekf/core/global_batch_optimizer.py)).
+  - Documented findings in [estimator_parameter_comparison.md](file:///home/hank/文件/Python/INS_python/doc/estimator_parameter_comparison.md).
+- **Upgraded EKF Wind Model**:
+  - Modified the EKF wind model from pure Random Walk to First-Order Gauss-Markov (FOGM) process.
+  - Implemented exact discretization of FOGM process noise ($Q_{\text{wind}} = \sigma_w^2 (1 - e^{-2 dt/\tau_w})$) in `genQ_core` and exponential decay dynamics ($1 - dt/\tau_w$) in `genF_core`.
+  - Added configuration parameters `wind_fogm_tau = 300.0` and `wind_fogm_sigma = 0.05` (the batch-optimized value) in [config.py](file:///home/hank/文件/Python/INS_python/nav_ekf/filters/config.py) and mapped them in [ekf_params.py](file:///home/hank/文件/Python/INS_python/nav_ekf/filters/ekf_params.py).
+- **Verified and Evaluated Performance**:
+  - Ran EKF outage simulations sequentially for IDs `0, 1, 2, 3, 4, 6` with FOGM vs Random Walk models.
+  - **Results**: FOGM wind model constraints drift during outages for IDs 0 (+31.5% rate / +22.5% max err) and 3 (+3.6% rate / +24.3% max err). However, ID 4 experienced numerical divergence due to coupling between the FOGM decay constraint and wind shear, which was handled safely by adding try-except blocks around matplotlib plotting.
+  - Documented findings in [ekf_wind_fogm_performance_analysis.md](file:///home/hank/文件/Python/INS_python/doc/ekf_wind_fogm_performance_analysis.md).
+
+- **Researched GPU Acceleration for Global Batch Optimizer**:
+  - Investigated the feasibility of offloading large Hessian matrix solving ($H = J^T J$) to GPUs.
+  - Identified **CuPy** (with `cuSolver`) as a primary candidate for sparse solving, while noting that CPU (Numba/SciPy) remains competitive for systems < 10,000 nodes due to I/O overhead.
+  - Recommended **Theseus (Meta)** or **NVIDIA cuDSS** for high-performance batch optimization exceeding 20,000 nodes.
+  - Documented technical insights and bottlenecks in the project's persistent memory (`topic-navigation-slam.md`).
+- **Analyzed EKF Computational Efficiency for Large Logs**:
+  - Identified that core EKF math is already accelerated by **Numba**, but Python wrapper overhead (object instantiation, memory churn, and un-vectorized checks) in 400Hz loops is the primary bottleneck.
+  - Proposed 5 optimization strategies: pre-computing GNSS outages/flags, reducing `.copy()` calls, reusing dictionary objects, and using `searchsorted` for time sync.
+  - Logged optimization roadmap in `topic-navigation-slam.md` to guide future performance refactors.
+
 ## Last Updated: 2026-06-10 18:45
 
 ### Achievements (Batch Optimizer Wind-Roll Correlation Analysis & Fix)
@@ -96,6 +121,12 @@
 
 
 ### Active Tasks
+- [ ] 優化 `runner.py` 高頻迴圈：實作 GNSS Outages 與 Sensor Flags 的向量化預計算，消除迴圈內物件建立與 redundant check。
+- [ ] 重構 `ins_gnss_kf.py` 記憶體管理：減少不必要的 `.copy()` 呼叫，並透過物件重用（In-place update）減輕 GC 壓力。
+- [ ] 提升時間同步效率：使用 `numpy.searchsorted` 取代 `while` 狀態機進行 $O(\log n)$ 的 GNSS Epoch 映射。
+- [ ] 實作 CuPy GPU 加速研究：針對 Batch Optimizer 實作可切換的 CuPy 後端，設計當資料量達到門檻（如 N > 20,000）時自動啟用，並量化評估其加速倍率與數據傳輸開銷。
+- [ ] 將 Batch Optimizer 與 EKF 的參數統一進行管理，確保兩方參數的一致性，但需要先進行研究，確認兩者參數的定義、對模型影響是相同的。
+
 - [x] 調查專案中 `num_range_data`、`min_z`、`rotation_weight` 參數是否設定及其預設值。
 - [x] 在 `my_2d.lua` 中優化調整這三個參數（分別設為 45, -0.1, 150.0）。
 - [x] 更新 `Cartographer Guide.md` 加入調參分析（特別是無里程計 vs 有里程計下的子圖剛性權衡）。
