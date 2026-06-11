@@ -1,6 +1,18 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-10 18:30
+
+### Achievements (QuadPlane Soft-Landing Safety Failsafes)
+- **Implemented 5 Safety Failsafes for QuadPlane Soft-Landing**:
+  - Clamped `RNGFND_LND_ALT` minimum to `3.0m` to avoid linear interpolation direction reversal.
+  - Added rangefinder anomaly failsafe: freezes target descent rate at `MAX(last_rate, 40cm/s)` if rangefinder loses tracking near the ground.
+  - Introduced `soft_landing_active` hysteresis state flag to prevent target speed chattering at the altitude boundary.
+  - Integrated low-pass target speed filtering (`ret = last * 0.8 + new * 0.2`) to suppress rangefinder sensor noise.
+  - Enforced a hard minimum landing speed limit of `0.4 m/s` (40 cm/s) to quickly clear ground effect turbulence and prevent wind tipping.
+- **Verified Compilation**:
+  - Successfully compiled both SITL (`./waf plane`) and hardware ChibiOS (`CubeOrangePlus-CIRC`) firmware with zero errors.
+
 ## Last Updated: 2026-06-10 09:40
 
 ### Achievements (Standard Reusable Vibration & FFT Library)
