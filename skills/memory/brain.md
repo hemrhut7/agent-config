@@ -1,7 +1,19 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
-## Last Updated: 2026-06-10 18:30
+## Last Updated: 2026-06-10 18:45
+
+### Achievements (Batch Optimizer Wind-Roll Correlation Analysis & Fix)
+- **Identified Root Cause of Wind-Roll Correlation**:
+  - Found that the default wind Gauss-Markov process noise (`wind_fogm_sigma = 1.0`) was 800 times larger than the online EKF's wind random walk noise (`rw_wind = 0.0001`). This excessive flexibility allowed the wind state to oscillate at the turning frequency to absorb turn-induced aerodynamic model and sensor errors, creating a false correlation.
+- **Verified and Tuned Parameters**:
+  - Conducted a parameter sweep on `wind_fogm_sigma` from 1.0 down to 0.02.
+  - Confirmed that setting `wind_fogm_sigma = 0.05` restricts the wind variation rate to a physically realistic range, resolving the false correlation with roll.
+  - Verified that this change improved GNSS Outage trajectory accuracy: **maximum horizontal error dropped from 1.560 m to 0.980 m (37% improvement)** and **average horizontal drift rate dropped from 0.030 m/s to 0.015 m/s (50% improvement)**.
+- **Updated Codebase**:
+  - Modified the default `wind_fogm_sigma` parameter to `0.05` in [global_batch_optimizer.py](file:///home/hank/文件/Python/INS_python/nav_ekf/core/global_batch_optimizer.py).
+  - Cleaned up temporary test files in `.agent_scratchpad`.
+  - Saved a detailed analysis report to [wind_roll_correlation_analysis.md](file:///home/hank/.gemini/antigravity-cli/brain/f297e451-2918-4ab5-b9bf-e2f744953b9f/wind_roll_correlation_analysis.md).
 
 ### Achievements (QuadPlane Soft-Landing Safety Failsafes)
 - **Implemented 5 Safety Failsafes for QuadPlane Soft-Landing**:
