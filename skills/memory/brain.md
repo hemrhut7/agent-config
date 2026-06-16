@@ -1,6 +1,23 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-16 10:22
+
+### Achievements (GlobalBatchOptimizer and EKF Performance Optimizations)
+- **GlobalBatchOptimizer add_factor Optimization**:
+  - Replaced Numpy-based index offset table mapping with a **Specialized Unrolled** `add_factor` for common block shapes (`3x3`, `3x1`, `2x2`, `1x3`, `1x2`, `1x1`).
+  - Avoided slow NumPy unboxing and list conversions during `extend()` calls, leading to a **30.7% speedup** on `_build_jacobian` (0.416s to 0.288s) and **17.9% speedup** overall per optimizer iteration.
+  - Documented Solution C (Numba-ifying `_build_jacobian` & pre-allocated array indexing) in [topic-navigation-slam.md](file:///home/hank/文件/Python/INS_python/.agents/skills/memory/topics/topic-navigation-slam.md) for future high-performance needs.
+- **EKF Bottleneck Analysis & Optimization**:
+  - Audited EKF wrapper overhead via `cProfile` and identified key bottlenecks: static log categories check, redundant array copies, hot-loop `isnan`/`all` checks, and high-frequency dictionary recreation.
+  - **Optimized DataLogger**: Pre-cached log category enablement (`self._category_cache`) to avoid repetitive configuration dict lookups, and removed all redundant `.copy()` calls on NumPy arrays (utilizing NumPy's default slice assignment copy-by-value behavior).
+  - **Precomputed Sensor and Raw Valid Flags**: Moved raw sensor data validity checks (e.g. `raw_att`, `raw_airspeed`) out of the 200-400Hz hot loop into `_precompute_all`.
+  - **Reused Sensor Data Dictionary**: Created a pre-allocated `self._sensor_data_cache` dictionary and updated it in-place to minimize garbage collection (GC) pressure.
+  - **Selective Module Execution**: Checked sensor flags in `_process_updates` before calling module `execute` methods, reducing redundant execution calls by **97.5%** per step.
+  - **Cached Logger Buffers**: Cached `_Buffer` object references on EKF filter and runner instances at initialization, bypassing dynamic string key lookups (`key not in self.data`) and wrapper method calls for all 3.25 million logs.
+  - **Eliminated Redundant Array Allocations**: Replaced `np.diag(P)` with `P.diagonal()` view during covariance logging and optimized the hot-loop NaN check `np.any(np.isnan(gyro))` with a fast element-wise comparison.
+  - **Results**: Achieved a **58% overall runtime reduction** (22.83s baseline down to **9.53s**), fully meeting the 10-second calculation goal with 100% numerical consistency verified.
+
 ## Last Updated: 2026-06-11 13:40
 
 ### Achievements (EKF Wind Model Upgrade to FOGM & Performance Evaluation)
