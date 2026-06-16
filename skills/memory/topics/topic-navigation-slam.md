@@ -60,3 +60,10 @@ Current EKF core is highly efficient due to `numba.njit(cache=True)`, but high-f
     3. **Sensor Flag Logic**: Computing sensor enablement per-step is redundant. Pre-calculate boolean arrays for `in_bar`, `in_mag`, etc.
     4. **Sync Latency**: Linear scanning in `_sync_gnss` can be replaced with `numpy.searchsorted` for $O(\log n)$ mapping before the loop.
 - **Key Strategy**: Move toward a "Vectorized Input, Jitted Core" architecture. Python should only handle flow control and indexing, not per-step data processing or object creation.
+
+### [2026-06-16] Tags: navigation, least-squares, LSM, optimization, numba
+#### GlobalBatchOptimizer add_factor & Jacobian Build Optimization
+- **Solution A (Implemented)**: Replaced element-by-element `list.append` (originally ~720K per-iteration) with batch `extend` and pre-cached identity/negative-identity matrices. This minimizes Python function call overhead and allocations.
+- **Solution C (Recorded)**: Numba-ify `_build_jacobian` and `add_factor`. Compile the entire Jacobian triple-loop using `@njit(cache=True)`.
+  - *Strategy*: Pre-allocate max COO entries arrays (`rows`, `cols`, `vals`) and residuals on the NumPy level. Write directly to pre-allocated arrays to eliminate list appends/extends entirely.
+  - *Risk/Prerequisite*: Requires converting non-Numba components (e.g. `nominal_q` list to 3D NumPy array, all custom vector math to Numba-compatible functions). High complexity and refactoring effort.
