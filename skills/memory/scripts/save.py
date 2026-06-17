@@ -39,9 +39,23 @@ def determine_target_file(tags: list[str], memory_root: Path) -> Path:
     if any(t.lower() in user_tags for t in tags):
         return memory_root / "user" / "preferences.md"
 
-    # Use the first tag as the topic filename
-    primary_tag = tags[0] if tags else "general"
-    topic_name = f"topic-{sanitize_filename(primary_tag)}.md"
+    # Map specific tags to consolidated files
+    tag_mapping = {
+        "ekf": "navigation-estimation",
+        "navigation": "navigation-estimation",
+        "slam": "navigation-estimation",
+        "estimation": "navigation-estimation",
+        "calibration": "navigation-estimation",
+        "uavlogviewer": "ui-ux",
+        "plotly": "ui-ux",
+        "pyside6": "ui-ux",
+        "ui-ux": "ui-ux",
+    }
+
+    primary_tag = tags[0].lower() if tags else "general"
+    consolidated_tag = tag_mapping.get(primary_tag, primary_tag)
+    
+    topic_name = f"topic-{sanitize_filename(consolidated_tag)}.md"
     return memory_root / "topics" / topic_name
 
 

@@ -35,35 +35,29 @@ Three-stage sweep for ABC dataset found optimal yaw offset (+19°), timing (+0.1
 ### [2026-06-07 17:21] Tags: navigation-slam
 #### GlobalBatchOptimizer Bias & Scale Factor Calibration
 - **Issue**: Hardcoded priors on attitude and noise bounds allowed the optimizer to fit trajectories by slightly wiggling states rather than updating biases, causing bias values to remain near zero and scale factors to remain flat.
-- **Fix**: Calculate and apply continuous-time noise parameters (ARW, VRW) scaled by \
-p.sqrt(dt)\ for the state integration model, add GNSS velocity factor constraints, and set realistic prior bounds on Node 0. This successfully recovers realistic, slowly-varying bias estimation (gyro bias 5~45 DPH, accel bias -0.5~0 mg) and scale factor drift.
-- **Unit Scale**: Gyro bias extraction from raw EKF logs must convert rad/s to DPH using \*(180.0 / np.pi * 3600.0)\.
+- **Fix**: Calculate and apply continuous-time noise parameters (ARW, VRW) scaled by `np.sqrt(dt)` for the state integration model, add GNSS velocity factor constraints, and set realistic prior bounds on Node 0. This successfully recovers realistic, slowly-varying bias estimation (gyro bias 5~45 DPH, accel bias -0.5~0 mg) and scale factor drift.
+- **Unit Scale**: Gyro bias extraction from raw EKF logs must convert rad/s to DPH using `*(180.0 / np.pi * 3600.0)`.
+
+### [2026-06-11] Tags: EKF, Optimization, GlobalBatchOptimizer, Python, Numba, searchsorted
+#### GlobalBatchOptimizer Performance Optimization Results
+1. `_preintegrate_all` (was 66.1% of time): Replaced full-array boolean mask `(imu_t > t_start) & (imu_t <= t_end)` with O(1) vectorized `np.searchsorted`. Time per iteration dropped by ~84% (from ~1.01s down to ~0.16s for 1877 nodes).
+2. `_build_jacobian` (was 28.1% of time): Replaced O(N) GNSS search `np.argmin(np.abs(...))` with `np.searchsorted`.
+Overall Impact: Total Batch EKF iteration time reduced by ~60% (e.g. from ~3.1-4.9s to ~1.3-1.9s for 4000 nodes).
 
 ### [2026-06-11] Tags: navigation, gpu, optimization, cupy
 #### GPU Acceleration Investigation for Global Batch Optimizer
 - **Feasibility**: High. GPU acceleration for the Hessian $H = J^T J$ and sparse linear solve is feasible for large-scale problems.
-- **CuPy Strategy**: Transfer Jacobian $J$ (COO) and residual $r$ to GPU. Compute $H = J^T J$ and solve for $dx$ using `cupyx.scipy.sparse.linalg.spsolve` (which uses cuSolver).
-- **Bottlenecks**: 
-    - **Host-to-Device Overhead**: For systems < 10,000 nodes, CPU (Numba + SciPy) might be faster due to transfer latency.
-    - **Serial Dependencies**: The block-tridiagonal Cholesky solver has serial dependencies along the time axis. Direct parallelization requires specialized algorithms like Parallel Cyclic Reduction (PCR).
-- **Recommended Tools**: 
-    - **Theseus (Meta)**: Best for native GPU-accelerated batch optimization (BaSpaCho).
-    - **NVIDIA cuDSS**: Latest high-performance sparse solver, significantly faster than `cuSolverSp`.
-- **Performance Threshold**: GPU typically shows clear benefits when matrix dimensions exceed 20,000.
+- **CuPy Strategy**: Transfer Jacobian $J$ (COO) and residual $r$ to GPU. Compute $H = J^T J$ and solve for $dx$ using `cupyx.scipy.sparse.linalg.spsolve`.
+- **Bottlenecks**: Host-to-Device overhead for < 10,000 nodes; serial dependencies in Cholesky solvers.
+- **Recommended Tools**: Theseus (Meta) or NVIDIA cuDSS for systems exceeding 20,000 nodes.
 
 ### [2026-06-11] Tags: navigation, ekf, performance, optimization, numba, python-overhead
 #### EKF Performance Optimization Analysis for Large Logs
 Current EKF core is highly efficient due to `numba.njit(cache=True)`, but high-frequency loops (200-400Hz) in Python wrappers introduce significant overhead.
-- **Identified Bottlenecks**:
-    1. **Redundant Logic**: `any(start <= t <= end for ...)` in hot loops creates expensive generator objects. Use vectorized pre-computation.
-    2. **Memory churn**: Excessive `.copy()` calls on state vectors and constant dictionary instantiation (`sensor_data = {...}`) triggers heavy GC. Use in-place updates or reusable objects.
-    3. **Sensor Flag Logic**: Computing sensor enablement per-step is redundant. Pre-calculate boolean arrays for `in_bar`, `in_mag`, etc.
-    4. **Sync Latency**: Linear scanning in `_sync_gnss` can be replaced with `numpy.searchsorted` for $O(\log n)$ mapping before the loop.
-- **Key Strategy**: Move toward a "Vectorized Input, Jitted Core" architecture. Python should only handle flow control and indexing, not per-step data processing or object creation.
+- **Identified Bottlenecks**: (1) Redundant loop search logic, (2) Memory churn via excessive `.copy()` calls, (3) Redundant sensor flag checks, (4) Linear sync latency (use `np.searchsorted`).
+- **Key Strategy**: Move toward a "Vectorized Input, Jitted Core" architecture.
 
 ### [2026-06-16] Tags: navigation, least-squares, LSM, optimization, numba
 #### GlobalBatchOptimizer add_factor & Jacobian Build Optimization
 - **Solution A (Implemented)**: Replaced element-by-element `list.append` (originally ~720K per-iteration) with batch `extend` and pre-cached identity/negative-identity matrices. This minimizes Python function call overhead and allocations.
 - **Solution C (Recorded)**: Numba-ify `_build_jacobian` and `add_factor`. Compile the entire Jacobian triple-loop using `@njit(cache=True)`.
-  - *Strategy*: Pre-allocate max COO entries arrays (`rows`, `cols`, `vals`) and residuals on the NumPy level. Write directly to pre-allocated arrays to eliminate list appends/extends entirely.
-  - *Risk/Prerequisite*: Requires converting non-Numba components (e.g. `nominal_q` list to 3D NumPy array, all custom vector math to Numba-compatible functions). High complexity and refactoring effort.

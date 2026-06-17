@@ -69,7 +69,7 @@ def memory_root(tmp_path):
     )
 
     # Create a topic file
-    (root / "topics" / "topic-ekf.md").write_text(
+    (root / "topics" / "topic-navigation-estimation.md").write_text(
         "<!-- SCOPE: Knowledge about EKF tuning and filter optimization. -->\n"
         "# EKF Tuning\n\n"
         "### [2026-05-10] Tags: ekf, tuning\n"
@@ -117,7 +117,7 @@ class TestRecall:
         from recall import recall_background
         result = recall_background("EKF tuning", memory_root)
         assert result["source"] == "file"
-        assert "ekf" in result["path"].lower()
+        assert "navigation-estimation" in result["path"].lower()
         assert result["content"]  # Should have content
 
     def test_recall_background_no_file_match(self, memory_root):
@@ -148,7 +148,7 @@ class TestSave:
         from save import determine_target_file
         target = determine_target_file(["ekf", "tuning"], memory_root)
         assert "topics" in str(target)
-        assert "topic-ekf" in str(target)
+        assert "topic-navigation-estimation" in str(target)
 
     def test_determine_target_file_user(self, memory_root):
         from save import determine_target_file
@@ -177,7 +177,7 @@ class TestSave:
         save_to_longterm(tags=["ekf"], content="First entry", storage_type="file", memory_root=memory_root)
         save_to_longterm(tags=["ekf"], content="Second entry", storage_type="file", memory_root=memory_root)
 
-        topic_file = memory_root / "topics" / "topic-ekf.md"
+        topic_file = memory_root / "topics" / "topic-navigation-estimation.md"
         content = topic_file.read_text(encoding="utf-8")
         assert "First entry" in content
         assert "Second entry" in content
