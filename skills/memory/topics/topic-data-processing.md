@@ -17,3 +17,14 @@ For large ArduPilot .bin logs, use byte-level in-place modification or parallel 
 ### [2026-06-06 15:10] Tags: log-analysis, standardization
 - **CLI Standard**: Standardized on `--input` and `--out` parameters. Outputs routed to `output/<log_name>/<analysis_type>_Analysis/`.
 - **Scaling Fix**: Resolved ILB gyroscope double-conversion (57.3x) scaling bug in `AP_ILB_Replay_Analyzer.py`.
+
+### [2026-06-11 14:55] Tags: memory-management, multiprocessing, plotting
+#### Memory Safety & Core Count Guidelines for Large Data Simulations
+Running EKF or SLAM simulations on massive flight datasets (e.g., >800MB log files) easily exhausts RAM and causes OS crashes due to Python's memory retention (especially in Matplotlib plotting and logger array allocations).
+- **Core Allocation Guideline**: Suggest using **2-3 cores** for processing (depending on hardware performance) to balance computation time and memory usage.
+- **Memory Risk Estimation**: If estimated memory usage per task is high relative to available RAM, fall back to sequential execution or reduce worker count.
+- **Memory Optimization Strategies**:
+  - Run massive dataset tasks in isolated subprocesses (via `subprocess.run`) so the OS fully reclaims memory upon subprocess exit.
+  - Downsample high-rate logger data (e.g., decimate by 20) *only during plotting* to prevent Matplotlib from holding millions of points in memory.
+  - Wrap plotting in try-except blocks to catch numerical divergence exceptions (e.g., coordinate layout calculations on `inf`/`nan`).
+
