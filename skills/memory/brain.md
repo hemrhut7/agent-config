@@ -1,6 +1,13 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-16 16:42
+
+### Achievements (IMU_TGA Dynamic Switching Fix)
+- **Diagnosed and Fixed IMU_TGA Reading Failure**: Found that switching to `"IMU_TGA"` dynamically fails because the device is configured to auto-start sending data. The `Stop` and restart commands sent in other modes interfere with the device's state. Additionally, `0x9A` is a Message Identifier and not a valid start command code.
+- **Implemented Fix in setMode**: Added logic in `setMode()` to directly set `self.__OK = True` when changing mode to `"IMU_TGA"`, bypassing command transmission and allowing immediate passive parsing of the incoming stream.
+- **Verified Code Integrity**: Successfully verified that the modifications compiled cleanly with no syntax errors.
+
 ## Last Updated: 2026-06-11 13:40
 
 ### Achievements (EKF Wind Model Upgrade to FOGM & Performance Evaluation)
@@ -124,7 +131,7 @@
 - [ ] 優化 `runner.py` 高頻迴圈：實作 GNSS Outages 與 Sensor Flags 的向量化預計算，消除迴圈內物件建立與 redundant check。
 - [ ] 重構 `ins_gnss_kf.py` 記憶體管理：減少不必要的 `.copy()` 呼叫，並透過物件重用（In-place update）減輕 GC 壓力。
 - [ ] 提升時間同步效率：使用 `numpy.searchsorted` 取代 `while` 狀態機進行 $O(\log n)$ 的 GNSS Epoch 映射。
-- [ ] 實作 CuPy GPU 加速研究：針對 Batch Optimizer 實作可切換的 CuPy 後端，設計當資料量達到門檻（如 N > 20,000）時自動啟用，並量化評估其加速倍率與數據傳輸開銷。
+- [ ] 實作 CuPy GPU 加速研究：針對 Batch Optimizer 實作可切換的 CuPy 後端，設計當資料量達到門檻（如 N > 20,000）時自動啟用，並量化評評估其加速倍率與數據傳輸開銷。
 - [ ] 將 Batch Optimizer 與 EKF 的參數統一進行管理，確保兩方參數的一致性，但需要先進行研究，確認兩者參數的定義、對模型影響是相同的。
 
 - [x] 調查專案中 `num_range_data`、`min_z`、`rotation_weight` 參數是否設定及其預設值。
