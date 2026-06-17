@@ -1,6 +1,28 @@
 <!-- SCOPE: Today's task log and working memory. Read at conversation start to resume context. -->
 # Brain — Working Memory
 
+## Last Updated: 2026-06-17 10:20
+
+### Achievements (GVT INS CSV Vibration & FFT Weekly Analysis)
+- **Removed Standby Phase & Integrated Gyroscope**: Updated [csv_vibration_analysis.py](file:///home/hank/文件/Python/logReader/tools/csv_vibration_analysis.py) and [single_log_vibration_analysis.py](file:///home/hank/文件/Python/logReader/tools/single_log_vibration_analysis.py) to calculate gyroscope band-limited RMS and time-domain stats, outputting 2x1 comparison plots (Accelerometer and Gyroscope) and removing the Standby phase from multi-log comparison reports.
+- **Resolved PPTX Symbol and Layout Anomalies**: Completely removed unicode emojis (🟢, 🔴, ⚪) and replaced them with text brackets (`[減震]`, `[共振]`, `[持平]`, `[惡化]`) to ensure rendering stability without `□` boxes on any system. Set font face to `'Microsoft YaHei'` for clean Chinese text layout.
+- **Added Rotational vs. Translational Trade-off Analysis**: Added new Gyroscope FFT and time-domain tables to the slide generator script [generate_vibe_report.js](file:///home/hank/文件/Python/logReader/scripts/generate_vibe_report.js) to detail the key engineering trade-offs (e.g. `2*Red+2*Yellow_1` is best for translation but increases rotation, while `6*Red_2` is most balanced for rotation).
+- **Updated PPTX Skill Instructions**: Stored the emoji-prevention and Chinese font face rules in [`.agents/skills/pptx/SKILL.md`](file:///home/hank/文件/Python/logReader/.agents/skills/pptx/SKILL.md) to serve as a persistent cross-session guideline.
+- **Committed Code Changes**: Staged and committed all modifications under git hash `0b1e8c3`.
+
+## Last Updated: 2026-06-16 14:18
+
+### Achievements (InertialLabs GVT INS CSV Vibration & FFT Analysis)
+- **Created a Dedicated GVT INS CSV vibration analysis tool**:
+  - Implemented [csv_vibration_analysis.py](file:///home/hank/文件/Python/logReader/tools/csv_vibration_analysis.py) to parse high-frequency (2000 Hz) external InertialLabs INS logs in CSV format (`wx,wy,wz,ax,ay,az,time`).
+  - Added automated active-phase detection based on 1-second rolling standard deviation of accelerometer magnitude to segment standby and excitation test phases.
+  - Reused the standard [fft_utils.py](file:///home/hank/文件/Python/logReader/src/fft_utils.py) library for 1D FFT spectral smoothing and band-limited RMS calculations.
+  - Supported multi-log comparison plots (`gvt_fft_comparison.png`, `gvt_vibration_comparison.png`) and quantitative percent change tables relative to a baseline log.
+- **Analyzed GVT CSV logs**:
+  - Successfully ran on the green baseline GVT log `InertialLabs INS_20260616_140455_green.csv`, detecting a strong principal excitation peak at **46.23 Hz** and a mid-band RMS vibration level of **5.4044 m/s²**.
+  - Analyzed the new dark red GVT log `InertialLabs INS_20260616_142705_dark_red.csv`, detecting a peak at **43.96 Hz**.
+  - Generated a multi-log comparison report showing that the red configuration reduced mid-band vibration by **71.5%** ($5.4044 \to 1.5414 \text{ m/s}^2$) and high-band vibration by **53.5%** compared to the green baseline.
+
 ## Last Updated: 2026-06-10 18:45
 
 ### Achievements (Batch Optimizer Wind-Roll Correlation Analysis & Fix)

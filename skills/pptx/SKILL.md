@@ -136,6 +136,8 @@ Choose colors that match your topic — don't default to generic blue. Use these
 - **Don't create text-only slides** — add images, icons, charts, or visual elements; avoid plain title + bullets
 - **Don't forget text box padding** — when aligning lines or shapes with text edges, set `margin: 0` on the text box or offset the shape to account for padding
 - **Don't use low-contrast elements** — icons AND text need strong contrast against the background; avoid light text on light backgrounds or dark text on dark backgrounds
+- **Don't use unicode emojis (e.g., 🟢, 🔴, ⚪)** — Emojis will render as `□` on platforms/viewers lacking emoji font support. Use text-based labels or brackets (e.g., `[減震]`, `[共振]`, `[持平]`, `[惡化]`) instead.
+- **Don't rely on default fonts for Chinese text** — Explicitly set the font family for all text boxes and tables (e.g., `'Microsoft YaHei'` for Traditional/Simplified Chinese) to guarantee reliable and clean rendering across different operating systems.
 - **NEVER use accent lines under titles** — these are a hallmark of AI-generated slides; use whitespace or background color instead
 
 ---
