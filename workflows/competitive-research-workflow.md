@@ -1,3 +1,7 @@
+---
+description: Manages complex problem-solving by deploying two concurrent independent subagents (Researchers A and B) to propose and implement competing solutions, with the Main Agent acting as the Supervisor to compare, evaluate, and synthesize the final outcome.
+---
+
 # Competitive Research Workflow
 
 ## 1. Overview
@@ -18,44 +22,49 @@ This workflow is designed to address complex problems by employing two independe
 ### Phase 0: Baseline Establishment & Problem Definition
 *   **[Supervisor]** Clearly defines the phenomenon or bug to be improved.
 *   **[Supervisor]** Establishes Baseline test cases and records current performance metrics (KPIs), such as RMSE, execution time, resource consumption, or bug frequency.
-*   **Output**: `baseline_report.md`.
+*   **Output**: Recorded in `[.agent_scratchpad/baseline_report.md](../../.agent_scratchpad/baseline_report.md)`.
 
 ### Phase 1: Research Proposal & Review (Task Planning Integration)
+*   **[Supervisor]** Invokes two subagents using the `invoke_subagent` tool:
+    - **Researcher A**: Name: `research_a`, Workspace mode: `"branch"` or `"share"` to ensure directory isolation.
+    - **Researcher B**: Name: `research_b`, Workspace mode: `"branch"` or `"share"`.
 *   **[Researcher A & B]** Independently propose their research plans.
-*   **Standard**: Plans MUST follow the **Mode B: Structured Solution** from the `task-planning` skill, using the `plan.md` format. This includes requirement analysis, task checklists, and risk assessments.
+*   **Standard**: Plans MUST follow the **Mode B: Structured Solution** from `[task-planning/SKILL.md](../skills/task-planning/SKILL.md)`, stored under:
+    - `[.agent_scratchpad/research_plan_A.md](../../.agent_scratchpad/research_plan_A.md)`
+    - `[.agent_scratchpad/research_plan_B.md](../../.agent_scratchpad/research_plan_B.md)`
 *   **[Supervisor]** Reviews the plans to:
-    *   Ensure significant divergence between Plan A and Plan B to avoid overlap.
-    *   Assess feasibility and resource allocation.
-    *   Request adjustments if paths are too similar.
-*   **Output**: Approved `research_plan_A.md` and `research_plan_B.md`.
+    - Ensure significant divergence between Plan A and Plan B to avoid overlap.
+    - Assess feasibility and resource allocation.
+    - Request adjustments if paths are too similar.
 
 ### Phase 2: Independent Research & Proactive Monitoring
-*   **[Researcher A & B]** Set up their respective workspaces (Worktrees or independent folders).
-*   **[Researcher A & B]** Submit "Progress Reports" to the Supervisor periodically (e.g., every 3-5 tool calls).
-*   **[Supervisor] Proactive Oversight**: If a researcher fails to submit a report automatically, the Supervisor MUST periodically inspect the researcher's workspace, command history, and logs to verify status and ensure no "logical tunnel vision" or environment issues occur.
-*   **[Supervisor]** Discusses progress with researchers, provides guidance, and corrects deviations to ensure alignment with the core goal.
-*   **Output**: Multiple `progress_report_A_N.md` and `progress_report_B_N.md`.
+*   **[Researcher A & B]** Set up their respective workspaces (branched directories).
+*   **[Researcher A & B]** Submit "Progress Reports" to the Supervisor using the `send_message` tool periodically (every 5-10 steps).
+*   **[Supervisor] Proactive Oversight**: If a researcher fails to report, the Supervisor MUST inspect the subagent's status/workspace using the `manage_subagents` and workspace toolsets.
+*   **Output**: Saved as progress logs in `[.agent_scratchpad/progress_report_A_N.md](../../.agent_scratchpad/progress_report_A_N.md)` and `[.agent_scratchpad/progress_report_B_N.md](../../.agent_scratchpad/progress_report_B_N.md)`.
 
 ### Phase 3: Evaluation & Comparison
 *   **[Researcher A & B]** Validate their implementations using the Baseline test cases from Phase 0.
 *   **[Researcher A & B]** Submit their final research result reports.
 *   **[Supervisor]** Compares the results of A and B, analyzing the pros and cons of each approach.
-*   **Output**: `evaluation_summary.md`.
+*   **Output**: Summary saved to `[.agent_scratchpad/evaluation_summary.md](../../.agent_scratchpad/evaluation_summary.md)`.
 
 ### Phase 4: Synthesis & Final Report
 *   **[Supervisor]** Decides whether to adopt one solution or fuse the strengths of both based on the results.
 *   **[Supervisor]** Authors the final conclusion report, including implementation recommendations and future maintenance plans.
-*   **Output**: `final_research_report.md`.
+*   **Output**: `[.agent_scratchpad/final_research_report.md](../../.agent_scratchpad/final_research_report.md)`.
 
 ---
 
 ## 4. Execution Checklist
 
+```markdown
 - [ ] **[Supervisor]** Baseline established and metrics recorded.
-- [ ] **[Researcher A]** Submitted Plan A following `task-planning` standards.
-- [ ] **[Researcher B]** Submitted Plan B following `task-planning` standards.
+- [ ] **[Researcher A]** Subagent invoked and submitted Plan A under `.agent_scratchpad/`.
+- [ ] **[Researcher B]** Subagent invoked and submitted Plan B under `.agent_scratchpad/`.
 - [ ] **[Supervisor]** Research plans reviewed and approved for execution.
-- [ ] **[Researcher A & B]** Developed in isolated environments without code conflicts.
-- [ ] **[Supervisor]** Proactively inspected workspaces if periodic reports were missing.
+- [ ] **[Researcher A & B]** Developed in isolated workspaces without code conflicts.
+- [ ] **[Supervisor]** Monitored progress and received status updates via `send_message`.
 - [ ] **[Supervisor]** Comparative evaluation of results completed.
-- [ ] **[Supervisor]** Final synthesis report generated.
+- [ ] **[Supervisor]** Final synthesis report generated under `.agent_scratchpad/`.
+```

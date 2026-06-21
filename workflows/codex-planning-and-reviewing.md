@@ -19,16 +19,16 @@ This workflow is designed for complex tasks where structural planning and rigoro
 
 1. **Invoke Codex Planning**: Agent 1 runs `codex` in the dedicated **"codex_agent"** terminal to process the `task-planning` skill.
    - **Command Example**: `codex "Follow the task-planning skill to create a plan for: [USER_REQUEST]"`
-2. **Review & Solidify Plan**: Agent 1 ensures the plan is committed to `plan.md` as per the `task-planning` skill requirements.
-3. **User Approval**: Present the `plan.md` to the user and wait for approval if required.
+2. **Review & Solidify Plan**: Agent 1 ensures the plan is committed to the scratchpad path: `[.agent_scratchpad/plan.md](../../.agent_scratchpad/plan.md)` as per the `task-planning` skill requirements.
+3. **User Approval**: Present the `[.agent_scratchpad/plan.md](../../.agent_scratchpad/plan.md)` to the user and wait for approval if required.
 
 ---
 
 ## Stage 2: Implementation & Development
 *Goal: Execute the plan with precision.*
 
-1. **Follow Plan**: Agent 1 implements the code changes following the established `plan.md`.
-2. **Standard Practices**: Adhere to `test-driven-development` and `systematic-debugging` as mentioned in the `task-planning` skill.
+1. **Follow Plan**: Agent 1 implements the code changes following the established `[.agent_scratchpad/plan.md](../../.agent_scratchpad/plan.md)`.
+2. **Standard Practices**: Adhere to `test-driven-development` (via `[test-driven-development/SKILL.md](../skills/test-driven-development/SKILL.md)`) and `systematic-debugging` (via `[systematic-debugging/SKILL.md](../skills/systematic-debugging/SKILL.md)`) as mentioned in the `task-planning` skill.
 3. **Staging**: Once a logical unit of work is completed, ensure changes are staged or clearly visible in the workspace.
 
 ---
@@ -51,7 +51,7 @@ This workflow is designed for complex tasks where structural planning and rigoro
 *Goal: Wrap up the task and maintain workspace hygiene.*
 
 1. **Verification**: Run final tests to ensure the fixes haven't introduced regressions.
-2. **Cleanup**: Delete `plan.md` and any temporary scripts as mandated by the `task-planning` skill.
+2. **Cleanup**: Delete `[.agent_scratchpad/plan.md](../../.agent_scratchpad/plan.md)` and any temporary scripts as mandated by the `task-planning` skill.
 3. **Final Report**: Provide the user with a summary of the work and the results of the final Codex review.
 
 ---
@@ -64,5 +64,5 @@ This workflow is designed for complex tasks where structural planning and rigoro
 - [ ] **Stage 3**: `codex review --uncommitted` executed.
 - [ ] **Stage 3**: Issues troubleshot with Codex and resolved.
 - [ ] **Stage 3**: Re-review confirmed no remaining issues (Recursive Loop closed).
-- [ ] **Stage 4**: Workspace hygiene completed (cleanup).
+- [ ] **Stage 4**: Workspace hygiene completed (cleanup of plan.md).
 ```

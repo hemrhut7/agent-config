@@ -21,13 +21,13 @@ Task Progress:
     [ ] Step 4: Draft analysis report and reply to the Issue
 
 ### Step 1: Read Issue Details
-Use the `github:get_issue` tool to retrieve the title, description, and existing comments of the issue. Identify the core problem to be solved.
+Use the `github:get_issue` tool (or CLI commands) to retrieve the title, description, and existing comments of the issue. Identify the core problem to be solved.
 
 ### Step 2: Analyze Git Commits
 Retrieve recent code changes related to the issue:
-1. Use `git:log` to view recent commit messages.
+1. Use `git log -n 20` to view recent commit messages.
 2. Search for commits containing the issue number or related keywords.
-3. For key commits, use `git:show` or `git:diff` to view actual code changes.
+3. For key commits, use `git show <commit_hash>` or `git diff` to view actual code changes.
 
 ### Step 3: Confirm Execution Results
 Based on commit content and comments, determine:
@@ -36,7 +36,7 @@ Based on commit content and comments, determine:
 - Whether there are remaining edge cases left unhandled.
 
 ### Step 4: Reply to Issue
-Use `github:create_issue_comment` to submit a reply. The content should be professional, concise, and follow this structure:
+Use the `github:create_issue_comment` tool (or CLI equivalent) to submit a reply. The content should be professional, concise, and follow this structure:
 
 **Reply Template:**
 > ### 🔍 Automated Analysis Report
@@ -44,7 +44,7 @@ Use `github:create_issue_comment` to submit a reply. The content should be profe
 > **Related Commits:** [List short hashes or commit titles]
 > **Execution Result Analysis:**
 > - [Briefly describe code change points]
-> - [Confirm current execution status/test results] (If applicable, reference quantification results from `algorithm-error-quantizer`)
+> - [Confirm current execution status/test results] (If applicable, reference quantification results from `[algorithm-error-quantizer/SKILL.md](../skills/algorithm-error-quantizer/SKILL.md)`)
 > 
 > **Conclusion:** (e.g., Fixed / Further testing required / Deployed to development environment)
 
