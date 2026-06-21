@@ -10,6 +10,3 @@
 - **Cross-Core Safety**: Wrapped sensitive writes/reads in FreeRTOS critical sections (`portENTER_CRITICAL`) to prevent telemetry tearing and multi-core races.
 - **Input Sanitization**: Strict non-negative, finite, and non-NaN checks in `AppScript` for serial PID commands.
 - **Joystick Safety**: Solved reconnection failures by checking `isConnected()` status. Wrapped BTstack operations in a Mutex to eliminate Guru Meditation crashes.
-
-### [2026-06-06 15:10] Tags: note, daily-summary
-- **Type-safe Math**: Use `std::abs()` for float comparisons to prevent incorrect integer casting.

@@ -1,63 +1,41 @@
-<!-- SCOPE: EKF, navigation, estimation algorithms, LiDAR SLAM fusion, and error analysis. -->
-# Navigation, Estimation & SLAM
+<!-- SCOPE: Navigation algorithms, EKF/SLAM estimation, log processing, and performance scaling. -->
+# Navigation, Estimation & Log Analysis
 
-### [2026-05-15 16:39] Tags: navigation, least-squares, LSM, GNSS-delay, UAV
-#### Global Batch Optimization (LSM) Framework
-Implemented a trajectory smoother using Non-linear Least Squares (LSM).
-- **Initialization**: Zero-EKF initialization via accLeveling and GNSS diff.
-- **GNSS Delay (tau)**: Estimated via Taylor expansion Jacobian.
-- **Manifold Optimization**: SO(3) updates for attitude.
-- **Solver**: Sparse Levenberg-Marquardt using `scipy.sparse.linalg.spsolve`.
-- **Stabilization**: Fixed rotation Jacobians and implemented recursive bias propagation. Horizontal error: 0.06m.
+## INS_python (Core Estimation & SLAM)
 
-### [2026-05-17 19:12] Tags: navigation, ekf, calibration, lidar, slam
-#### EKF LiDAR Yaw Calibration & Optimization
-- **Key Discovery**: Identified +8.2° heading offset in Cartographer relative to absolute ENU.
-- **Result**: Setting `lidar_yaw_offset_deg = 8.2` reduced 2D RMSE to 0.0713m (7.13cm).
-- **Origin Alignment**: EKF `pos0` must match LiDAR origin LLA (e.g. [25.0, 121.0, 10.0]) to prevent residual explosion.
-- **Odometry**: Enabled wheel odometry constraints, reducing RMSE from 0.31m to 0.08m.
+### [2026-05-15] Global Batch Optimization (LSM) Framework
+- **Init & Delay**: Zero-EKF init via accLeveling/GPS diff. Est GNSS delay (tau) via Taylor expansion Jacobian.
+- **Attitude**: SO(3) updates; sparse Levenberg-Marquardt solver via `spsolve`.
+- **Stabilization**: Fixed rotation Jacobians & recursive bias propagation. (Horizontal error: 0.06m).
+- **Project Structure**: Reverted state indexing for Wind/Gravity/SF. Reverted to Standard Form covariance.
 
-### [2026-05-18 12:53] Tags: ekf, architecture-sync, bugfix
-Synchronized `modify-project-structure` branch. Reverted state indexing for Wind/Gravity/SF. Reverted to Standard Form covariance update for consistency with master.
+### [2026-05-17] Cartographer SLAM & Calibration
+- **Calibration**: Heading offset (+8.2°) alignment reduced 2D RMSE to 0.0713m. EKF `pos0` must match LLA.
+- **Odometry**: Wheel constraints reduced RMSE from 0.31m to 0.08m. Aligned path RMSE/MAE is primary.
+- **ABC Sweep**: Optimal yaw offset (+19°), timing (+0.1s), lever arm (-0.13, -0.07)m (RMSE_2D: 0.27m).
+- **Tuning (N10 Lidar)**: No odometer setup; short range (15m). Set `num_range_data = 45` to prevent translation drift. High `rotation_weight = 150.0` leverages IMU Yaw constraint. Set `min_z = -0.1m` to filter ground reflections.
+- **Submap Reprojection**: Bridge `/submap_list` from ROS to Windows UDP `9092`. Cache submap local poses `(idx, x, y, yaw)` to dynamically re-project historical points on redraw. Bound virtual submaps to prevent memory leaks.
+- **Tracking Error**: XKF1 diverges from llh2enu over 20km (39m error). Extract Geodetic POS to isolate drift. Zero-base altitude by subtracting first point. Truncate query end times by -0.1s to avoid sync spikes.
 
-### [2026-05-20] Tags: navigation, coordinate-projection, llh
-#### Tracking Error Methodology
-- **Coordinate Projection**: EKF internal `XKF1` frame diverges from `llh2enu` over 20km (~39m error). Extract Geodetic `POS` for consistent projection.
-- **Vertical Baseline**: Zero-base altitudes by subtracting the first point to isolate active drift.
-- **Transitions**: Truncate query end times by -0.1s to avoid spikes from GNSS restoration/sync mismatch.
-
-### [2026-05-17 14:30] Tags: slam, cartographer, metrics
-Use aligned path RMSE/MAE as primary metrics for SLAM evaluation, not just closure error. Aligned path RMSE improved from 0.47m to 0.32m with `enable_lidar_yaw=True`.
-
-### [2026-05-17 17:05] Tags: slam, abc, sweep
-Three-stage sweep for ABC dataset found optimal yaw offset (+19°), timing (+0.1s), and lever arm (-0.13, -0.07) m, reducing RMSE_2D to 0.27m. Remaining error suggests URDF/TF inconsistencies.
-
-### [2026-06-07 17:21] Tags: navigation-slam
-#### GlobalBatchOptimizer Bias & Scale Factor Calibration
-- **Issue**: Hardcoded priors on attitude and noise bounds allowed the optimizer to fit trajectories by slightly wiggling states rather than updating biases, causing bias values to remain near zero and scale factors to remain flat.
-- **Fix**: Calculate and apply continuous-time noise parameters (ARW, VRW) scaled by `np.sqrt(dt)` for the state integration model, add GNSS velocity factor constraints, and set realistic prior bounds on Node 0. This successfully recovers realistic, slowly-varying bias estimation (gyro bias 5~45 DPH, accel bias -0.5~0 mg) and scale factor drift.
+### [2026-06-07] GlobalBatchOptimizer Bias & Scale Factor Calibration
+- **Calibration Fix**: Apply continuous noise (ARW/VRW) scaled by `np.sqrt(dt)`, GNSS velocity factor constraints, Node 0 bounds. Recovers slowly-varying biases (gyro 5~45 DPH, accel -0.5~0 mg).
 - **Unit Scale**: Gyro bias extraction from raw EKF logs must convert rad/s to DPH using `*(180.0 / np.pi * 3600.0)`.
 
-### [2026-06-11] Tags: EKF, Optimization, GlobalBatchOptimizer, Python, Numba, searchsorted
-#### GlobalBatchOptimizer Performance Optimization Results
-1. `_preintegrate_all` (was 66.1% of time): Replaced full-array boolean mask `(imu_t > t_start) & (imu_t <= t_end)` with O(1) vectorized `np.searchsorted`. Time per iteration dropped by ~84% (from ~1.01s down to ~0.16s for 1877 nodes).
-2. `_build_jacobian` (was 28.1% of time): Replaced O(N) GNSS search `np.argmin(np.abs(...))` with `np.searchsorted`.
-Overall Impact: Total Batch EKF iteration time reduced by ~60% (e.g. from ~3.1-4.9s to ~1.3-1.9s for 4000 nodes).
+### [2026-06-11] Performance & GPU Acceleration
+- **Vectorization**: `np.searchsorted` for preintegration/Jacobian time-sync (dropped time/iteration by ~84%).
+- **Jacobian**: Replaced `list.append` (720K per-iter) with `extend` & pre-cached identity matrices (30.7% speedup).
+- **GPU Feasibility**: CuPy with `cupyx.scipy.sparse.linalg.spsolve` is viable for Hessian solving ($H = J^T J$) on N > 20k. Host-to-device overhead makes CPU faster for < 10k nodes.
 
-### [2026-06-11] Tags: navigation, gpu, optimization, cupy
-#### GPU Acceleration Investigation for Global Batch Optimizer
-- **Feasibility**: High. GPU acceleration for the Hessian $H = J^T J$ and sparse linear solve is feasible for large-scale problems.
-- **CuPy Strategy**: Transfer Jacobian $J$ (COO) and residual $r$ to GPU. Compute $H = J^T J$ and solve for $dx$ using `cupyx.scipy.sparse.linalg.spsolve`.
-- **Bottlenecks**: Host-to-Device overhead for < 10,000 nodes; serial dependencies in Cholesky solvers.
-- **Recommended Tools**: Theseus (Meta) or NVIDIA cuDSS for systems exceeding 20,000 nodes.
+## ArduPilot & Log Analysis (Data Processing)
 
-### [2026-06-11] Tags: navigation, ekf, performance, optimization, numba, python-overhead
-#### EKF Performance Optimization Analysis for Large Logs
-Current EKF core is highly efficient due to `numba.njit(cache=True)`, but high-frequency loops (200-400Hz) in Python wrappers introduce significant overhead.
-- **Identified Bottlenecks**: (1) Redundant loop search logic, (2) Memory churn via excessive `.copy()` calls, (3) Redundant sensor flag checks, (4) Linear sync latency (use `np.searchsorted`).
-- **Key Strategy**: Move toward a "Vectorized Input, Jitted Core" architecture.
+### [2026-05-26] High-Performance Log Parsing
+- **Optimization**: Read into mutable `bytearray`/`mmap`. ProcessPoolExecutor for parallel trajectory analysis.
+- **Pitfalls**: Skip offsets where `body_start + body_len` exceeds file size. Preserve `IMS` alignment.
+- **FFT Gaps**: Estimate `fs` from median positive `dt` in the longest continuous segment to avoid bias.
+- **Scaling & CLI**: Standardized on `--input`/`--out`. Fixed ILB gyro double-conversion (57.3x) scaling.
+- **NPZ Output**: Automatically save EKF results as compressed `.npz` file for rapid cross-model EKF analysis.
 
-### [2026-06-16] Tags: navigation, least-squares, LSM, optimization, numba
-#### GlobalBatchOptimizer add_factor & Jacobian Build Optimization
-- **Solution A (Implemented)**: Replaced element-by-element `list.append` (originally ~720K per-iteration) with batch `extend` and pre-cached identity/negative-identity matrices. This minimizes Python function call overhead and allocations.
-- **Solution C (Recorded)**: Numba-ify `_build_jacobian` and `add_factor`. Compile the entire Jacobian triple-loop using `@njit(cache=True)`.
+### [2026-06-11] Memory Safety & EKF Hot-Loop Tuning
+- **EKF Hot-Loop Tuning**: Achieved 58% runtime reduction (22.83s to 9.53s). Pre-cached log categories, pre-computed sensor flags, re-used cache dict, and avoided redundant `.copy()` calls.
+- **Resource Scaling**: Decimate data by 20 for plots. Run massive logs (>800MB) in isolated subprocesses.
+- **Cores**: Use 2-3 cores (parallel workers count: `max(1, cpu_count - 4)`) to balance CPU and RAM usage.

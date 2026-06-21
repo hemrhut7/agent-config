@@ -32,8 +32,8 @@ During complex workflows, record active tasks, milestones, and results directly 
 
 ## Automated Processes
 
-### Daily Summarize (Time-Gated)
-If >8 hours since last update, auto-suggest summarization. (Script: `scripts/daily_summarize.py`)
+### Daily Summarize (Auto-Execution)
+At session startup (Recall_Background), the agent MUST run `python -u scripts/daily_summarize.py --check-only`. If `"due": true`, the agent MUST run `python -u scripts/daily_summarize.py` to archive the prior session, extract notes, and restore incomplete Active Tasks to the new `brain.md`.
 
 ### Line-Limit Enforcement
 `SKILL.md` ≤60 | `user/preferences.md` ≤40 | `topics/*.md` ≤100. (Script: `scripts/compress.py`)

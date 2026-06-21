@@ -31,7 +31,7 @@ BRAIN_TEMPLATE = """<!-- SCOPE: Today's task log and working memory. Read at con
 ## Last Updated: {timestamp}
 
 ### Active Tasks
-- (none yet)
+- (See project-specific tasks in [task/{project_name}.md](task/{project_name}.md))
 
 ### Session Notes
 - (fresh session)
@@ -128,10 +128,10 @@ def archive_brain(brain_path: Path, archive_dir: Path) -> str:
     return str(archive_path)
 
 
-def reset_brain(brain_path: Path):
+def reset_brain(brain_path: Path, project_name: str):
     """Reset brain.md to the empty template."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-    brain_path.write_text(BRAIN_TEMPLATE.format(timestamp=timestamp), encoding="utf-8")
+    brain_path.write_text(BRAIN_TEMPLATE.format(timestamp=timestamp, project_name=project_name), encoding="utf-8")
 
 
 def daily_summarize(memory_root: Path | None = None, force: bool = False) -> dict:
@@ -184,8 +184,15 @@ def daily_summarize(memory_root: Path | None = None, force: bool = False) -> dic
     # Archive
     archive_path = archive_brain(brain_path, archive_dir)
 
-    # Reset
-    reset_brain(brain_path)
+    # Reset with project name
+    project_name = root.parent.parent.name
+    task_dir = root / "task"
+    task_dir.mkdir(exist_ok=True)
+    project_task_file = task_dir / f"{project_name}.md"
+    if not project_task_file.exists():
+        project_task_file.write_text(f"# Active Tasks — {project_name}\n\n- [ ] (none yet)\n", encoding="utf-8")
+
+    reset_brain(brain_path, project_name)
 
     return {
         "action": "completed",
