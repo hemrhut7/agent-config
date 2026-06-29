@@ -1,5 +1,0 @@
-{
-  "version": 1,
-  "skills": {},
-  "_comment": "Tracks invocation counts for temp skills. Format: { 'skill-name': { 'invocations': N, 'created': 'ISO-date', 'last_used': 'ISO-date', 'source_requirement': '...' } }"
-}
