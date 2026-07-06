@@ -5,6 +5,8 @@ When writing a git commit message, you MUST follow the Conventional Commits spec
 Format
 `<type>[optional scope]: <description>`
 
+If additional context is useful, add a blank line after the summary line and include bullet points that explain the main changes.
+
 Allowed Types
 - **feat**: A new feature
 - **fix**: A bug fix
@@ -19,7 +21,14 @@ Instructions
 1. Analyze the changes to determine the primary `type`.
 2. Identify the `scope` if applicable (e.g., specific component or file).
 3. Write a concise `description` in an imperative mood (e.g., "add feature" not "added feature").
-4. If there are breaking changes, add a footer starting with `BREAKING CHANGE:`.
+4. If extra context is helpful, add a short body with bullet points after a blank line.
+5. If there are breaking changes, add a footer starting with `BREAKING CHANGE:`.
 
 Example
 `feat(auth): implement login with google`
+
+`chore(memory): archive prior session and document real-time plotting optimizations`
+
+- Archive working memory from prior session into brain_2026-06-25.md.
+- Add notes on sensor health check and telemetry receiver dynamic parsing.
+- Document high-frequency plotting optimizations using collections.deque, busy-wait sleep fix, and signal batching.
