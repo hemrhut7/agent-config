@@ -58,3 +58,7 @@ Task Progress:
 - **No Data Loss**: Before deleting any topic file, ensure its context and dates are copied and merged.
 - **Portability**: Never use absolute file links (e.g., `file:///home/hank/` or `C:/`) inside skill folders.
 - **Conform to Limits**: Enforce length limits (`SKILL.md` <= 60 lines, `user/preferences.md` <= 40 lines) to keep LLM context clean.
+- **Batch Processing**: When writing/modifying multiple files, write a single Python script in `.agent_scratchpad/` to perform the writes at once, reducing tool call roundtrips.
+- **Combined Git Operations**: Chain multiple git commands (status, stage, commit) across sub-repositories using `&&` to avoid turn overhead.
+- **Milestone Tracking**: Update the progress tracking artifact in batches at major milestones rather than step-by-step to prevent context bloat from repetitive edits.
+
