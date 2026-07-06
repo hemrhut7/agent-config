@@ -10,4 +10,4 @@ trigger: always_on
 
 3. If the project contains a graphify-out folder, you MUST prioritize checking its contents (e.g., GRAPH_REPORT.md or graph.json) during the research or exploration phase to gather architectural insights and module relationships.
 
-4. **Memory First**: At the start of every new conversation or major task, you MUST automatically invoke the `memory` skill (read `brain.md` and trigger `Recall_Background`) before taking any other action.
+4. **Memory First**: At the start of every new conversation or major task, you MUST automatically invoke the `memory` skill by running the unified initialization script `python -u scripts/init_session.py "<topic>"` (in `.agents/skills/memory`) before taking any other action.
