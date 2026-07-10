@@ -1,3 +1,8 @@
+---
+name: attitude-analysis
+description: "Process, analyze, and visualize angular navigation data (roll, pitch, yaw) from multi-stream logs, handling wrapping to [-180, 180] and filtering outlier spikes."
+---
+
 # Attitude Analysis Skill
 
 This skill provides specialized utilities for processing, analyzing, and visualizing navigation data from multi-stream logs (e.g., External INS vs ArduPilot EKF). It focuses on handling the circular nature of angular data and mitigating artifacts from timing/interpolation issues.
