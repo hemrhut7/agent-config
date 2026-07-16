@@ -1,0 +1,30 @@
+{
+  "summary": {
+    "pass_rate": 1.0,
+    "passed": 4,
+    "failed": 0,
+    "total": 4
+  },
+  "expectations": [
+    {
+      "text": "Check if has_output_file (exists: output.txt)",
+      "passed": true,
+      "evidence": "File 'outputs/output.txt' exists."
+    },
+    {
+      "text": "Check if contains_bluehawk (contains: Bluehawk)",
+      "passed": true,
+      "evidence": "Found: '{\"status\": \"success\", \"results\": [{\"content\": \"Technical Details\\nSlide 2 Content: Project Falcon code name is 'Bluehawk' and development phase is active.\", \"metadata\": {\"slide\": 2, \"type\": \"pptx\", \"source\": \"test_ppt.pptx\"}}, {\"content\": \"Falcon Slide Deck\\nSlide 1 Content: Project overview.\", \"metadata\": {\"source\": \"test_ppt.pptx\", \"type\": \"pptx\", \"slide\": 1}}]}'"
+    },
+    {
+      "text": "Check if contains_flux_capacitor (contains: Flux Capacitor)",
+      "passed": true,
+      "evidence": "Found: '$ PYTHONPATH=\"/home/hank/文件/Python/INS_Reader/.agents/skills/memory\" ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/query_document.py \"test_excel\" \"Flux Capacitor\"'"
+    },
+    {
+      "text": "Check if contains_serial (contains: FC-1985)",
+      "passed": true,
+      "evidence": "Found: '{\"status\": \"success\", \"results\": [{\"content\": \"Sheet: Sheet1\\nItem,Serial,Status\\nFlux Capacitor,FC-1985,Ready\\nOscillation Overthruster,OO-1984,Testing\\nMr. Fusion,MF-2015,Prototype\", \"metadata\": {\"source\": \"test_excel.xlsx\", \"chunk\": 1, \"sheet\": \"Sheet1\", \"type\": \"excel\"}}]}'"
+    }
+  ]
+}

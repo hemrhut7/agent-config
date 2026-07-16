@@ -1,0 +1,11 @@
+$ ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/index_document.py ".agent_scratchpad/test_ppt.pptx"
+{"status": "success", "file_name": "test_ppt.pptx", "collection_name": "test_ppt", "total_chunks": 2, "indexed_chunks": 2}
+
+$ ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/index_document.py ".agent_scratchpad/test_excel.xlsx"
+{"status": "success", "file_name": "test_excel.xlsx", "collection_name": "test_excel", "total_chunks": 1, "indexed_chunks": 1}
+
+$ ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/query_document.py "test_ppt" "code name"
+{"status": "success", "results": [{"content": "Technical Details\nSlide 2 Content: Project Falcon code name is 'Bluehawk' and development phase is active.", "metadata": {"type": "pptx", "source": "test_ppt.pptx", "slide": 2}}, {"content": "Falcon Slide Deck\nSlide 1 Content: Project overview.", "metadata": {"source": "test_ppt.pptx", "slide": 1, "type": "pptx"}}]}
+
+$ ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/query_document.py "test_excel" "Flux Capacitor"
+{"status": "success", "results": [{"content": "Sheet: Sheet1\nItem,Serial,Status\nFlux Capacitor,FC-1985,Ready\nOscillation Overthruster,OO-1984,Testing\nMr. Fusion,MF-2015,Prototype", "metadata": {"chunk": 1, "source": "test_excel.xlsx", "type": "excel", "sheet": "Sheet1"}}]}

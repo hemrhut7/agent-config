@@ -1,0 +1,23 @@
+{
+  "skill_name": "doc-to-vectordb",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Index the PDF document doc/INS-U_ICD_rev-1.43_Jul_2025.pdf into the local vector database. Then, perform a query for 'baud rate' and print the text and page number of the best match.",
+      "expected_output": "Prints page 117 indicating that the default COM1 baud rate is 115200 bps.",
+      "files": ["doc/INS-U_ICD_rev-1.43_Jul_2025.pdf"]
+    },
+    {
+      "id": 1,
+      "prompt": "Index the Word document .agent_scratchpad/test_doc.docx into the local vector database. Then, query for 'password' and print the matching text.",
+      "expected_output": "Prints matching text containing the secret password 'Antigravity-42'.",
+      "files": [".agent_scratchpad/test_doc.docx"]
+    },
+    {
+      "id": 2,
+      "prompt": "Index the PowerPoint presentation .agent_scratchpad/test_ppt.pptx and the Excel spreadsheet .agent_scratchpad/test_excel.xlsx into the local vector database. Then, query the presentation for 'code name' and query the spreadsheet for 'Flux Capacitor', printing the results.",
+      "expected_output": "Prints PPTX match containing 'Bluehawk' and Excel match containing 'Flux Capacitor' and serial 'FC-1985'.",
+      "files": [".agent_scratchpad/test_ppt.pptx", ".agent_scratchpad/test_excel.xlsx"]
+    }
+  ]
+}
