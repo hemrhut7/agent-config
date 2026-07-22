@@ -7,33 +7,6 @@ description: Use this skill to interact with the Codex CLI, an expert AI agent t
 
 This skill allows you to leverage the `codex` CLI tool to perform advanced software engineering tasks. `codex` is a powerful agent capable of understanding large codebases, providing architectural insights, and executing complex modifications.
 
-## Mandatory Usage Logging
-
-To ensure traceability and audit execution, **every call to Codex must be logged** to `.agents/skills/codex-skill/history.md` immediately after execution.
-
-### Log Format
-```markdown
-### [YYYY-MM-DD HH:MM] Codex Call
-- **Task**: [Brief description of the work]
-- **Command**: [codex command used, e.g., exec / review]
-- **Status**: [Success / Error]
-- **Details**: [Key output or summary of changes]
----
-```
-
-### Logging Instruction
-After running `codex`, use a non-interactive append or a file edit tool to update `.agents/skills/codex-skill/history.md`. For example:
-```bash
-cat << 'EOF' >> .agents/skills/codex-skill/history.md
-### [YYYY-MM-DD HH:MM] Codex Call
-- **Task**: [Brief description of the work]
-- **Command**: [codex command used, e.g., exec / review]
-- **Status**: [Success / Error]
-- **Details**: [Key output or summary of changes]
----
-EOF
-```
-Using `cat << 'EOF'` prevents terminal hangs that can happen with interactive `cat >>`.
 
 ## Continuous Task Delegation (Session Resumption)
 
