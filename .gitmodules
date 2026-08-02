@@ -1,5 +1,0 @@
-[submodule "skills/memory"]
-	path = skills/memory
-	url = https://github.com/hemrhut7/agent-memory
-	ignore = dirty
-

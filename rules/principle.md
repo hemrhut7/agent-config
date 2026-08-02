@@ -9,5 +9,3 @@ trigger: always_on
 2. After code updates, compile or run the project to confirm there is not any error during the processing of compiling or running. If something goes wrong, you MUST follow the `systematic-debugging` skill.
 
 3. If the project contains a graphify-out folder, you MUST prioritize checking its contents (e.g., GRAPH_REPORT.md or graph.json) during the research or exploration phase to gather architectural insights and module relationships.
-
-4. **Memory First**: At the start of every new conversation or major task, you MUST automatically invoke the `memory` skill by running the unified initialization script `python -u scripts/init_session.py "<topic>"` (in `.agents/skills/memory`) before taking any other action.

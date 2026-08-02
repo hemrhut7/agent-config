@@ -77,5 +77,5 @@ Whenever you need to read or reference information from the indexed document:
   ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/query_document.py "<collection_name>" "your query" --top-k 3
   ```
 
-### 6. Memory Log Update
-After successfully indexing a document, add an entry under the `Achievements` and `Session Notes` section of `brain.md` indicating that the document is now indexed and specifying its collection name.
+### 6. Index Log Update
+After successfully indexing a document, add an entry under the `Achievements` and `Session Notes` section indicating that the document is now indexed and specifying its collection name.

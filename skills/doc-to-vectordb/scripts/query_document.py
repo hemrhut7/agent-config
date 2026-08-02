@@ -10,9 +10,7 @@ import argparse
 import json
 from pathlib import Path
 
-# Resolve the memory scripts folder to import vectordb_manager
 project_root = Path(__file__).resolve().parent.parent.parent.parent.parent
-sys.path.append(str(project_root / ".agents" / "skills" / "memory"))
 
 try:
     from scripts import vectordb_manager
