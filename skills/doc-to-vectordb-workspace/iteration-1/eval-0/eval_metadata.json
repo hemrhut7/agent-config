@@ -1,0 +1,22 @@
+{
+  "eval_id": 0,
+  "eval_name": "pdf_indexing_and_query",
+  "prompt": "Index the PDF document doc/INS-U_ICD_rev-1.43_Jul_2025.pdf into the local vector database. Then, perform a query for 'baud rate' and print the text and page number of the best match.",
+  "assertions": [
+    {
+      "name": "has_output_file",
+      "type": "exists",
+      "value": "output.txt"
+    },
+    {
+      "name": "contains_baud_rate_info",
+      "type": "contains",
+      "value": "115200"
+    },
+    {
+      "name": "contains_page_number",
+      "type": "contains",
+      "value": "117"
+    }
+  ]
+}

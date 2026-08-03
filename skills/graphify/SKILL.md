@@ -59,7 +59,7 @@ If no path was given, use `.` (current directory). Do not ask the user for a pat
 
 ## Critical Windows, Shell & CLI Compatibility Guidelines
 
-When executing on **Windows (PowerShell)**, you MUST follow the **Windows Environment Memory Rules** defined under `memory/user/preferences.md` (specifically avoiding PowerShell stdout redirection `>` and long terminal command one-liners).
+When executing on **Windows (PowerShell)**, follow Windows environment guidelines (specifically avoiding PowerShell stdout redirection `>` and long terminal command one-liners).
 
 For path/directory exclusions:
 - **Exclusion handling**: The `graphify.detect.detect()` API does not accept an exclusion parameter directly. Write all requested exclusions (e.g. `examples/results/**`, `data/**`) to the `.graphifyignore` file in the root directory before running file detection.

@@ -7,33 +7,6 @@ description: Use this skill to delegate simple or batch tasks to the Hermes Agen
 
 This skill allows you to leverage the `hermes` CLI tool, an AI assistant with tool-calling capabilities, to perform various tasks. It is specifically designed to manage Gemini API usage limits by selecting appropriate models based on task complexity.
 
-## Mandatory Usage Logging
-
-To ensure traceability and monitor quota consumption, **every call to Hermes must be logged** to `.agents/skills/hermes-skill/history.md` immediately after execution.
-
-### Log Format
-```markdown
-### [YYYY-MM-DD HH:MM] Hermes Call
-- **Task**: [Brief description of the work]
-- **Model**: [Model name used]
-- **Status**: [Success / Error]
-- **Details**: [Key output or error message]
----
-```
-
-### Logging Instruction
-After running `hermes`, use a non-interactive append or a file edit tool to update `.agents/skills/hermes-skill/history.md`. For example:
-```bash
-cat << 'EOF' >> .agents/skills/hermes-skill/history.md
-### [YYYY-MM-DD HH:MM] Hermes Call
-- **Task**: [Brief description of the work]
-- **Model**: [Model name used]
-- **Status**: [Success / Error]
-- **Details**: [Key output or error message]
----
-EOF
-```
-Using `cat << 'EOF'` prevents terminal hangs that can happen with interactive `cat >>`.
 
 ## Continuous Task Delegation (Session Isolation)
 

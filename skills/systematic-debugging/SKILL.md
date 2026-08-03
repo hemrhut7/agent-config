@@ -31,7 +31,7 @@ Random fixes waste time and create technical debt. Always find the root cause be
 - **Failing Test**: Write a test that reproduces the bug.
 - **Root Fix**: Fix the source, not the symptom.
 - **Regression**: Verify all other tests still pass.
-- **Persist**: Call `memory/Reflect_On_Error` to save the pitfall and prevention strategy for future recall.
+- **Persist**: Document the pitfall and prevention strategy for future reference.
 
 ## Red Flags
 

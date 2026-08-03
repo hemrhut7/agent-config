@@ -27,8 +27,8 @@ Instructions
 Example
 `feat(auth): implement login with google`
 
-`chore(memory): archive prior session and document real-time plotting optimizations`
+`chore(docs): archive prior session and document real-time plotting optimizations`
 
-- Archive working memory from prior session into brain_2026-06-25.md.
+- Archive working notes from prior session into brain_2026-06-25.md.
 - Add notes on sensor health check and telemetry receiver dynamic parsing.
 - Document high-frequency plotting optimizations using collections.deque, busy-wait sleep fix, and signal batching.

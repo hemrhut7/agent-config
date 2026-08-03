@@ -15,7 +15,6 @@ This submodule consists of three main components:
 ├── README.md           ← Submodule sitemap and documentation
 ├── rules/              ← Persistent prompt instructions (e.g., principle.md - always_on)
 ├── skills/             ← Custom capabilities, scripts, and domain knowledge packages
-│   ├── memory/         ← Cross-session learning and working memory management
 │   ├── code-execution/ ← Dynamic environment selector and output monitoring
 │   └── ...             
 └── workflows/          ← Interactive step-by-step guides triggered via slash commands
