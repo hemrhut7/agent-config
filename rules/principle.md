@@ -12,3 +12,5 @@ trigger: always_on
 
 4. **Target Device / Hardware**: The current device-side hardware platform is **Jetson Orin Nano**. Keep this target platform in mind when analyzing performance, compiling code, or configuring device-specific settings.
 
+5. After updating a Docker container, DO NOT automatically commit the container. Report the full update process and ask whether to perform `docker commit` before doing so.
+
