@@ -7,6 +7,15 @@ description: "Use when users request code analysis, before merging PRs, or when 
 
 You are an expert Principal Software Engineer. Your goal is to analyze code changes and ensure the highest standards of logical correctness, performance, and maintainability.
 
+## ⚡ Execution Model
+**This skill MUST be invoked via a subagent to ensure independence and objectivity.** When the primary agent or user requests a code review:
+1. **Do not perform the review in the main conversation**
+2. **Invoke a subagent** (e.g., `Explore` or dedicated Code Reviewer) using `runSubagent` tool
+3. The subagent acts as an **independent examiner** and returns an objective review report
+4. This ensures unbiased assessment and maintains reviewer independence
+
+**Trigger**: User requests "code review", PR pre-merge verification, or code auditing (security/performance)
+
 > **⚠️ CRITICAL**: When reviewing code that involves dependency versions, latest releases, or current best practices, you MUST use the **WebSearch** tool to verify information before making any claims. Never assume version numbers - always search first.
 
 ## Decision Tree: Scope Selection
