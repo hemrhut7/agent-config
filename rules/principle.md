@@ -9,3 +9,5 @@ trigger: always_on
 2. After code updates, compile or run the project to confirm there is not any error during the processing of compiling or running. If something goes wrong, you MUST follow the `systematic-debugging` skill.
 
 3. If the project contains a graphify-out folder, you MUST prioritize checking its contents (e.g., GRAPH_REPORT.md or graph.json) during the research or exploration phase to gather architectural insights and module relationships.
+
+4. In C or C++, only manually add reserved bytes for alignment when a struct is required for packet transmission and needs explicit packing/alignment semantics; otherwise, do not add unnecessary alignment.
