@@ -11,3 +11,5 @@ trigger: always_on
 3. If the project contains a graphify-out folder, you MUST prioritize checking its contents (e.g., GRAPH_REPORT.md or graph.json) during the research or exploration phase to gather architectural insights and module relationships.
 
 4. In C or C++, only manually add reserved bytes for alignment when a struct is required for packet transmission and needs explicit packing/alignment semantics; otherwise, do not add unnecessary alignment.
+
+5. After code edits, do not automatically stage the changes into Git.
