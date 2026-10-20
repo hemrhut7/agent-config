@@ -40,7 +40,7 @@ Review request → What scope?
 *Automatically execute the appropriate git commands to gather context if not provided.* Use `read_file` to understand the architecture of files touched by the diff.
 
 ## 2. Review Criteria
-1. **Logic & Correctness**: Null pointers, boundary values, async race conditions, robust error handling.
+1. **Logic & Correctness**: Null pointers, boundary values, async race conditions, robust error handling, and opportunities to simplify recently changed logic without changing behavior.
 2. **Performance (Multi-layered Audit)**:
    - **Architecture & I/O**: N+1 queries, payload over-fetching, wrong-layer processing.
    - **Memory**: Hot-path allocations, missing capacity hints, GC pressure, streaming vs. buffering.
@@ -50,6 +50,13 @@ Review request → What scope?
 3. **Security**: SQLi, XSS, hardcoded credentials, insecure dependencies (verify via search).
 4. **Memory Safety & Leaks**: Unclosed handles, dangling pointers, uncancelled contexts.
 5. **Dependency Check**: Verified via WebSearch on YYYY-MM-DD.
+
+## Logic Simplification Review
+During the Logic & Correctness phase, launch a separate `code-simplifier` subagent to inspect the same changed code for behavior-preserving simplifications. Keep its scope limited to the review target, and ask it for specific candidate changes, their rationale, and any assumptions or behavior risks. In this review workflow, the simplifier proposes changes; it must not edit the working tree.
+
+After both analyses are available, keep both the reviewer and simplifier subagents active and discuss each proposed simplification with them. Have the reviewer assess whether it is necessary and safe, and have the simplifier respond to objections or explain the concrete maintainability benefit. Do not end either subagent before this discussion is complete. Exclude suggestions that are merely stylistic, duplicate existing clarity, or add risk without a meaningful benefit; retain unresolved disagreements as such rather than forcing consensus.
+
+Include only worthwhile, behavior-preserving simplifications in **Maintainability & Suggested Changes**, with the rationale, expected benefit, and any relevant risk. Clearly distinguish these proposals from correctness bugs, and do not present a simplification as required when the existing logic is already clear and appropriate.
 
 ## 3. Report Format
 ### Executive Summary
