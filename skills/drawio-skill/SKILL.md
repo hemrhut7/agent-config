@@ -60,6 +60,30 @@ Install draw.io desktop if missing:
 
 ## Workflow
 
+### Audience mode (required first)
+
+At the start of every diagram request, ask which audience mode to use before planning or generating the diagram. Ask in the user's language. If the user already explicitly chose a mode in their request, honor it without asking again. Otherwise, present these two choices and wait for the user's answer:
+
+> Which diagram mode would you like?
+> 1. **Engineering / internal** — detailed implementation flow
+> 2. **Presentation / external** — clear, concise overview
+
+Do not silently choose a mode. Keep the selected mode for the whole request and apply it to labels, detail, and scope; it does not override the requested diagram type, visual style, or output format.
+
+#### Engineering / internal mode
+
+- Design for engineers tracing implementation behavior. Show relevant function/API names, important variables or fields, state changes, conditions, inputs/outputs, and error or retry paths when they affect the flow.
+- Use exact identifiers from provided code or documentation. Never invent names; when a detail is unknown, use a clear conceptual label or ask if it is essential.
+- Keep the flow detailed enough to trace meaningful control and data paths, but omit line-by-line code that does not change the design.
+
+#### Presentation / external mode
+
+- Design for executives, customers, or presentation audiences. Focus on major capabilities, actors, decisions, and outcomes.
+- Use plain-language action labels. Omit implementation-level variable, function, class, and internal API names, as well as incidental technical branches.
+- Consolidate low-level steps into a small number of logical stages while preserving the main decisions and outcomes. Explain necessary technical concepts in audience-friendly terms.
+
+When adapting an existing diagram or source code, preserve factual behavior in either mode; the presentation mode simplifies how that behavior is communicated, not what it does.
+
 Before starting the workflow, assess whether the user's request is specific enough. If key details are missing, ask 1-3 focused questions:
 - **Diagram type** — which preset? (ERD, UML, Sequence, Architecture, ML/DL, Flowchart, or general)
 - **Output format** — PNG (default), SVG, PDF, or JPG?
@@ -67,6 +91,8 @@ Before starting the workflow, assess whether the user's request is specific enou
 - **Scope/fidelity** — how many components? Any specific technologies or labels?
 
 Skip clarification if the request already specifies these details or is clearly simple (e.g., "draw a flowchart of X").
+
+After mode selection, continue with the clarification and workflow steps below.
 
 0. **Update check (notify, don't pull)** — first use per conversation. Throttle to once per 24 h via `<this-skill-dir>/.last_update`; never mutate the skill directory without explicit user consent.
 
@@ -94,7 +120,7 @@ Load the preset JSON from `~/.drawio-skill/styles/<name>.json`, falling back to 
 When a preset loads successfully, mention it in the first line of the reply: *"Using preset `<name>` (confidence: `<level>`)."* See the **Applying a preset** subsection below for how the preset changes color/shape/edge/font decisions.
 
 1. **Check deps** — verify `draw.io --version` succeeds; note platform for correct CLI path
-2. **Plan** — identify shapes, relationships, layout (LR or TB), group by tier/layer
+2. **Plan** — identify shapes, relationships, layout (LR or TB), group by tier/layer, and choose the label/detail level for the selected audience mode.
 3. **Generate** — write `.drawio` XML file to disk. Default output dir is the user's working dir; if the user specified an output path or directory (e.g. `./artifacts/`, `docs/images/`), use that instead — `mkdir -p` the target dir first. Apply the same dir choice to PNG/SVG/PDF exports in steps 4 and 7.
 4. **Export draft** — run CLI to produce a preview PNG. **Do NOT pass `-e`** at this step — the embedded `zTXt mxGraphModel` chunk it adds causes vision APIs (Claude included) to return 400 "Could not process image" in step 5. Save the clean preview as `<name>.png` (single extension). Embedding is for the final export only (step 7).
 5. **Self-check** — use the agent's built-in vision capability to read the exported PNG, catch obvious issues, auto-fix before showing user (requires a vision-enabled model such as Claude Sonnet/Opus). If reading the PNG returns a 400 / "Could not process image" error, you almost certainly exported with `-e` by mistake — re-export without `-e` and retry once. If it still fails, skip self-check and continue to step 6.
