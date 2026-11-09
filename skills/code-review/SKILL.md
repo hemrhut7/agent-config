@@ -78,3 +78,6 @@ Include only worthwhile, behavior-preserving simplifications in **Maintainabilit
 - **Be specific**: Point to exact line numbers.
 - **Be constructive**: Frame suggestions as improvements.
 - **Context is King**: If a diff is narrow, read the surrounding functions/classes.
+
+## Saving the Report
+After completing the review, save the full report as a Markdown file in the current project's root directory, not in the skill directory. Use `code-review-report.md`; if that file already exists, use a timestamped filename such as `code-review-report-YYYYMMDD-HHMMSS.md` to avoid overwriting an earlier report. Preserve the report structure above and tell the user the path of the saved file.
