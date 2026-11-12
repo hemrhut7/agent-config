@@ -24,6 +24,16 @@ Instructions
 4. If extra context is helpful, add a short body with bullet points after a blank line.
 5. If there are breaking changes, add a footer starting with `BREAKING CHANGE:`.
 
+## Concise style
+Keep the Conventional Commit summary, followed by at most two short bullets with the most important technical details. Omit extended context and secondary implementation details.
+
+Example:
+```text
+fix(link-monitor): correct MUX selection and failover behavior
+- Invert PB3 channel mapping and add readback diagnostics.
+- Add `setauto` and raise the DTC timeout threshold to 10.
+```
+
 Example
 `feat(auth): implement login with google`
 

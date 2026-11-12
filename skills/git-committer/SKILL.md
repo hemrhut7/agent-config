@@ -12,6 +12,9 @@ description: "Analyze Git changes, generate standardized commit messages, and ex
 - **Format Compliance**: Select language based on context (default is English).
    - English messages: Comply with [EN_FORMAT.md](EN_FORMAT.md).
    - Chinese messages: Comply with [CH_FORMAT.md](CH_FORMAT.md).
+- **Message Style**: After analysis and before drafting, ask the user to choose the original full style or concise style. If the user has already explicitly chosen a style for this task, use it without asking again. Use the `ask_user` tool when available.
+   - Full style: Follow the selected language's format guide as written.
+   - Concise style: Keep the summary and only the most important technical details; follow the concise template in the selected language's format guide.
 - **Plan Before Action**: After analysis, always present a comprehensive plan (including any necessary submodule repairs or intermediate commits) and the proposed message or messages. Wait for user approval before modifying any files or executing any state-changing git commands.
 - **Commit Confirmation**: Ensure the user approves every proposed message and the full sequence of actions before executing any `commit`.
 
@@ -26,29 +29,33 @@ You MUST STOP and ask the user to confirm the final commit message before runnin
    - **Note**: If the change content is too large, the script will automatically save the report to `.agent_scratchpad/auto_analysis.md` and display a summary in the terminal. Finally, please delete the automatically generated report so it does not occupy space ('auto_analysis.md').
    - Write the Commit Message based on the report content (read the temporary file if one exists).
 
-2. **Drafting**:
+2. **Choose Message Style**:
+   Ask the user whether to use the original full style or the concise style before drafting, unless they already specified the choice.
+
+3. **Drafting**:
    Generate the commit message by referencing the `Detailed Staged Diff` and `Recent Commits Context` in the report.
    - Review the full change set, not only the staged diff: use status and inspect unstaged and untracked changes as needed so the plan accounts for all intended modifications.
+   - Apply the selected style and the corresponding language guide.
 
-3. **Choose Commit Granularity**:
+4. **Choose Commit Granularity**:
    - Decide whether the changes form one cohesive, clearly describable unit or contain multiple independently meaningful updates.
    - When there is a substantial amount of code change, split it into multiple commits when the actual updates support meaningful, cohesive groups (for example, separate features or fixes, with their directly related tests). Do not split merely because there are many changed files or lines; keep tightly coupled implementation and tests together.
    - For each proposed commit, specify its order, the exact logical scope/files or hunks it will contain, and its own message in the applicable format. Make sure the sequence is coherent and that no intended changes are omitted or accidentally included in another commit.
    - If the changes are one cohesive unit, use a single commit.
 
-4. **Plan and Verification**:
+5. **Plan and Verification**:
    - Present the complete commit plan, all proposed messages, and a list of all intended actions (e.g., submodule updates, file additions, and how changes will be staged).
    - Check if technical jargon (e.g., `EKF`, `DMA`) is retained.
    - Ensure each message describes its commit's changes, and the plan collectively covers all intended modifications found in the analysis.
    - **STOP**: Wait for explicit user approval before proceeding to any execution.
 
-5. **Execute Commit**:
+6. **Execute Commit**:
    - After approval, stage only the changes for the first planned commit (use interactive/hunk staging when a file contains changes for different commits), then run `analyze_all` again and verify the staged diff matches that commit's approved scope.
    - Run `python .agents/skills/git-committer/scripts/git_helper.py --action commit --message "[Approved Message]"`.
    - For a multi-commit plan, verify the commit, then stage and analyze the next approved group before committing it. Keep changes assigned to later commits out of the current commit.
    - **Protection Mechanism**: If there are unresolved conflicts, the script will automatically abort the commit.
 
-6. **Confirm Commit(s)**:
+7. **Confirm Commit(s)**:
    Use `git log` and `git status` to confirm the planned commits were created and check whether any intended changes remain.
 
 ## Error Handling
