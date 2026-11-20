@@ -10,7 +10,7 @@ Systematic code refactoring across files.
 ## Mode Selection
 
 - **1-9 files**: Use native tools (`grep_search` + `replace_file_content`)
-- **10+ files**: Use `code-execution` skill (write a batch Python script)
+- **10+ files**: Write a batch Python script in `.agent_scratchpad/` and run it with `./.venv/bin/python -u` (delete after execution).
 
 **Batch example (10+ files):**
 ```python

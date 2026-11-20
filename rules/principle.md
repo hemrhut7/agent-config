@@ -2,9 +2,9 @@
 trigger: always_on
 ---
 
-0. **Master Protocol**: You MUST follow the logic in `.agents/skills/using-agents/SKILL.md`. This includes checking for specialized skills (like ESKF Optimization) before every action.
+0. **Skill Check**: Before starting any task, check `.agents/skills/` and read any applicable `SKILL.md` (including domain skills like ESKF Optimization).
 
-1. If the project is based on Python, all Python commands or scripts MUST follow the "code-execution" skill logic.
+1. **Python Execution**: Prefer the workspace `.venv/bin/python -u` (fall back to global Python or ask before creating/installing if missing); for batch edits across 10+ files, run a temporary script in `.agent_scratchpad/` and delete it afterward.
 
 2. **Engineering Discipline**:
    - **Test-Driven Development**: Write a failing test before production code, implement minimal code to pass, then refactor.

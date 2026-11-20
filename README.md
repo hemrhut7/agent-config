@@ -15,7 +15,7 @@ This submodule consists of three main components:
 ├── README.md           ← Submodule sitemap and documentation
 ├── rules/              ← Persistent prompt instructions (e.g., principle.md - always_on)
 ├── skills/             ← Custom capabilities, scripts, and domain knowledge packages
-│   ├── code-execution/ ← Dynamic environment selector and output monitoring
+│   ├── task-planning/  ← Structured task planning and verification workflows
 │   └── ...             
 └── workflows/          ← Interactive step-by-step guides triggered via slash commands
     ├── codex-planning-and-reviewing.md
