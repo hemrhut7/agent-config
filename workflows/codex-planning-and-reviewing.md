@@ -28,7 +28,7 @@ This workflow is designed for complex tasks where structural planning and rigoro
 *Goal: Execute the plan with precision.*
 
 1. **Follow Plan**: Agent 1 implements the code changes following the established `[.agent_scratchpad/plan.md](../../.agent_scratchpad/plan.md)`.
-2. **Standard Practices**: Adhere to `test-driven-development` (via `[test-driven-development/SKILL.md](../skills/test-driven-development/SKILL.md)`) and `systematic-debugging` (via `[systematic-debugging/SKILL.md](../skills/systematic-debugging/SKILL.md)`) as mentioned in the `task-planning` skill.
+2. **Standard Practices**: Adhere to TDD, Systematic Debugging, and Verification Before Completion as defined in `.agents/rules/principle.md` Rule 2.
 3. **Staging**: Once a logical unit of work is completed, ensure changes are staged or clearly visible in the workspace.
 
 ---

@@ -11,7 +11,7 @@ description: "Use when users pose complex requirements, start new projects, or n
 - Combining multiple complex tasks into one turn.
 - Using "TBD" or placeholders in the plan.
 - **Using a low-tier/flash model for Mode B or Mode C planning.** (Ensure high-reasoning models are active for complex tasks).
-- **Skipping TDD or Systematic Debugging** during implementation. See `test-driven-development`.
+- **Skipping TDD or Systematic Debugging** during implementation. See `.agents/rules/principle.md` Rule 2.
 
 ## Mode Selection Guide
 

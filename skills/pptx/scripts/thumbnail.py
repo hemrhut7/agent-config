@@ -23,6 +23,10 @@ import zipfile
 from pathlib import Path
 
 import defusedxml.minidom
+_SHARED_DIR = Path(__file__).resolve().parents[2] / "_shared"
+if str(_SHARED_DIR) not in sys.path:
+    sys.path.insert(0, str(_SHARED_DIR))
+
 from office.soffice import get_soffice_env
 from PIL import Image, ImageDraw, ImageFont
 

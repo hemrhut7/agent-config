@@ -1,5 +1,0 @@
-$ ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/index_document.py ".agent_scratchpad/test_doc.docx"
-{"status": "success", "file_name": "test_doc.docx", "collection_name": "test_doc", "total_chunks": 1, "indexed_chunks": 1}
-
-$ ./.venv/bin/python -u .agents/skills/doc-to-vectordb/scripts/query_document.py "test_doc" "password"
-{"status": "success", "results": [{"content": "Project Falcon Specification\nThis document outlines the core architecture of Project Falcon.\nThe secret password for the primary database is 'Antigravity-42'.\nEnsure all endpoints are secured using TLS 1.3.", "metadata": {"source": "test_doc.docx", "type": "docx", "chunk": 1}}]}

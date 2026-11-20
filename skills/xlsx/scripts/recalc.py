@@ -10,6 +10,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+_SHARED_DIR = Path(__file__).resolve().parents[2] / "_shared"
+if str(_SHARED_DIR) not in sys.path:
+    sys.path.insert(0, str(_SHARED_DIR))
+
 from office.soffice import get_soffice_env
 
 from openpyxl import load_workbook

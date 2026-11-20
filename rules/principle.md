@@ -2,11 +2,14 @@
 trigger: always_on
 ---
 
-0. **Master Protocol**: You MUST follow the logic in `.agents/skills/using-agents/SKILL.md`. This includes checking for specialized skills (like TDD, Systematic Debugging, and ESKF Optimization) before every action.
+0. **Master Protocol**: You MUST follow the logic in `.agents/skills/using-agents/SKILL.md`. This includes checking for specialized skills (like ESKF Optimization) before every action.
 
 1. If the project is based on Python, all Python commands or scripts MUST follow the "code-execution" skill logic.
 
-2. After code updates, compile or run the project to confirm there is not any error during the processing of compiling or running. If something goes wrong, you MUST follow the `systematic-debugging` skill.
+2. **Engineering Discipline**:
+   - **Test-Driven Development**: Write a failing test before production code, implement minimal code to pass, then refactor.
+   - **Systematic Debugging**: On any bug or failure, reproduce and identify the root cause before proposing fixes; never guess or apply unverified patches.
+   - **Verification Before Completion**: Run relevant build/test/verification commands after final edits and confirm actual passing output before claiming completion.
 
 3. If the project contains a graphify-out folder, you MUST prioritize checking its contents (e.g., GRAPH_REPORT.md or graph.json) during the research or exploration phase to gather architectural insights and module relationships.
 

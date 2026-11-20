@@ -18,7 +18,7 @@ YOU DO NOT HAVE A CHOICE. YOU CANNOT RATIONALIZE YOUR WAY OUT OF THIS.
 
 ### Skill Priority
 1. **Process Skills** (`task-planning`, `using-agents`) - These determine HOW to approach the task.
-2. **Foundational Skills** (`test-driven-development`, `systematic-debugging`) - Core engineering standards.
+2. **Engineering Discipline** (`.agents/rules/principle.md` Rule 2) - TDD, Systematic Debugging, and Verification Before Completion.
 3. **Domain Skills** (`algorithm-error-quantizer`, `web-artifacts-builder`) - Specific task execution.
 
 ## Red Flags
@@ -31,7 +31,7 @@ If you find yourself thinking these, you are **rationalizing** away from the pro
 | "I'll just do this one thing first." | Check BEFORE doing anything. |
 | "I know how to do this manually." | Skills encode battle-tested patterns you might forget. |
 | "The skill is overkill for this." | Complexity emerges from simplicity. Use the discipline. |
-| "I'll write tests after I'm done." | **VIOLATION of TDD.** See `test-driven-development`. |
+| "I'll write tests after I'm done." | **VIOLATION of TDD.** See `.agents/rules/principle.md` Rule 2. |
 
 ## Navigation & Control (High-Risk Strategies)
 

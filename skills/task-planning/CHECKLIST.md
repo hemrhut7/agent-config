@@ -17,7 +17,7 @@ The supervisor must check item by item before approving the executor's results:
 
 ## Planning & Skill Alignment
 - [ ] Were specialized skills properly identified and assigned during the planning phase?
-- [ ] Are high-risk tasks properly routed to `test-driven-development` or `systematic-debugging`?
+- [ ] Are high-risk tasks properly following TDD and Systematic Debugging in `.agents/rules/principle.md`?
 - [ ] **Model Alignment**: Was a high-tier model used for Mode B/C planning?
 
 ## Failure Analysis (If an error occurs)
